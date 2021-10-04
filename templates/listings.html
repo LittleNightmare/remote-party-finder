@@ -5,10 +5,10 @@ Remote Party Finder
 {%- endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="/assets/listings.css"/>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
-<script defer src="/assets/listings.js"></script>
-{% endblock %}
+    <link rel="stylesheet" href="/assets/listings.css"/>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+    <script defer src="/assets/listings.js"></script>
+{%- endblock %}
 
 {% block body %}
 <div id="container">
@@ -17,19 +17,19 @@ Remote Party Finder
         <option>All</option>
     </select>
     <div id="listings" class="list">
-        {% for container in containers %}
-        {% let listing = container.listing.borrow() %}
+        {%- for container in containers %}
+        {%- let listing = container.listing.borrow() %}
         <div
                 class="listing"
                 data-id="{{ listing.id }}"
                 data-centre="{{ listing.data_centre_name().unwrap_or_default() }}">
             <div class="left">
-                {% let duty_class %}
-                {% if listing.is_cross_world() %}
-                    {% let duty_class = " cross" %}
-                {% else %}
-                    {% let duty_class = " local" %}
-                {% endif %}
+                {%- let duty_class %}
+                {%- if listing.is_cross_world() %}
+                    {%- let duty_class = " cross" %}
+                {%- else %}
+                    {%- let duty_class = " local" %}
+                {%- endif %}
                 <div class="duty{{ duty_class }}">{{ listing.duty_name() }}</div>
                 <div class="description">
                     {%- let desc = listing.description.full_text() %}
@@ -42,33 +42,33 @@ Remote Party Finder
                     {%- endif -%}
                 </div>
                 <div class="party">
-                    {% for slot in listing.slots() %}
-                        {% let filled %}
-                        {% let title %}
-                        {% let role_class %}
-                        {% match slot %}
-                            {% when Ok with (slot) %}
-                                {% let filled = " filled" %}
-                                {% match slot.role() %}
-                                    {% when Some with (role) %}
-                                        {% let role_class = " {}"|format(role.as_str().to_lowercase()) %}
-                                    {% when None %}
-                                        {% let role_class = "".to_string() %}
-                                {% endmatch %}
-                                {% let title = slot.code().to_string() %}
-                            {% when Err with (tuple) %}
-                                {% let filled = "" %}
-                                {% let title = tuple.1.clone() %}
-                                {% let role_class = " {}"|format(tuple.0) %}
-                        {% endmatch %}
+                    {%- for slot in listing.slots() %}
+                        {%- let filled %}
+                        {%- let title %}
+                        {%- let role_class %}
+                        {%- match slot %}
+                            {%- when Ok with (slot) %}
+                                {%- let filled = " filled" %}
+                                {%- match slot.role() %}
+                                    {%- when Some with (role) %}
+                                        {%- let role_class = " {}"|format(role.as_str().to_lowercase()) %}
+                                    {%- when None %}
+                                        {%- let role_class = "".to_string() %}
+                                {%- endmatch %}
+                                {%- let title = slot.code().to_string() %}
+                            {%- when Err with (tuple) %}
+                                {%- let filled = "" %}
+                                {%- let title = tuple.1.clone() %}
+                                {%- let role_class = " {}"|format(tuple.0) %}
+                        {%- endmatch %}
                         <div class="slot{{ filled }}{{ role_class }}" title="{{ title }}">
-                            {% if !filled.is_empty() %}
+                            {%- if !filled.is_empty() %}
                             <svg viewBox="0 0 32 32">
                                 <use href="/assets/icons.svg#{{ title }}"></use>
                             </svg>
-                            {% endif %}
+                            {%- endif %}
                         </div>
-                    {% endfor %}
+                    {%- endfor %}
                     <div class="total">{{ listing.slots_filled() }}/{{ listing.slots_available }}</div>
                 </div>
             </div>
@@ -113,7 +113,7 @@ Remote Party Finder
                 </div>
             </div>
         </div>
-    {% endfor %}
+    {%- endfor %}
     </div>
 </div>
 {% endblock %}
