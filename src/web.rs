@@ -1,8 +1,8 @@
 use std::convert::{Infallible, TryFrom};
 use anyhow::{Result, Context};
 use std::sync::Arc;
-use mongodb::{Client as MongoClient, Collection};
-use mongodb::options::UpdateOptions;
+use mongodb::{Client as MongoClient, Collection, IndexModel};
+use mongodb::options::{IndexOptions, UpdateOptions};
 use mongodb::results::UpdateResult;
 use tokio_stream::StreamExt;
 use warp::{Filter, Reply};
@@ -34,10 +34,28 @@ impl State {
             .await
             .context("could not create mongodb client")?;
 
-        Ok(Arc::new(Self {
+        let state = Arc::new(Self {
             config,
             mongo,
-        }))
+        });
+
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.id": 1,
+                        "listing.content_id_lower": 1,
+                    })
+                    .options(IndexOptions::builder()
+                        .unique(true)
+                        .build())
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create index")?;
+
+        Ok(state)
     }
 
     pub fn collection(&self) -> Collection<ListingContainer> {
