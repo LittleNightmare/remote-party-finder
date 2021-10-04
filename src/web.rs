@@ -77,6 +77,8 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
         .and(warp::path("assets"))
         .and(
             icons()
+                .or(minireset())
+                .or(listings_css())
         )
         .boxed()
 }
@@ -85,6 +87,20 @@ fn icons() -> BoxedFilter<(impl Reply, )> {
     warp::path("icons.svg")
         .and(warp::path::end())
         .and(warp::fs::file("./assets/icons.svg"))
+        .boxed()
+}
+
+fn minireset() -> BoxedFilter<(impl Reply, )> {
+    warp::path("minireset.css")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/minireset.css"))
+        .boxed()
+}
+
+fn listings_css() -> BoxedFilter<(impl Reply, )> {
+    warp::path("listings.css")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/listings.css"))
         .boxed()
 }
 
