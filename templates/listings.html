@@ -1,0 +1,330 @@
+{% extends "_frame.html" %}
+
+{% block title -%}
+Remote Party Finder
+{%- endblock %}
+
+{% block head %}
+<style>
+    :root {
+        --background: #2C2F34;
+        --text: #A0A0A0;
+        --local-duty-text: #E6A73A;
+        --cross-duty-text: #79C7EC;
+        --gold-text: #FFC240;
+        --light-blue-text: #5BE2FF;
+        --green-text: #37DE99;
+        --meta-text: #D3EEE9;
+        --ui-text: #EEE1C5;
+        --text-bright: #FFF;
+
+        --row-background: #2C2F34;
+        --row-background-alternate: #373A3E;
+
+        --slot-background: #868180;
+        --slot-empty: #AAA3A2;
+        --tank-blue: #455CCB;
+        --healer-green: #487B39;
+        --dps-red: #813B3C;
+        --icon-gold: #ECB7A2;
+
+        /*--slot-empty: #ADA99C;*/
+        /*--tank-blue: #4A5DC6;*/
+        /*--healer-green: #4A7939;*/
+        /*--dps-red: #7E3938;*/
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+
+        font-family: sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+    }
+
+    body > div {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+
+        padding: 1em;
+        margin-bottom: 1em;
+
+        background-color: var(--row-background);
+    }
+
+    body > div .left {
+        flex: 1 0 0;
+    }
+
+    body > div:nth-child(2n) {
+        background-color: var(--row-background-alternate);
+    }
+
+    body > div .description {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    body > div .duty {
+        font-size: 1.2em;
+    }
+
+    body > div .duty.cross {
+        color: var(--cross-duty-text);
+    }
+
+    body > div .duty.local {
+        color: var(--local-duty-text);
+    }
+
+    body > div .meta {
+        display: flex;
+        flex-direction: column;
+
+        margin-left: 1em;
+
+        color: var(--meta-text);
+        text-align: right;
+    }
+
+    body > div .meta > .item {
+        display: flex;
+        flex-flow: row nowrap;
+        align-self: flex-end;
+    }
+
+    /*body > div .meta > .item > .text {*/
+    /*    align-self: center;*/
+    /*}*/
+
+    body > div .meta > .item .icon {
+        height: 1em;
+        width: 1em;
+        fill: var(--text);
+        margin-left: .5em;
+        align-self: center;
+        justify-self: center;
+    }
+
+    body > div .party {
+        margin-top: .5em;
+
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 2em);
+        gap: .5em;
+
+        /*display: flex;*/
+        /*flex-direction: row;*/
+        /*flex-wrap: wrap;*/
+        /*align-items: center;*/
+        /*margin-top: .5em;*/
+    }
+
+    body > div .party > .total {
+        align-self: center;
+        justify-self: center;
+    }
+
+    body > div .party > .slot {
+        width: 2em;
+        height: 2em;
+        border: 1px solid currentColor;
+        margin-right: .5em;
+    }
+
+    body > div .party > .slot:not(.filled).dps.tank {
+        background: linear-gradient(
+                to bottom,
+                var(--tank-blue) 0%,
+                var(--tank-blue) 50%,
+                var(--dps-red) 50%
+        );
+    }
+
+    body > div .party > .slot:not(.filled).dps.healer {
+        background: linear-gradient(
+                to bottom,
+                var(--healer-green) 0%,
+                var(--healer-green) 50%,
+                var(--dps-red) 50%
+        );
+    }
+
+    body > div .party > .slot:not(.filled).tank.healer {
+        background: linear-gradient(
+                to bottom,
+                var(--tank-blue) 0%,
+                var(--tank-blue) 50%,
+                var(--healer-green) 50%
+        );
+    }
+
+    body > div .party > .slot:not(.filled).tank.healer.dps {
+        background: linear-gradient(
+                to bottom,
+                var(--tank-blue) 0%,
+                var(--tank-blue) 33%,
+                var(--healer-green) 33%,
+                var(--healer-green) 66%,
+                var(--dps-red) 66%
+        );
+    }
+
+    body > div .party > .slot:not(.filled).dps {
+        background-color: var(--dps-red);
+    }
+
+    /* background: linear-gradient(to top, #FF44AD, #CD60B2); */
+
+    body > div .party > .slot.filled {
+        background-color: var(--slot-background);
+        border-color: var(--icon-gold);
+    }
+
+    body > div .party > .slot.empty {
+        background-color: var(--slot-empty);
+    }
+
+    body > div .party > .slot.dps {
+        background-color: var(--dps-red);
+    }
+
+    body > div .party > .slot.healer {
+        background-color: var(--healer-green);
+    }
+
+    body > div .party > .slot.tank {
+        background-color: var(--tank-blue);
+    }
+
+    body > div .party > .slot > svg {
+        width: 100%;
+        height: 100%;
+        fill: var(--icon-gold);
+    }
+
+    body > div .party > .slot.filled:not(.dps):not(.healer):not(.tank) > svg {
+        fill: #C6C6C6;
+    }
+
+    /* Really, this could be 26em */
+    @media (max-width: 30em) {
+        body > div {
+            flex-flow: column nowrap;
+        }
+
+        body > div .meta {
+            flex-grow: 1;
+
+            margin-top: .5em;
+            margin-left: 0;
+            text-align: unset;
+        }
+
+        body > div .meta > .item {
+            align-self: unset;
+        }
+
+        body > div .meta > .item .icon {
+            order: 1;
+            margin-left: 0;
+            margin-right: .5em;
+        }
+
+        body > div .meta > .item > .text {
+            order: 2;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+{% for container in containers %}
+{% let listing = container.listing.borrow() %}
+<div data-id="{{ listing.id }}" data-updated-minutes="{{ container.since_updated().num_minutes() }}">
+    <div class="left">
+        {% let duty_class %}
+        {% if listing.is_cross_world() %}
+            {% let duty_class = " cross" %}
+        {% else %}
+            {% let duty_class = " local" %}
+        {% endif %}
+        <div class="duty{{ duty_class }}">{{ listing.duty_name() }}</div>
+        <div class="description">
+            {%- let desc = listing.description.full_text() %}
+            {%- if desc.is_empty() -%}
+                <em>None</em>
+            {%- else -%}
+                {{ desc }}
+            {%- endif -%}
+        </div>
+        <div class="party">
+            {% for slot in listing.slots() %}
+                {% let filled %}
+                {% let title %}
+                {% let role_class %}
+                {% match slot %}
+                    {% when Ok with (slot) %}
+                        {% let filled = " filled" %}
+                        {% match slot.role() %}
+                            {% when Some with (role) %}
+                                {% let role_class = " {}"|format(role.as_str().to_lowercase()) %}
+                            {% when None %}
+                                {% let role_class = "".to_string() %}
+                        {% endmatch %}
+                        {% let title = slot.code().to_string() %}
+                    {% when Err with (tuple) %}
+                        {% let filled = "" %}
+                        {% let title = tuple.1.clone() %}
+                        {% let role_class = " {}"|format(tuple.0) %}
+                {% endmatch %}
+                <div class="slot{{ filled }}{{ role_class }}" title="{{ title }}">
+                    {% if !filled.is_empty() %}
+                    <svg viewBox="0 0 32 32">
+                        <use href="/assets/icons.svg#{{ title }}"></use>
+                    </svg>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="total">{{ listing.slots_filled() }}/{{ listing.slots_available }}</div>
+        </div>
+    </div>
+    <div class="right meta">
+        <div class="item creator">
+            <span class="text">{{ listing.name.full_text() }} @ {{ listing.home_world_string() }}</span>
+            <span title="Creator">
+                <svg class="icon" viewBox="0 0 32 32">
+                    <use href="/assets/icons.svg#user"></use>
+                </svg>
+            </span>
+        </div>
+        <div class="item world">
+            <span class="text">{{ listing.created_world_string() }}</span>
+            <span title="Created on">
+                <svg class="icon" viewBox="0 0 32 32">
+                    <use href="/assets/icons.svg#sphere"></use>
+                </svg>
+            </span>
+        </div>
+        <div class="item expires">
+            <span class="text">{{ container.human_time_left() }}</span>
+            <span title="Expires">
+                <svg class="icon" viewBox="0 0 32 32">
+                    <use href="/assets/icons.svg#stopwatch"></use>
+                </svg>
+            </span>
+        </div>
+        <div class="item updated">
+            <span class="text">{{ container.human_since_updated() }}</span>
+            <span title="Updated">
+                <svg class="icon" viewBox="0 0 32 32">
+                    <use href="/assets/icons.svg#clock"></use>
+                </svg>
+            </span>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
