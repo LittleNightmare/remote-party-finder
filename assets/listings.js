@@ -6,10 +6,14 @@
         let centre = elem.dataset['centre'];
         if (data_centres.indexOf(centre) === -1) {
             data_centres.push(centre);
-            let opt = document.createElement('option');
-            opt.innerText = centre;
-            select.appendChild(opt);
         }
+    }
+
+    data_centres.sort();
+    for (let centre of data_centres) {
+        let opt = document.createElement('option');
+        opt.innerText = centre;
+        select.appendChild(opt);
     }
 
     let options = {
