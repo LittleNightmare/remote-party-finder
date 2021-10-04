@@ -1,0 +1,231 @@
+:root {
+    --background: #2C2F34;
+    --text: #A0A0A0;
+    --local-duty-text: #E6A73A;
+    --cross-duty-text: #79C7EC;
+    --gold-text: #FFC240;
+    --light-blue-text: #5BE2FF;
+    --green-text: #37DE99;
+    --meta-text: #D3EEE9;
+    --ui-text: #EEE1C5;
+    --text-bright: #FFF;
+
+    --row-background: #2C2F34;
+    --row-background-alternate: #373A3E;
+
+    --slot-background: #868180;
+    --slot-empty: #AAA3A2;
+    --tank-blue: #455CCB;
+    --healer-green: #487B39;
+    --dps-red: #813B3C;
+    --icon-gold: #ECB7A2;
+
+    /*--slot-empty: #ADA99C;*/
+    /*--tank-blue: #4A5DC6;*/
+    /*--healer-green: #4A7939;*/
+    /*--dps-red: #7E3938;*/
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+    font-family: sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+}
+
+body > .listing {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
+    padding: 1em;
+    margin-bottom: 1em;
+
+    background-color: var(--row-background);
+}
+
+body > .listing .left {
+    flex: 2 0 0;
+}
+
+body > .listing .middle {
+    flex: 1 0 0 ;
+}
+
+body > .listing:nth-child(2n) {
+    background-color: var(--row-background-alternate);
+}
+
+body > .listing .description {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+body > .listing .stat {
+    color: var(--meta-text);
+}
+
+body > .listing .duty {
+    font-size: 1.2em;
+}
+
+body > .listing .duty.cross {
+    color: var(--cross-duty-text);
+}
+
+body > .listing .duty.local {
+    color: var(--local-duty-text);
+}
+
+body > .listing .meta {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 1em;
+
+    color: var(--meta-text);
+    text-align: right;
+}
+
+body > .listing .meta > .item {
+    display: flex;
+    flex-flow: row nowrap;
+    align-self: flex-end;
+}
+
+body > .listing .meta > .item .icon {
+    height: 1em;
+    width: 1em;
+    fill: var(--text);
+    margin-left: .5em;
+    align-self: center;
+    justify-self: center;
+}
+
+body > .listing .party {
+    margin-top: .5em;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 2em);
+    gap: .5em;
+}
+
+body > .listing .party > .total {
+    align-self: center;
+    justify-self: center;
+}
+
+body > .listing .party > .slot {
+    width: 2em;
+    height: 2em;
+    border: 1px solid currentColor;
+    margin-right: .5em;
+}
+
+body > .listing .party > .slot:not(.filled).dps.tank {
+    background: linear-gradient(
+            to bottom,
+            var(--tank-blue) 0%,
+            var(--tank-blue) 50%,
+            var(--dps-red) 50%
+    );
+}
+
+body > .listing .party > .slot:not(.filled).dps.healer {
+    background: linear-gradient(
+            to bottom,
+            var(--healer-green) 0%,
+            var(--healer-green) 50%,
+            var(--dps-red) 50%
+    );
+}
+
+body > .listing .party > .slot:not(.filled).tank.healer {
+    background: linear-gradient(
+            to bottom,
+            var(--tank-blue) 0%,
+            var(--tank-blue) 50%,
+            var(--healer-green) 50%
+    );
+}
+
+body > .listing .party > .slot:not(.filled).tank.healer.dps {
+    background: linear-gradient(
+            to bottom,
+            var(--tank-blue) 0%,
+            var(--tank-blue) 33%,
+            var(--healer-green) 33%,
+            var(--healer-green) 66%,
+            var(--dps-red) 66%
+    );
+}
+
+body > .listing .party > .slot:not(.filled).dps {
+    background-color: var(--dps-red);
+}
+
+body > .listing .party > .slot.filled {
+    background-color: var(--slot-background);
+    border-color: var(--icon-gold);
+}
+
+body > .listing .party > .slot.empty {
+    background-color: var(--slot-empty);
+}
+
+body > .listing .party > .slot.dps {
+    background-color: var(--dps-red);
+}
+
+body > .listing .party > .slot.healer {
+    background-color: var(--healer-green);
+}
+
+body > .listing .party > .slot.tank {
+    background-color: var(--tank-blue);
+}
+
+body > .listing .party > .slot > svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--icon-gold);
+}
+
+body > .listing .party > .slot.filled:not(.dps):not(.healer):not(.tank) > svg {
+    fill: #C6C6C6;
+}
+
+/* Really, this could be 26em */
+@media (max-width: 30em) {
+    body > .listing {
+        flex-flow: column nowrap;
+    }
+
+    body > .listing > :not(:first-child) {
+        margin-top: .5em;
+        margin-left: 0;
+    }
+
+    body > .listing .meta {
+        flex-grow: 1;
+
+        margin-left: 0;
+        text-align: unset;
+    }
+
+    body > .listing .meta > .item {
+        align-self: unset;
+    }
+
+    body > .listing .meta > .item .icon {
+        order: 1;
+        margin-left: 0;
+        margin-right: .5em;
+    }
+
+    body > .listing .meta > .item > .text {
+        order: 2;
+    }
+}
