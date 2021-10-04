@@ -79,6 +79,7 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
             icons()
                 .or(minireset())
                 .or(listings_css())
+                .or(listings_js())
         )
         .boxed()
 }
@@ -101,6 +102,13 @@ fn listings_css() -> BoxedFilter<(impl Reply, )> {
     warp::path("listings.css")
         .and(warp::path::end())
         .and(warp::fs::file("./assets/listings.css"))
+        .boxed()
+}
+
+fn listings_js() -> BoxedFilter<(impl Reply, )> {
+    warp::path("listings.js")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/listings.js"))
         .boxed()
 }
 

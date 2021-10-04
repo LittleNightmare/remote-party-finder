@@ -109,6 +109,45 @@ impl PartyFinderListing {
             .map(|world| Cow::from(world.name()))
             .unwrap_or_else(|| Cow::from(self.home_world.to_string()))
     }
+
+    pub fn prepend_flags(&self) -> (&'static str, String) {
+        let mut colour_class = "";
+        let mut flags = Vec::new();
+
+        if self.objective.contains(ObjectiveFlags::PRACTICE) {
+            flags.push("[Practice]");
+            colour_class = "desc-green";
+        }
+
+        if self.objective.contains(ObjectiveFlags::DUTY_COMPLETION) {
+            flags.push("[Duty Completion]");
+            colour_class = "desc-blue";
+        }
+
+        if self.objective.contains(ObjectiveFlags::LOOT) {
+            flags.push("[Loot]");
+            colour_class = "desc-yellow";
+        }
+
+        if self.conditions.contains(ConditionFlags::DUTY_COMPLETE) {
+            flags.push("[Duty Complete]");
+        }
+
+        if self.conditions.contains(ConditionFlags::DUTY_INCOMPLETE) {
+            flags.push("[Duty Incomplete]");
+        }
+
+        if self.search_area.contains(SearchAreaFlags::ONE_PLAYER_PER_JOB) {
+            flags.push("[One Player per Job]");
+        }
+
+        (colour_class, flags.join(""))
+    }
+
+    pub fn data_centre_name(&self) -> Option<&'static str> {
+        crate::ffxiv::WORLDS.get(&u32::from(self.created_world))
+            .map(|w| w.data_center().name())
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
