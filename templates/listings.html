@@ -41,7 +41,9 @@ Remote Party Finder
                         <em>None</em>
                     {%- else -%}
                         {%- let (colour_class, prepend_flags) = listing.prepend_flags() -%}
+                        {%- if !prepend_flags.is_empty() -%}
                         <span class="{{ colour_class }}">{{ prepend_flags }} </span>
+                        {%- endif -%}
                         {{- desc.trim() }}
                     {%- endif -%}
                 </div>
