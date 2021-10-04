@@ -1,0 +1,5 @@
+[web]
+host = "127.0.0.1:1234"
+
+[mongo]
+url = "mongodb://example.com:1234"
