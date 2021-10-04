@@ -16,6 +16,10 @@ Remote Party Finder
     <select id="data-centre-filter">
         <option>All</option>
     </select>
+    {%- if containers.is_empty() %}
+    <br/>
+    <em>No listings - download the plugin to help contribute!</em>
+    {%- endif %}
     <div id="listings" class="list">
         {%- for container in containers %}
         {%- let listing = container.listing.borrow() %}
