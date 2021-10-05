@@ -30,9 +30,62 @@ body {
     display: flex;
     flex-direction: column;
 
+    margin: 0;
+
     font-family: sans-serif;
     background-color: var(--background);
     color: var(--text);
+}
+
+.js body {
+    margin: 1em 0 0;
+}
+
+.no-js .requires-js {
+    display: none;
+    visibility: hidden;
+}
+
+details {
+    margin-top: .5em;
+}
+
+details > summary {
+    cursor: pointer;
+}
+
+#container {
+    margin: 0 1em;
+}
+
+.filter-controls > div {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.filter-controls .control {
+    width: max-content;
+    flex: 0 1 auto;
+    margin-left: 1em;
+}
+
+.filter-controls .control > label {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-controls .control > label > * {
+    flex: 0 1 auto;
+    margin-top: .5em;
+}
+
+.js #listings {
+    border-top: 2px dashed var(--text);
+    margin-top: 1em;
+}
+
+#listings > .no-listings {
+    margin-top: 1em;
 }
 
 #listings > .listing {
@@ -40,6 +93,7 @@ body {
     grid-template-columns: 3fr auto 2fr;
     gap: 1em;
 
+    margin: 0 -1em;
     padding: 1em;
 
     background-color: var(--row-background);
