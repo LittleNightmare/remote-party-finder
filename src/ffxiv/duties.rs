@@ -67,6 +67,36 @@ impl ContentKind {
             x => Self::Other(x),
         }
     }
+
+    pub fn as_u32(self) -> u32 {
+        match self {
+            Self::DutyRoulette => 1,
+            Self::Dungeons => 2,
+            Self::Guildhests => 3,
+            Self::Trials => 4,
+            Self::Raids => 5,
+            Self::PvP => 6,
+            Self::QuestBattles => 7,
+            Self::FATEs => 8,
+            Self::TreasureHunt => 9,
+            Self::Levequests => 10,
+            Self::GrandCompany => 11,
+            Self::Companions => 12,
+            Self::BeastTribeQuests => 13,
+            Self::OverallCompletion => 14,
+            Self::PlayerCommendation => 15,
+            Self::DisciplesoftheLand => 16,
+            Self::DisciplesoftheHand => 17,
+            Self::RetainerVentures => 18,
+            Self::GoldSaucer => 19,
+            Self::DeepDungeons => 21,
+            Self::WondrousTails => 24,
+            Self::CustomDeliveries => 25,
+            Self::Eureka => 26,
+            Self::UltimateRaids => 28,
+            Self::Other(x) => x,
+        }
+    }
 }
 
 lazy_static::lazy_static! {
