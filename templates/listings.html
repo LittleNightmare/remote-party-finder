@@ -8,25 +8,66 @@ Remote Party Finder
     <link rel="stylesheet" href="/assets/listings.css"/>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
     <script defer src="/assets/listings.js"></script>
-{%- endblock %}
+{% endblock %}
 
 {% block body %}
 <div id="container">
-    <input type="search" class="search" placeholder="Search"/>
-    <select id="data-centre-filter">
-        <option>All</option>
-    </select>
-    {%- if containers.is_empty() %}
-    <br/>
-    <em>No listings - download the plugin to help contribute!</em>
-    {%- endif %}
+    <div class="requires-js">
+        <input type="search" class="search" placeholder="Search"/>
+        <select id="data-centre-filter">
+            <option>All</option>
+        </select>
+        <details class="filter-controls">
+            <summary>Advanced</summary>
+            <div>
+                <div class="control">
+                    <label>
+                        Categories
+                        <select multiple id="category-filter">
+                            <option data-type="0" data-category="0">None</option>
+                            <option data-type="1" data-category="0">Duty Roulette</option>
+                            <option data-type="" data-category="">Dungeons</option>
+                            <option data-type="" data-category="">Guildhests</option>
+                            <option data-type="" data-category="">Trials</option>
+                            <option data-type="" data-category="">Raids</option>
+                            <option data-type="" data-category="">High-end Duty</option>
+                            <option data-type="" data-category="">PvP</option>
+                            <option data-type="0" data-category="1">Quest Battles</option>
+                            <option data-type="0" data-category="2">FATEs</option>
+                            <option data-type="0" data-category="4">Treasure Hunt</option>
+                            <option data-type="0" data-category="8">The Hunt</option>
+                            <option data-type="0" data-category="16">Gathering Forays</option>
+                            <option data-type="0" data-category="32">Deep Dungeons</option>
+                            <option data-type="0" data-category="64">Adventuring Forays</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="control">
+                    <label>
+                        Categories
+                        <select multiple>
+                            <option>Lul</option>
+                            <option>Wut</option>
+                            <option>Uwu</option>
+                            <option>Owo</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </details>
+    </div>
     <div id="listings" class="list">
+        {%- if containers.is_empty() %}
+        <em class="no-listings">No listings - download the plugin to help contribute!</em>
+        {%- endif %}
         {%- for container in containers %}
         {%- let listing = container.listing.borrow() %}
         <div
                 class="listing"
                 data-id="{{ listing.id }}"
-                data-centre="{{ listing.data_centre_name().unwrap_or_default() }}">
+                data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
+                data-type="{{ listing.duty_type.as_u8() }}"
+                data-category="{{ listing.category.as_u32() }}">
             <div class="left">
                 {%- let duty_class %}
                 {%- if listing.is_cross_world() %}

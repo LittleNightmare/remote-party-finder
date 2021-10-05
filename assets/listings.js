@@ -1,45 +1,78 @@
 (function () {
-    let select = document.getElementById('data-centre-filter');
-
-    let data_centres = [];
-    for (let elem of document.querySelectorAll('#listings > .listing')) {
-        let centre = elem.dataset['centre'];
-        if (data_centres.indexOf(centre) === -1) {
-            data_centres.push(centre);
-        }
+    function addJsClass() {
+        document.children[0].className = 'js';
     }
 
-    data_centres.sort();
-    for (let centre of data_centres) {
-        let opt = document.createElement('option');
-        opt.innerText = centre;
-        select.appendChild(opt);
+    function setUpList() {
+        let options = {
+            valueNames: [
+                'duty',
+                'creator',
+                'description',
+                {data: ['centre']},
+            ],
+        };
+        return new List('container', options);
     }
 
-    let options = {
-        valueNames: [
-            'duty',
-            'creator',
-            'description',
-            {data: ['centre']},
-        ],
-    };
-    let list = new List('container', options);
+    function setUpDataCentreFilter(list) {
+        let select = document.getElementById('data-centre-filter');
 
-    select.addEventListener('change', () => {
-        let centre = select.value;
-        if (centre === 'All') {
-            list.filter();
-            return;
+        let data_centres = [];
+        for (let elem of document.querySelectorAll('#listings > .listing')) {
+            let centre = elem.dataset['centre'];
+            if (!data_centres.includes(centre)) {
+                data_centres.push(centre);
+            }
         }
 
-        console.log(`looking for ${centre}`);
+        data_centres.sort();
+        for (let centre of data_centres) {
+            let opt = document.createElement('option');
+            opt.innerText = centre;
+            select.appendChild(opt);
+        }
 
-        list.filter(item => {
-            console.log(item.values().centre === centre)
-            return item.values().centre === centre;
-            // console.log(item.elm.dataset['centre']);
-            // return item.elm.dataset['centre'] === centre;
+        select.addEventListener('change', () => {
+            let centre = select.value;
+            if (centre === 'All') {
+                list.filter();
+                return;
+            }
+
+            list.filter(item => item.values().centre === centre);
         });
-    });
+    }
+
+    function setUpCategoryFilter(list) {
+        let select = document.getElementById('category-filter');
+
+        select.addEventListener('change', () => {
+            let allowed = [];
+
+            for (let option of select.options) {
+                if (!option.selected) {
+                    continue;
+                }
+
+                let type = option.dataset.type;
+                let category = option.dataset.category;
+
+                allowed.push(`${type}/${category}`);
+            }
+
+            list.filter(item => {
+                let data = item.elm.dataset;
+                let type = data.type;
+                let category = data.category;
+
+                return allowed.includes(`${type}/${category}`);
+            });
+        });
+    }
+
+    addJsClass();
+    let list = setUpList();
+    setUpDataCentreFilter(list);
+    setUpCategoryFilter(list);
 })();

@@ -55,8 +55,8 @@ impl PartyFinderListing {
             (DutyType::Other, DutyCategory::TheHunt) => return Cow::from("The Hunt"),
             (DutyType::Other, DutyCategory::Duty) if self.duty == 0 => return Cow::from("None"),
             (DutyType::Normal, _) => {
-                if let Some(&name) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
-                    return Cow::from(name);
+                if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
+                    return Cow::from(info.name);
                 }
             }
             (DutyType::Roulette, _) => {
@@ -188,7 +188,7 @@ impl PartyFinderSlot {
     }
 }
 
-#[derive(Debug, Deserialize_repr, Serialize_repr, PartialEq)]
+#[derive(Debug, Clone, Copy, Deserialize_repr, Serialize_repr, PartialEq)]
 #[repr(u32)]
 pub enum DutyCategory {
     Duty = 0,
@@ -201,12 +201,24 @@ pub enum DutyCategory {
     AdventuringForays = 1 << 6,
 }
 
-#[derive(Debug, Deserialize_repr, Serialize_repr, PartialEq)]
+impl DutyCategory {
+    pub fn as_u32(self) -> u32 {
+        unsafe { std::mem::transmute(self) }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Deserialize_repr, Serialize_repr, PartialEq)]
 #[repr(u8)]
 pub enum DutyType {
     Other = 0,
     Roulette = 1 << 0,
     Normal = 1 << 1,
+}
+
+impl DutyType {
+    pub fn as_u8(self) -> u8 {
+        unsafe { std::mem::transmute(self) }
+    }
 }
 
 bitflags! {
