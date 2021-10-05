@@ -120,19 +120,30 @@
     function setUpDataCentreFilter() {
         let select = document.getElementById('data-centre-filter');
 
-        let data_centres = [];
+        let dataCentres = {};
         for (let elem of document.querySelectorAll('#listings > .listing')) {
             let centre = elem.dataset['centre'];
-            if (!data_centres.includes(centre)) {
-                data_centres.push(centre);
+            if (!dataCentres.hasOwnProperty(centre)) {
+                dataCentres[centre] = 0;
             }
+
+            dataCentres[centre] += 1;
         }
 
-        data_centres.sort();
-        for (let centre of data_centres) {
-            let opt = document.createElement('option');
-            opt.innerText = centre;
-            select.appendChild(opt);
+        for (let opt of select.options) {
+            let centre = opt.value;
+
+            let count = 0;
+
+            if (dataCentres.hasOwnProperty(centre)) {
+                count = dataCentres[centre];
+            }
+
+            if (centre === 'All') {
+                count = Object.values(dataCentres).reduce((a, b) => a + b);
+            }
+
+            opt.innerText += ` (${count})`;
         }
 
         select.addEventListener('change', () => {
