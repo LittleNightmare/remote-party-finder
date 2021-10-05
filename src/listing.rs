@@ -148,6 +148,26 @@ impl PartyFinderListing {
         crate::ffxiv::WORLDS.get(&u32::from(self.created_world))
             .map(|w| w.data_center().name())
     }
+
+    pub fn high_end(&self) -> bool {
+        if self.duty_type != DutyType::Normal {
+            return false;
+        }
+
+        crate::ffxiv::DUTIES.get(&u32::from(self.duty))
+            .map(|info| info.high_end)
+            .unwrap_or_default()
+    }
+
+    pub fn content_kind(&self) -> u32 {
+        if self.duty_type != DutyType::Normal {
+            return 0;
+        }
+
+        crate::ffxiv::DUTIES.get(&u32::from(self.duty))
+            .map(|info| info.content_kind.as_u32())
+            .unwrap_or_default()
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]

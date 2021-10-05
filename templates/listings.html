@@ -63,11 +63,13 @@ Remote Party Finder
         {%- for container in containers %}
         {%- let listing = container.listing.borrow() %}
         <div
-                class="listing"
-                data-id="{{ listing.id }}"
-                data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
-                data-type="{{ listing.duty_type.as_u8() }}"
-                data-category="{{ listing.category.as_u32() }}">
+            class="listing"
+            data-id="{{ listing.id }}"
+            data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
+            data-type="{{ listing.duty_type.as_u8() }}"
+            data-category="{{ listing.category.as_u32() }}"
+            data-high-end="{{ listing.high_end() }}"
+            data-content-kind={{ listing.content_kind() }}>
             <div class="left">
                 {%- let duty_class %}
                 {%- if listing.is_cross_world() %}
