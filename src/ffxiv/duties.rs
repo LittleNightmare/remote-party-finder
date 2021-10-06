@@ -102,12 +102,12 @@ impl ContentKind {
 lazy_static::lazy_static! {
     pub static ref DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {
         1 => DutyInfo {
-            name: "The Thousand Maws of TotoRak",
+            name: "The Thousand Maws of Toto-Rak",
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
         2 => DutyInfo {
-            name: "The TamTara Deepcroft",
+            name: "The Tam-Tara Deepcroft",
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
@@ -217,7 +217,7 @@ lazy_static::lazy_static! {
             content_kind: ContentKind::Dungeons,
         },
         24 => DutyInfo {
-            name: "The TamTara Deepcroft (Hard)",
+            name: "The Tam-Tara Deepcroft (Hard)",
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
