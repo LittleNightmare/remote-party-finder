@@ -1,41 +1,152 @@
 use std::collections::HashMap;
 
+#[derive(Debug)]
+pub struct RouletteInfo {
+    pub name: &'static str,
+    pub pvp: bool,
+}
+
 lazy_static::lazy_static! {
-    pub static ref ROULETTES: HashMap<u32, &'static str> = maplit::hashmap! {
-        1 => "Duty Roulette: Leveling",
-        2 => "Duty Roulette: Level 50/60/70 Dungeons",
-        3 => "Duty Roulette: Main Scenario",
-        4 => "Duty Roulette: Guildhests",
-        5 => "Duty Roulette: Expert",
-        6 => "Duty Roulette: Trials",
-        7 => "Daily Challenge: Frontline",
-        8 => "Duty Roulette: Level 80 Dungeons",
-        9 => "Duty Roulette: Mentor",
-        11 => "The Feast (Training Match)",
-        13 => "The Feast (Ranked Match)",
-        15 => "Duty Roulette: Alliance Raids",
-        16 => "The Feast (Team Ranked Match)",
-        17 => "Duty Roulette: Normal Raids",
-        18 => "Chocobo Race: Sagolii Road",
-        19 => "Chocobo Race: Costa del Sol",
-        20 => "Chocobo Race: Tranquil Paths",
-        21 => "Chocobo Race: Random",
-        22 => "Chocobo Race: Sagolii Road (No Rewards)",
-        23 => "Chocobo Race: Costa del Sol (No Rewards)",
-        24 => "Chocobo Race: Tranquil Paths (No Rewards)",
-        25 => "Chocobo Race: Random (No Rewards)",
-        26 => "Chocobo Race: Random",
-        27 => "Chocobo Race: Random",
-        28 => "Chocobo Race: Random",
-        29 => "Chocobo Race: Random",
-        30 => "Chocobo Race: Random",
-        31 => "Chocobo Race: Random",
-        32 => "Chocobo Race: Random",
-        33 => "Chocobo Race: Random",
-        34 => "Chocobo Race: Random",
-        35 => "Chocobo Race: Random",
-        36 => "Chocobo Race: Random",
-        37 => "Chocobo Race: Random",
-        38 => "Chocobo Race: Random",
+    pub static ref ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
+        1 => RouletteInfo {
+            name: "Duty Roulette: Leveling",
+            pvp: false,
+        },
+        2 => RouletteInfo {
+            name: "Duty Roulette: Level 50/60/70 Dungeons",
+            pvp: false,
+        },
+        3 => RouletteInfo {
+            name: "Duty Roulette: Main Scenario",
+            pvp: false,
+        },
+        4 => RouletteInfo {
+            name: "Duty Roulette: Guildhests",
+            pvp: false,
+        },
+        5 => RouletteInfo {
+            name: "Duty Roulette: Expert",
+            pvp: false,
+        },
+        6 => RouletteInfo {
+            name: "Duty Roulette: Trials",
+            pvp: false,
+        },
+        7 => RouletteInfo {
+            name: "Daily Challenge: Frontline",
+            pvp: false,
+        },
+        8 => RouletteInfo {
+            name: "Duty Roulette: Level 80 Dungeons",
+            pvp: false,
+        },
+        9 => RouletteInfo {
+            name: "Duty Roulette: Mentor",
+            pvp: false,
+        },
+        11 => RouletteInfo {
+            name: "The Feast (Training Match)",
+            pvp: true,
+        },
+        13 => RouletteInfo {
+            name: "The Feast (Ranked Match)",
+            pvp: true,
+        },
+        15 => RouletteInfo {
+            name: "Duty Roulette: Alliance Raids",
+            pvp: false,
+        },
+        16 => RouletteInfo {
+            name: "The Feast (Team Ranked Match)",
+            pvp: true,
+        },
+        17 => RouletteInfo {
+            name: "Duty Roulette: Normal Raids",
+            pvp: false,
+        },
+        18 => RouletteInfo {
+            name: "Chocobo Race: Sagolii Road",
+            pvp: false,
+        },
+        19 => RouletteInfo {
+            name: "Chocobo Race: Costa del Sol",
+            pvp: false,
+        },
+        20 => RouletteInfo {
+            name: "Chocobo Race: Tranquil Paths",
+            pvp: false,
+        },
+        21 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        22 => RouletteInfo {
+            name: "Chocobo Race: Sagolii Road (No Rewards)",
+            pvp: false,
+        },
+        23 => RouletteInfo {
+            name: "Chocobo Race: Costa del Sol (No Rewards)",
+            pvp: false,
+        },
+        24 => RouletteInfo {
+            name: "Chocobo Race: Tranquil Paths (No Rewards)",
+            pvp: false,
+        },
+        25 => RouletteInfo {
+            name: "Chocobo Race: Random (No Rewards)",
+            pvp: false,
+        },
+        26 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        27 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        28 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        29 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        30 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        31 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        32 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        33 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        34 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        35 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        36 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        37 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
+        38 => RouletteInfo {
+            name: "Chocobo Race: Random",
+            pvp: false,
+        },
     };
 }
