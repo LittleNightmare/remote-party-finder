@@ -6,12 +6,16 @@ use crate::listing::PartyFinderListing;
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct ListingContainer {
     #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
+    pub created_at: DateTime<Utc>,
+    #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
     pub updated_at: DateTime<Utc>,
     pub listing: PartyFinderListing,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct QueriedListing {
+    #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
+    pub created_at: DateTime<Utc>,
     #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
     pub updated_at: DateTime<Utc>,
     #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
