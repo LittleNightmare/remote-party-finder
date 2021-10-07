@@ -2,16 +2,9 @@
     let stateWasNull = false;
 
     const state = {
-        allowed: {},
+        allowed: [],
         centre: "All",
         list: null,
-    };
-
-    const categoryDefaults = {
-        type: 0,
-        category: 0,
-        highEnd: false,
-        contentKind: -1,
     };
 
     function addJsClass() {
@@ -23,8 +16,12 @@
         if (saved !== null) {
             try {
                 saved = JSON.parse(saved);
+                if (!Array.isArray(saved.allowed)) {
+                    saved = {};
+                    stateWasNull = true;
+                }
             } catch (e) {
-                saved = {}
+                saved = {};
                 stateWasNull = true;
             }
 
@@ -49,33 +46,16 @@
         });
     }
 
-    function getOptionValues(option) {
-        return {
-            type: option.dataset.type || categoryDefaults.type,
-            category: option.dataset.category || categoryDefaults.category,
-            highEnd: option.dataset.highEnd || categoryDefaults.highEnd,
-            contentKind: option.dataset.contentKind || categoryDefaults.contentKind,
-        };
-    }
-
     function reflectState() {
         let category = document.getElementById('category-filter');
         for (let option of category.options) {
-            let values = getOptionValues(option);
-            let key = `${values.type}/${values.category}/${values.highEnd}`;
-            if (state.allowed[key] === undefined) {
-                if (stateWasNull) {
-                    state.allowed[key] = [];
-                } else {
-                    continue;
-                }
-            }
-
             if (stateWasNull) {
-                state.allowed[key].push(values.contentKind);
+                console.log('was null');
+                state.allowed.push(option.value);
             }
 
-            option.selected = state.allowed[key].includes(-1) || state.allowed[key].includes(values.contentKind);
+            console.log(`allowed includes ${option.value} = ${state.allowed.includes(option.value)}`)
+            option.selected = state.allowed.includes(option.value);
         }
 
         let dataCentre = document.getElementById('data-centre-filter');
@@ -96,18 +76,9 @@
 
     function refilter() {
         function categoryFilter(item) {
-            let data = item.elm.dataset;
-            let type = data.type;
-            let category = data.category;
-            let highEnd = data.highEnd;
-            let contentKind = data.contentKind;
+            let category = item.elm.dataset.pfCategory;
 
-            let allowedContentKind = state.allowed[`${type}/${category}/${highEnd}`];
-            if (allowedContentKind === undefined) {
-                return false;
-            }
-
-            return allowedContentKind.includes(-1) || allowedContentKind.includes(contentKind);
+            return category === 'unknown' || state.allowed.includes(category);
         }
 
         function dataCentreFilter(item) {
@@ -156,23 +127,15 @@
         let select = document.getElementById('category-filter');
 
         select.addEventListener('change', () => {
-            let allowed = new Map();
+            let allowed = [];
 
             for (let option of select.options) {
                 if (!option.selected) {
                     continue;
                 }
 
-                let values = getOptionValues(option);
-
-                let key = `${values.type}/${values.category}/${values.highEnd}`;
-                if (allowed[key] === undefined) {
-                    allowed[key] = [];
-                }
-
-                if (!allowed[key].includes(values.contentKind)) {
-                    allowed[key].push(values.contentKind);
-                }
+                let category = option.value;
+                allowed.push(category);
             }
 
             state.allowed = allowed;

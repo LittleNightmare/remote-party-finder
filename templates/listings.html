@@ -41,21 +41,9 @@ Remote Party Finder
                     <label>
                         Categories
                         <select multiple id="category-filter">
-                            <option>None</option>
-                            <option data-type="1">Duty Roulette</option>
-                            <option data-type="2" data-content-kind="2">Dungeons</option>
-                            <option data-type="2" data-content-kind="3">Guildhests</option>
-                            <option data-type="2" data-content-kind="4">Trials</option>
-                            <option data-type="2" data-content-kind="5">Raids</option>
-                            <option data-type="2" data-high-end="true">High-end Duty</option>
-                            <option data-type="2" data-content-kind="6">PvP</option>
-                            <option data-category="1">Quest Battles</option>
-                            <option data-category="2">FATEs</option>
-                            <option data-category="4">Treasure Hunt</option>
-                            <option data-category="8">The Hunt</option>
-                            <option data-type="2" data-category="16">Gathering Forays</option>
-                            <option data-type="2" data-category="32">Deep Dungeons</option>
-                            <option data-type="2" data-category="64">Adventuring Forays</option>
+                            {%- for category in PartyFinderCategory::ALL %}
+                                <option value="{{ category.as_str() }}">{{ category.name() }}</option>
+                            {%- endfor %}
                         </select>
                     </label>
                 </div>
@@ -72,10 +60,7 @@ Remote Party Finder
                 class="listing"
                 data-id="{{ listing.id }}"
                 data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
-                data-type="{{ listing.duty_type.as_u8() }}"
-                data-category="{{ listing.category.as_u32() }}"
-                data-high-end="{{ listing.high_end() }}"
-                data-content-kind={{ listing.content_kind() }}>
+                data-pf-category="{{ listing.html_pf_category() }}">
             <div class="left">
                 {%- let duty_class %}
                 {%- if listing.is_cross_world() %}

@@ -14,6 +14,8 @@ pub struct ListingContainer {
 pub struct QueriedListing {
     #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
     pub updated_at: DateTime<Utc>,
+    #[serde(with = "mongodb::bson::serde_helpers::chrono_datetime_as_bson_datetime")]
+    pub updated_minute: DateTime<Utc>,
     pub time_left: f64,
     pub listing: PartyFinderListing,
 }
