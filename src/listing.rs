@@ -26,6 +26,7 @@ pub struct PartyFinderListing {
     pub min_item_level: u16,
     pub num_parties: u8,
     pub slots_available: u8,
+    pub last_server_restart: u32,
     pub objective: ObjectiveFlags,
     pub conditions: ConditionFlags,
     pub duty_finder_settings: DutyFinderSettingsFlags,

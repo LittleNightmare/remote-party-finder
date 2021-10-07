@@ -45,7 +45,8 @@ impl State {
                 IndexModel::builder()
                     .keys(mongodb::bson::doc! {
                         "listing.id": 1,
-                        "listing.content_id_lower": 1,
+                        "listing.last_server_restart": 1,
+                        "listing.created_world": 1,
                     })
                     .options(IndexOptions::builder()
                         .unique(true)
@@ -239,6 +240,8 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             let result = insert_listing(&*state, listing).await;
             if result.is_ok() {
                 successful += 1;
+            } else {
+                eprintln!("{:#?}", result);
             }
         }
 
@@ -266,7 +269,8 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> mongodb::
         .update_one(
             doc! {
                     "listing.id": listing.id,
-                    "listing.content_id_lower": listing.content_id_lower,
+                    "listing.last_server_restart": listing.last_server_restart,
+                    "listing.created_world": listing.created_world as u32,
                 },
             doc! {
                     "$currentDate": {
