@@ -2,6 +2,7 @@ use std::cmp::Ordering;
 use std::convert::{Infallible, TryFrom};
 use anyhow::{Result, Context};
 use std::sync::Arc;
+use chrono::Utc;
 use mongodb::{Client as MongoClient, Collection, IndexModel};
 use mongodb::options::{IndexOptions, UpdateOptions};
 use mongodb::results::UpdateResult;
@@ -264,6 +265,7 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> mongodb::
         .build();
     let value = serde_json::to_value(&listing).unwrap();
     let bson_value = mongodb::bson::Bson::try_from(value).unwrap();
+    let now = Utc::now();
     state
         .collection()
         .update_one(
@@ -278,7 +280,10 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> mongodb::
                     },
                     "$set": {
                         "listing": bson_value,
-                    }
+                    },
+                    "$setOnInsert": {
+                        "created_at": now,
+                    },
                 },
             opts,
         )
