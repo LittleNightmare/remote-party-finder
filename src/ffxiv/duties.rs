@@ -8,6 +8,7 @@ pub struct DutyInfo {
 }
 
 #[derive(Debug, Clone, Copy)]
+#[allow(unused)]
 #[repr(u32)]
 pub enum ContentKind {
     DutyRoulette = 1,
