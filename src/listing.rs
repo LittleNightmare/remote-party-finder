@@ -178,6 +178,20 @@ impl PartyFinderListing {
         let duty_category = self.category;
 
         let category = match (duty_type, duty_info, duty_category) {
+            (DutyType::Roulette, _, _) => PartyFinderCategory::DutyRoulette,
+            (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
+            (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
+            (DutyType::Normal, _, DutyCategory::AdventuringForays) => PartyFinderCategory::AdventuringForays,
+            (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Guildhests, .. }), _) => PartyFinderCategory::Guildhests,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Trials, .. }), _) => PartyFinderCategory::Trials,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Raids, .. }), _) => PartyFinderCategory::Raids,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::PvP, .. }), _) => PartyFinderCategory::Pvp,
+            (_, _, DutyCategory::QuestBattles) => PartyFinderCategory::QuestBattles,
+            (_, _, DutyCategory::Fates) => PartyFinderCategory::Fates,
+            (_, _, DutyCategory::TreasureHunt) => PartyFinderCategory::TreasureHunt,
+            (_, _, DutyCategory::TheHunt) => PartyFinderCategory::TheHunt,
             (DutyType::Other, None, _) => PartyFinderCategory::None,
             (DutyType::Roulette, _, _) => PartyFinderCategory::DutyRoulette,
             (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
