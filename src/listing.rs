@@ -5,6 +5,7 @@ use ffxiv_types::{Role, World};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;
+use crate::ffxiv::duties::{ContentKind, DutyInfo};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PartyFinderListing {
@@ -54,6 +55,8 @@ impl PartyFinderListing {
             }
             (DutyType::Other, DutyCategory::TheHunt) => return Cow::from("The Hunt"),
             (DutyType::Other, DutyCategory::Duty) if self.duty == 0 => return Cow::from("None"),
+            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 1 => return Cow::from("The Palace of the Dead"),
+            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 2 => return Cow::from("Heaven-on-High"),
             (DutyType::Normal, _) => {
                 if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
                     return Cow::from(info.name);
@@ -167,6 +170,39 @@ impl PartyFinderListing {
         crate::ffxiv::DUTIES.get(&u32::from(self.duty))
             .map(|info| info.content_kind.as_u32())
             .unwrap_or_default()
+    }
+
+    pub fn pf_category(&self) -> Option<PartyFinderCategory> {
+        let duty_type = self.duty_type;
+        let duty_info = crate::ffxiv::DUTIES.get(&u32::from(self.duty));
+        let duty_category = self.category;
+
+        let category = match (duty_type, duty_info, duty_category) {
+            (DutyType::Other, None, _) => PartyFinderCategory::None,
+            (DutyType::Roulette, _, _) => PartyFinderCategory::DutyRoulette,
+            (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Guildhests, .. }), _) => PartyFinderCategory::Guildhests,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Trials, .. }), _) => PartyFinderCategory::Trials,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Raids, .. }), _) => PartyFinderCategory::Raids,
+            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::PvP, .. }), _) => PartyFinderCategory::Pvp,
+            (_, _, DutyCategory::QuestBattles) => PartyFinderCategory::QuestBattles,
+            (_, _, DutyCategory::Fates) => PartyFinderCategory::Fates,
+            (_, _, DutyCategory::TreasureHunt) => PartyFinderCategory::TreasureHunt,
+            (_, _, DutyCategory::TheHunt) => PartyFinderCategory::TheHunt,
+            (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
+            (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
+            (DutyType::Normal, _, DutyCategory::AdventuringForays) => PartyFinderCategory::AdventuringForays,
+            _ => return None,
+        };
+
+        Some(category)
+    }
+
+    pub fn html_pf_category(&self) -> &'static str {
+        self.pf_category()
+            .map(|cat| cat.as_str())
+            .unwrap_or("unknown")
     }
 }
 
@@ -442,5 +478,84 @@ impl JobFlags {
         }
 
         cjs
+    }
+}
+
+#[derive(Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
+pub enum PartyFinderCategory {
+    DutyRoulette,
+    Dungeons,
+    Guildhests,
+    Trials,
+    Raids,
+    HighEndDuty,
+    Pvp,
+    QuestBattles,
+    Fates,
+    TreasureHunt,
+    TheHunt,
+    GatheringForays,
+    DeepDungeons,
+    AdventuringForays,
+    None,
+}
+
+impl PartyFinderCategory {
+    pub const ALL: [Self; 15] = [
+        Self::DutyRoulette,
+        Self::Dungeons,
+        Self::Guildhests,
+        Self::Trials,
+        Self::Raids,
+        Self::HighEndDuty,
+        Self::Pvp,
+        Self::QuestBattles,
+        Self::Fates,
+        Self::TreasureHunt,
+        Self::TheHunt,
+        Self::GatheringForays,
+        Self::DeepDungeons,
+        Self::AdventuringForays,
+        Self::None,
+    ];
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::DutyRoulette => "DutyRoulette",
+            Self::Dungeons => "Dungeons",
+            Self::Guildhests => "Guildhests",
+            Self::Trials => "Trials",
+            Self::Raids => "Raids",
+            Self::HighEndDuty => "HighEndDuty",
+            Self::Pvp => "Pvp",
+            Self::QuestBattles => "QuestBattles",
+            Self::Fates => "Fates",
+            Self::TreasureHunt => "TreasureHunt",
+            Self::TheHunt => "TheHunt",
+            Self::GatheringForays => "GatheringForays",
+            Self::DeepDungeons => "DeepDungeons",
+            Self::AdventuringForays => "AdventuringForays",
+            Self::None => "None",
+        }
+    }
+
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::DutyRoulette => "Duty Roulette",
+            Self::Dungeons => "Dungeons",
+            Self::Guildhests => "Guildhests",
+            Self::Trials => "Trials",
+            Self::Raids => "Raids",
+            Self::HighEndDuty => "High-end Duty",
+            Self::Pvp => "PvP",
+            Self::QuestBattles => "Quest Battles",
+            Self::Fates => "FATEs",
+            Self::TreasureHunt => "Treasure Hunt",
+            Self::TheHunt => "The Hunt",
+            Self::GatheringForays => "Gathering Forays",
+            Self::DeepDungeons => "Deep Dungeons",
+            Self::AdventuringForays => "Adventuring Forays",
+            Self::None => "None",
+        }
     }
 }

@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::convert::{Infallible, TryFrom};
 use anyhow::{Result, Context};
 use std::sync::Arc;
@@ -179,6 +180,14 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         containers.push(listing);
                     }
                 }
+
+                containers.sort_by(|a, b| a.time_left.partial_cmp(&b.time_left).unwrap_or(Ordering::Equal));
+
+                containers.sort_by_key(|container| container.listing.pf_category());
+                containers.reverse();
+
+                containers.sort_by_key(|container| container.updated_minute);
+                containers.reverse();
 
                 Ok(ListingsTemplate {
                     containers,
