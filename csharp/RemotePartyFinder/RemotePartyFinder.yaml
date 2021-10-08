@@ -3,9 +3,5 @@ name: Remote Party Finder Uploader
 description: |-
   Uploads the PF listings you retrieve to the crowdsourced Remote
   Party Finder website (https://rpf.annaclemens.io/).
-
-  THIS IS BETA AF AND DEFINITELY NOT PRODUCTION QUALITY
-
-  PLEASE NO REPORT SHIT
-punchline: '[Extreme Beta] Crowdsourced PF website'
-repo_url: https://git.sr.ht/~jkcclemens/RemotePartyFinder
+punchline: Crowdsourced PF website
+repo_url: https://git.sr.ht/~jkcclemens/remote-party-finder
