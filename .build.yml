@@ -8,9 +8,9 @@ tasks:
       curl -L https://nixos.org/nix/install | sh -s
       echo 'source $HOME/.nix-profile/etc/profile.d/nix.sh' >> $HOME/.buildenv
   - build: |
-      cd remote-party-finder
+      cd remote-party-finder/server
       nix-shell --command 'cargo build --release'
       strip -s target/release/remote-party-finder
       nix-shell --command 'patchelf --remove-rpath --set-interpreter /usr/lib64/ld-linux-x86-64.so.2 target/release/remote-party-finder'
 artifacts:
-  - remote-party-finder/target/release/remote-party-finder
+  - remote-party-finder/server/target/release/remote-party-finder

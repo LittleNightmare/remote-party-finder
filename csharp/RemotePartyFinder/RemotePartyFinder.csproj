@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>1.0.1</Version>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Dalamud>$(AppData)\XIVLauncher\addon\Hooks\dev</Dalamud>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Dalamud">
+            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina">
+            <HintPath>$(Dalamud)\Lumina.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina.Excel">
+            <HintPath>$(Dalamud)\Lumina.Excel.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(Dalamud)\Newtonsoft.Json.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="DalamudLinter" Version="1.0.3"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.3"/>
+    </ItemGroup>
+
+</Project>
