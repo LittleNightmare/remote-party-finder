@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use std::convert::{Infallible, TryFrom};
+use std::convert::Infallible;
 use anyhow::{Result, Context};
 use std::sync::Arc;
 use chrono::Utc;
@@ -263,8 +263,7 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> mongodb::
     let opts = UpdateOptions::builder()
         .upsert(true)
         .build();
-    let value = serde_json::to_value(&listing).unwrap();
-    let bson_value = mongodb::bson::Bson::try_from(value).unwrap();
+    let bson_value = mongodb::bson::to_bson(&listing).unwrap();
     let now = Utc::now();
     state
         .collection()
