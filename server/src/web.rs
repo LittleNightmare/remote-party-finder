@@ -153,17 +153,9 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     },
                     doc! {
                         "$match": {
-                            "time_left": {
-                                "$gte": 0,
-                            },
+                            "time_left": { "$gte": 0 },
                         }
                     },
-                    doc! {
-                        "$sort": {
-                            "updated_minute": -1,
-                            "time_left": 1,
-                        }
-                    }
                 ],
                 None,
             )
