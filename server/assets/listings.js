@@ -111,7 +111,7 @@
             }
 
             if (centre === 'All') {
-                count = Object.values(dataCentres).reduce((a, b) => a + b);
+                count = Object.values(dataCentres).reduce((a, b) => a + b, 0);
             }
 
             opt.innerText += ` (${count})`;
