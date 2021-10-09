@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <Dalamud>$(HOME)/games/final-fantasy-xiv-online/drive_c/users/ascclemens/AppData/Roaming/XIVLauncher/addon/Hooks/dev</Dalamud>
+        <Dalamud>$(HOME)/games/final-fantasy-xiv-online/drive_c/users/$(USER)/AppData/Roaming/XIVLauncher/addon/Hooks/dev</Dalamud>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(IsCI)' == 'true'">
