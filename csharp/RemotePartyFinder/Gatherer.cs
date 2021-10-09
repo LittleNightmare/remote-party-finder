@@ -16,7 +16,7 @@ namespace RemotePartyFinder {
         #if DEBUG
         private const string UploadUrl = "http://192.168.174.240:7878/contribute/multiple";
         #elif RELEASE
-        private const string UploadUrl = "https://rpf.annaclemens.io/contribute/multiple";
+        private const string UploadUrl = "https://xivpf.com/contribute/multiple";
         #endif
 
         private Plugin Plugin { get; }
