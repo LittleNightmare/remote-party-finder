@@ -10,6 +10,14 @@
         <Dalamud>$(AppData)\XIVLauncher\addon\Hooks\dev</Dalamud>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <Dalamud>$(HOME)/games/final-fantasy-xiv-online/drive_c/users/ascclemens/AppData/Roaming/XIVLauncher/addon/Hooks/dev</Dalamud>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsCI)' == 'true'">
+        <Dalamud>$(HOME)/dalamud</Dalamud>
+    </PropertyGroup>
+
     <ItemGroup>
         <Reference Include="Dalamud">
             <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
