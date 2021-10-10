@@ -68,9 +68,9 @@ Remote Party Finder
                 {%- else %}
                 {%- let duty_class = " local" %}
                 {%- endif %}
-                <div class="duty{{ duty_class }}">{{ listing.duty_name() }}</div>
+                <div class="duty{{ duty_class }}">{{ listing.duty_name(codes.as_str()) }}</div>
                 <div class="description">
-                    {%- let desc = listing.description.full_text() %}
+                    {%- let desc = listing.description.full_text(codes.as_str()) %}
                     {%- if desc.trim().is_empty() -%}
                     <em>None</em>
                     {%- else -%}
@@ -120,7 +120,7 @@ Remote Party Finder
             </div>
             <div class="right meta">
                 <div class="item creator">
-                    <span class="text">{{ listing.name.full_text() }} @ {{ listing.home_world_string() }}</span>
+                    <span class="text">{{ listing.name.full_text(codes.as_str()) }} @ {{ listing.home_world_string() }}</span>
                     <span title="Creator">
                         <svg class="icon" viewBox="0 0 32 32">
                             <use href="/assets/icons.svg#user"></use>

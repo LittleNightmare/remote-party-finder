@@ -122,8 +122,9 @@ fn index() -> BoxedFilter<(impl Reply, )> {
 }
 
 fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
-    async fn logic(state: Arc<State>) -> std::result::Result<impl Reply, Infallible> {
+    async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
         use mongodb::bson::doc;
+        let codes = codes.unwrap_or_else(|| String::from("en"));
 
         let res = state
             .collection()
@@ -185,12 +186,14 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
                 Ok(ListingsTemplate {
                     containers,
+                    codes,
                 })
             }
             Err(e) => {
                 eprintln!("{:#?}", e);
                 Ok(ListingsTemplate {
                     containers: Default::default(),
+                    codes,
                 })
             }
         })
@@ -198,7 +201,12 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
     let route = warp::path("listings")
         .and(warp::path::end())
-        .and_then(move || logic(Arc::clone(&state)));
+        .and(
+            warp::filters::header::optional::<String>("accept-language")
+                .or(warp::filters::cookie::optional::<String>("lang"))
+        )
+        .unify()
+        .and_then(move |codes: Option<String>| logic(Arc::clone(&state), codes));
 
     warp::get().and(route).boxed()
 }
