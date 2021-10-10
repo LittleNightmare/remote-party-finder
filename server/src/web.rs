@@ -11,6 +11,7 @@ use warp::{Filter, Reply};
 use warp::filters::BoxedFilter;
 use warp::http::Uri;
 use crate::config::Config;
+use crate::ffxiv::Language;
 use crate::listing::PartyFinderListing;
 use crate::listing_container::{ListingContainer, QueriedListing};
 use crate::template::listings::ListingsTemplate;
@@ -124,7 +125,7 @@ fn index() -> BoxedFilter<(impl Reply, )> {
 fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
         use mongodb::bson::doc;
-        let codes = codes.unwrap_or_else(|| String::from("en"));
+        let lang = Language::from_codes(codes.as_deref());
 
         let res = state
             .collection()
@@ -186,14 +187,14 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
                 Ok(ListingsTemplate {
                     containers,
-                    codes,
+                    lang,
                 })
             }
             Err(e) => {
                 eprintln!("{:#?}", e);
                 Ok(ListingsTemplate {
                     containers: Default::default(),
-                    codes,
+                    lang,
                 })
             }
         })
@@ -202,10 +203,13 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     let route = warp::path("listings")
         .and(warp::path::end())
         .and(
-            warp::filters::header::optional::<String>("accept-language")
-                .or(warp::filters::cookie::optional::<String>("lang"))
+            warp::cookie::<String>("lang")
+                .or(warp::header::<String>("accept-language"))
+                .unify()
+                .map(Some)
+                .or(warp::any().map(|| None))
+                .unify()
         )
-        .unify()
         .and_then(move |codes: Option<String>| logic(Arc::clone(&state), codes));
 
     warp::get().and(route).boxed()

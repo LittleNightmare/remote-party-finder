@@ -11,7 +11,13 @@ using Lumina.Text;
 namespace SourceGenerator {
     internal class Program {
         private static void Main(string[] args) {
-            var data = new GameData(args[0]);
+            var data = new Dictionary<Language, GameData>(4);
+            foreach (var lang in Languages.Keys) {
+                data[lang] = new GameData(args[0], new LuminaOptions {
+                    DefaultExcelLanguage = lang,
+                });
+            }
+
             var prog = new Program(data);
 
             File.WriteAllText(Path.Join(args[1], "duties.rs"), prog.GenerateDuties());
@@ -23,9 +29,9 @@ namespace SourceGenerator {
             File.WriteAllText(Path.Join(args[1], "treasure_maps.rs"), prog.GenerateTreasureMaps());
         }
 
-        private GameData Data { get; }
+        private Dictionary<Language, GameData> Data { get; }
 
-        private Program(GameData data) {
+        private Program(Dictionary<Language, GameData> data) {
             this.Data = data;
         }
 
@@ -46,8 +52,8 @@ namespace SourceGenerator {
             [Language.French] = "fr",
         };
 
-        private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0) where T : ExcelRow {
-            var def = this.Data.GetExcelSheet<T>()!.GetRow(rowId)!;
+        private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : ExcelRow {
+            var def = this.Data[Language.English].GetExcelSheet<T>()!.GetRow(rowId)!;
             var defName = nameFunc(def)?.TextValue();
             if (string.IsNullOrEmpty(defName)) {
                 return null;
@@ -58,11 +64,14 @@ namespace SourceGenerator {
             sb.Append("LocalisedText {\n");
 
             foreach (var (language, key) in Languages) {
-                var row = this.Data.GetExcelSheet<T>(language)?.GetRow(rowId);
+                var row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
                 var name = row == null
                     ? defName
                     : nameFunc(row)?.TextValue().Replace("\"", "\\\"");
                 name ??= defName;
+                if (capitalise) {
+                    name = name[..1].ToUpperInvariant() + name[1..];
+                }
 
                 for (var i = 0; i < indent + 4; i++) {
                     sb.Append(' ');
@@ -74,7 +83,7 @@ namespace SourceGenerator {
             for (var i = 0; i < indent; i++) {
                 sb.Append(' ');
             }
-            
+
             sb.Append('}');
 
             return sb.ToString();
@@ -95,7 +104,7 @@ namespace SourceGenerator {
             sb.Append("#[allow(unused)]\n");
             sb.Append("#[repr(u32)]\n");
             sb.Append("pub enum ContentKind {\n");
-            foreach (var kind in this.Data.GetExcelSheet<ContentType>()!) {
+            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
                 var name = kind.Name.TextValue().Replace(" ", "");
                 if (name.Length > 0) {
                     sb.Append($"    {name} = {kind.RowId},\n");
@@ -109,7 +118,7 @@ namespace SourceGenerator {
 
             sb.Append("    fn from_u32(kind: u32) -> Self {\n");
             sb.Append("        match kind {\n");
-            foreach (var kind in this.Data.GetExcelSheet<ContentType>()!) {
+            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
                 var name = kind.Name.TextValue().Replace(" ", "");
                 if (name.Length > 0) {
                     sb.Append($"            {kind.RowId} => Self::{name},\n");
@@ -122,7 +131,7 @@ namespace SourceGenerator {
 
             sb.Append("    pub fn as_u32(self) -> u32 {\n");
             sb.Append("        match self {\n");
-            foreach (var kind in this.Data.GetExcelSheet<ContentType>()!) {
+            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
                 var name = kind.Name.TextValue().Replace(" ", "");
                 if (name.Length > 0) {
                     sb.Append($"            Self::{name} => {kind.RowId},\n");
@@ -138,20 +147,19 @@ namespace SourceGenerator {
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {\n");
 
-            foreach (var cfc in this.Data.GetExcelSheet<ContentFinderCondition>()!) {
+            foreach (var cfc in this.Data[Language.English].GetExcelSheet<ContentFinderCondition>()!) {
                 if (cfc.RowId == 0) {
                     continue;
                 }
 
-                var name = this.GetLocalisedStruct<ContentFinderCondition>(cfc.RowId, row => row.Name, 12);
+                var name = this.GetLocalisedStruct<ContentFinderCondition>(cfc.RowId, row => row.Name, 12, true);
                 if (name == null) {
                     continue;
                 }
 
-                name = name[..1].ToUpperInvariant() + name[1..];
                 var highEnd = cfc.HighEndDuty ? "true" : "false";
                 var contentType = cfc.ContentType.Value;
-                var contentKind = contentType?.Name?.TextValue()?.Replace(" ", "");
+                var contentKind = contentType?.Name?.TextValue().Replace(" ", "");
                 if (string.IsNullOrEmpty(contentKind)) {
                     contentKind = $"Other({contentType?.RowId ?? 0})";
                 }
@@ -175,7 +183,7 @@ namespace SourceGenerator {
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref JOBS: HashMap<u32, ClassJob> = maplit::hashmap! {\n");
 
-            foreach (var cj in this.Data.GetExcelSheet<ClassJob>()!) {
+            foreach (var cj in this.Data[Language.English].GetExcelSheet<ClassJob>()!) {
                 if (cj.RowId == 0) {
                     continue;
                 }
@@ -218,7 +226,7 @@ namespace SourceGenerator {
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {\n");
 
-            foreach (var cr in this.Data.GetExcelSheet<ContentRoulette>()!) {
+            foreach (var cr in this.Data[Language.English].GetExcelSheet<ContentRoulette>()!) {
                 if (cr.RowId == 0) {
                     continue;
                 }
@@ -250,7 +258,7 @@ namespace SourceGenerator {
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
-            foreach (var world in this.Data.GetExcelSheet<World>()!) {
+            foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
                 if (world.RowId == 0 || !world.IsPublic || world.DataCenter.Row == 0) {
                     continue;
                 }
@@ -274,7 +282,7 @@ namespace SourceGenerator {
             sb.Append("\nlazy_static::lazy_static! {\n");
             sb.Append("    pub static ref TERRITORY_NAMES: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
 
-            foreach (var tt in this.Data.GetExcelSheet<TerritoryType>()!) {
+            foreach (var tt in this.Data[Language.English].GetExcelSheet<TerritoryType>()!) {
                 if (tt.RowId == 0 || tt.PlaceName.Row == 0) {
                     continue;
                 }
@@ -302,7 +310,7 @@ namespace SourceGenerator {
             sb.Append("\nlazy_static::lazy_static! {\n");
             sb.Append("    pub static ref AUTO_TRANSLATE: HashMap<(u32, u32), LocalisedText> = maplit::hashmap! {\n");
 
-            foreach (var row in this.Data.GetExcelSheet<Completion>()!) {
+            foreach (var row in this.Data[Language.English].GetExcelSheet<Completion>()!) {
                 var lookup = row.LookupTable.TextValue();
                 if (lookup is not ("" or "@")) {
                     // TODO: do lookup
@@ -326,19 +334,26 @@ namespace SourceGenerator {
             sb.Append("    pub static ref TREASURE_MAPS: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
             sb.Append("        0 => LocalisedText {\n");
             sb.Append("            en: \"All Levels\",\n");
-            sb.Append("            ja: \"All Levels\",\n");
-            sb.Append("            de: \"All Levels\",\n");
-            sb.Append("            fr: \"All Levels\",\n");
+            sb.Append("            ja: \"レベルを指定しない\",\n");
+            sb.Append("            de: \"Jede Stufe\",\n");
+            sb.Append("            fr: \"Tous niveaux\",\n");
             sb.Append("        },\n");
 
             var i = 1;
-            foreach (var row in this.Data.GetExcelSheet<TreasureHuntRank>()!) {
+            foreach (var row in this.Data[Language.English].GetExcelSheet<TreasureHuntRank>()!) {
                 // IS THIS RIGHT?
                 if (row.TreasureHuntTexture != 0) {
                     continue;
                 }
 
-                var name = this.GetLocalisedStruct<TreasureHuntRank>(row.RowId, row => row.KeyItemName.Value?.Name, 8);
+                SeString? GetMapName(TreasureHuntRank thr) {
+                    var name = thr.KeyItemName.Value?.Name;
+                    return string.IsNullOrEmpty(name?.TextValue())
+                        ? thr.ItemName.Value?.Name
+                        : name;
+                }
+
+                var name = this.GetLocalisedStruct<TreasureHuntRank>(row.RowId, GetMapName, 8);
                 if (!string.IsNullOrEmpty(name)) {
                     sb.Append($"        {i++} => {name},\n");
                 }
