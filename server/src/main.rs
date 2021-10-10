@@ -13,6 +13,7 @@ mod listing;
 mod listing_container;
 mod base64_sestring;
 mod sestring_ext;
+mod stats;
 mod web;
 mod template;
 mod ffxiv;

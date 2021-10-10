@@ -1,0 +1,125 @@
+{% extends "_frame.html" %}
+
+{% block title -%}
+Remote Party Finder
+{%- endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/assets/common.css"/>
+<link rel="stylesheet" href="/assets/stats.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script defer src="/assets/stats.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="total">
+    Stats for {{ stats.num_listings() }} listings
+</div>
+
+<div class="chart-containers">
+    <div class="container">
+        <h1>Top categories</h1>
+        <div class="chart">
+            <canvas id="dutiesChart"></canvas>
+        </div>
+        <details>
+            <summary>Details</summary>
+            <table id="duties">
+                <thead>
+                <tr>
+                    <th>Duty</th>
+                    <th>Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%- for info in stats.duties %}
+                <tr>
+                    <td>{{ info.name(lang) }}</td>
+                    <td>{{ info.count }}</td>
+                </tr>
+                {%- endfor %}
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+    <div class="container">
+        <h1>Top hosts</h1>
+        <div class="chart">
+            <canvas id="hostsChart"></canvas>
+        </div>
+        <details>
+            <summary>Details</summary>
+            <table id="hosts">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%- for info in stats.hosts %}
+                <tr>
+                    <td>{{ stats.player_name(info.content_id_lower) }}</td>
+                    <td>{{ info.count }}</td>
+                </tr>
+                {%- endfor %}
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+    <div class="container">
+        <h1>Top hours (UTC)</h1>
+        <div class="chart">
+            <canvas id="hoursChart"></canvas>
+        </div>
+        <details>
+            <summary>Details</summary>
+            <table id="hours">
+                <thead>
+                <tr>
+                    <th>Hour</th>
+                    <th>Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%- for info in stats.hours %}
+                <tr>
+                    <td>{{ info.hour }}</td>
+                    <td>{{ info.count }}</td>
+                </tr>
+                {%- endfor %}
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+    <div class="container">
+        <h1>Top days (UTC)</h1>
+        <div class="chart">
+            <canvas id="daysChart"></canvas>
+        </div>
+        <details>
+            <summary>Details</summary>
+            <table id="days">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                {%- for info in stats.days %}
+                <tr>
+                    <td>{{ info.name() }}</td>
+                    <td>{{ info.count }}</td>
+                </tr>
+                {%- endfor %}
+                </tbody>
+            </table>
+        </details>
+    </div>
+
+</div>
+{% endblock %}
