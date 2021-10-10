@@ -30,6 +30,15 @@ pub enum Language {
 }
 
 impl Language {
+    pub fn code(&self) -> &'static str {
+        match self {
+            Self::English => "en",
+            Self::Japanese => "ja",
+            Self::German => "de",
+            Self::French => "fr",
+        }
+    }
+
     pub fn from_codes(val: Option<&str>) -> Self {
         let val = match val {
             Some(v) => v,

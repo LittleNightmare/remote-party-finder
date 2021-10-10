@@ -5,7 +5,7 @@
         allowed: [],
         centre: 'All',
         list: null,
-        lang: 'en',
+        lang: null,
     };
 
     function addJsClass() {
@@ -62,6 +62,16 @@
         dataCentre.value = state.centre;
 
         let language = document.getElementById('language');
+        if (state.lang === null) {
+            state.lang = language.dataset.accept;
+            let cookie = document.cookie
+                .split(';')
+                .find(row => row.trim().startsWith('lang='));
+            if (cookie !== undefined) {
+                state.lang = decodeURIComponent(cookie.split('=')[1]);
+            }
+        }
+
         language.value = state.lang;
     }
 
