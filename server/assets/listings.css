@@ -42,8 +42,8 @@ body {
 }
 
 .no-js .requires-js {
-    display: none;
-    visibility: hidden;
+    display: none !important;
+    visibility: hidden !important;
 }
 
 details {
