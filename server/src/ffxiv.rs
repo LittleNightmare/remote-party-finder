@@ -21,16 +21,21 @@ use std::{
     str::FromStr,
 };
 
-#[derive(Debug)]
-pub struct LocalisedText {
-    pub en: &'static str,
-    pub ja: &'static str,
-    pub de: &'static str,
-    pub fr: &'static str,
+#[derive(Debug, Copy, Clone)]
+pub enum Language {
+    English,
+    Japanese,
+    German,
+    French,
 }
 
-impl LocalisedText {
-    pub fn from_codes(&self, val: &str) -> &'static str {
+impl Language {
+    pub fn from_codes(val: Option<&str>) -> Self {
+        let val = match val {
+            Some(v) => v,
+            None => return Self::English,
+        };
+
         let mut parts: Vec<(&str, f32)> = val.split(',')
             .map(|part| {
                 let sub_parts: Vec<&str> = part.split(';').collect();
@@ -45,20 +50,39 @@ impl LocalisedText {
             .collect();
         parts.sort_unstable_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(Ordering::Less));
         if parts.len() == 0 {
-            return self.en;
+            return Self::English;
         }
 
         for (lang, _) in parts {
             let first = lang.split('-').next().unwrap();
             match first {
-                "en" => return self.en,
-                "ja" => return self.ja,
-                "de" => return self.de,
-                "fr" => return self.fr,
+                "en" => return Self::English,
+                "ja" => return Self::Japanese,
+                "de" => return Self::German,
+                "fr" => return Self::French,
                 _ => {},
             }
         }
 
-        self.en
+        Self::English
+    }
+}
+
+#[derive(Debug)]
+pub struct LocalisedText {
+    pub en: &'static str,
+    pub ja: &'static str,
+    pub de: &'static str,
+    pub fr: &'static str,
+}
+
+impl LocalisedText {
+    pub fn text(&self, lang: &Language) -> &'static str {
+        match lang {
+            Language::English => self.en,
+            Language::Japanese => self.ja,
+            Language::German => self.de,
+            Language::French => self.fr,
+        }
     }
 }

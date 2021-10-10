@@ -12,43 +12,53 @@ Remote Party Finder
 
 {% block body %}
 <div id="container">
-    <div class="requires-js">
-        <input type="search" class="search" placeholder="Search"/>
-        <select id="data-centre-filter">
-            <option value="All">All</option>
-            <optgroup label="North America">
-                <option value="Aether">Aether</option>
-                <option value="Crystal">Crystal</option>
-                <option value="Primal">Primal</option>
-            </optgroup>
-            <optgroup label="Europe">
-                <option value="Chaos">Chaos</option>
-                <option value="Light">Light</option>
-            </optgroup>
-            <optgroup label="Japan">
-                <option value="Elemental">Elemental</option>
-                <option value="Gaia">Gaia</option>
-                <option value="Mana">Mana</option>
-            </optgroup>
-            <optgroup label="Oceania">
-                <option disabled value="">Not yet lmao</option>
-            </optgroup>
-        </select>
-        <details class="filter-controls">
-            <summary>Advanced</summary>
-            <div>
-                <div class="control">
-                    <label>
-                        Categories
-                        <select multiple id="category-filter">
-                            {%- for category in PartyFinderCategory::ALL %}
-                                <option value="{{ category.as_str() }}">{{ category.name() }}</option>
-                            {%- endfor %}
-                        </select>
-                    </label>
+    <div class="requires-js settings">
+        <div class="left">
+            <input type="search" class="search" placeholder="Search"/>
+            <select id="data-centre-filter">
+                <option value="All">All</option>
+                <optgroup label="North America">
+                    <option value="Aether">Aether</option>
+                    <option value="Crystal">Crystal</option>
+                    <option value="Primal">Primal</option>
+                </optgroup>
+                <optgroup label="Europe">
+                    <option value="Chaos">Chaos</option>
+                    <option value="Light">Light</option>
+                </optgroup>
+                <optgroup label="Japan">
+                    <option value="Elemental">Elemental</option>
+                    <option value="Gaia">Gaia</option>
+                    <option value="Mana">Mana</option>
+                </optgroup>
+                <optgroup label="Oceania">
+                    <option disabled value="">Not yet lmao</option>
+                </optgroup>
+            </select>
+            <details class="filter-controls">
+                <summary>Advanced</summary>
+                <div>
+                    <div class="control">
+                        <label>
+                            Categories
+                            <select multiple id="category-filter">
+                                {%- for category in PartyFinderCategory::ALL %}
+                                    <option value="{{ category.as_str() }}">{{ category.name().text(lang) }}</option>
+                                {%- endfor %}
+                            </select>
+                        </label>
+                    </div>
                 </div>
-            </div>
-        </details>
+            </details>
+        </div>
+        <div class="right">
+            <select id="language">
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="de">Deutsch</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
     </div>
     <div id="listings" class="list">
         {%- if containers.is_empty() %}
@@ -68,9 +78,9 @@ Remote Party Finder
                 {%- else %}
                 {%- let duty_class = " local" %}
                 {%- endif %}
-                <div class="duty{{ duty_class }}">{{ listing.duty_name(codes.as_str()) }}</div>
+                <div class="duty{{ duty_class }}">{{ listing.duty_name(lang) }}</div>
                 <div class="description">
-                    {%- let desc = listing.description.full_text(codes.as_str()) %}
+                    {%- let desc = listing.description.full_text(lang) %}
                     {%- if desc.trim().is_empty() -%}
                     <em>None</em>
                     {%- else -%}
@@ -120,7 +130,7 @@ Remote Party Finder
             </div>
             <div class="right meta">
                 <div class="item creator">
-                    <span class="text">{{ listing.name.full_text(codes.as_str()) }} @ {{ listing.home_world_string() }}</span>
+                    <span class="text">{{ listing.name.full_text(lang) }} @ {{ listing.home_world_string() }}</span>
                     <span title="Creator">
                         <svg class="icon" viewBox="0 0 32 32">
                             <use href="/assets/icons.svg#user"></use>

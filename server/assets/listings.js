@@ -3,8 +3,9 @@
 
     const state = {
         allowed: [],
-        centre: "All",
+        centre: 'All',
         list: null,
+        lang: 'en',
     };
 
     function addJsClass() {
@@ -54,12 +55,14 @@
                 state.allowed.push(option.value);
             }
 
-            console.log(`allowed includes ${option.value} = ${state.allowed.includes(option.value)}`)
             option.selected = state.allowed.includes(option.value);
         }
 
         let dataCentre = document.getElementById('data-centre-filter');
         dataCentre.value = state.centre;
+
+        let language = document.getElementById('language');
+        language.value = state.lang;
     }
 
     function setUpList() {
@@ -143,9 +146,19 @@
         });
     }
 
+    function setUpLanguage() {
+        let language = document.getElementById('language');
+        language.addEventListener('change', () => {
+            state.lang = language.value;
+            document.cookie = `lang=${encodeURIComponent(language.value)};path=/;max-age=31536000;samesite=lax`;
+            window.location.reload();
+        });
+    }
+
     addJsClass();
     saveLoadState();
     reflectState();
+    setUpLanguage();
     state.list = setUpList();
     setUpDataCentreFilter();
     setUpCategoryFilter();

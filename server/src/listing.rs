@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;
 use crate::ffxiv::duties::{ContentKind, DutyInfo};
+use crate::ffxiv::{Language, LocalisedText};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PartyFinderListing {
@@ -45,32 +46,57 @@ impl PartyFinderListing {
         self.search_area.contains(SearchAreaFlags::DATA_CENTRE)
     }
 
-    pub fn duty_name(&self, codes: &str) -> Cow<str> {
+    pub fn duty_name(&self, lang: &Language) -> Cow<str> {
         match (&self.duty_type, &self.category) {
             (DutyType::Other, DutyCategory::Fates) => {
                 if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(self.duty)) {
-                    return Cow::from(name.from_codes(codes));
+                    return Cow::from(name.text(lang));
                 }
 
-                return Cow::from("Fates");
+                return Cow::from("FATEs");
             }
-            (DutyType::Other, DutyCategory::TheHunt) => return Cow::from("The Hunt"),
-            (DutyType::Other, DutyCategory::Duty) if self.duty == 0 => return Cow::from("None"),
-            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 1 => return Cow::from("The Palace of the Dead"),
-            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 2 => return Cow::from("Heaven-on-High"),
+            (DutyType::Other, DutyCategory::TheHunt) => return Cow::from(match lang {
+                Language::English => "The Hunt",
+                Language::Japanese => "モブハント",
+                Language::German => "Hohe Jagd",
+                Language::French => "Contrats de chasse",
+            }),
+            (DutyType::Other, DutyCategory::Duty) if self.duty == 0 => return Cow::from(match lang {
+                Language::English => "None",
+                Language::Japanese => "設定なし",
+                Language::German => "Nicht festgelegt",
+                Language::French => "Non spécifiée",
+            }),
+            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 1 => return Cow::from(match lang {
+                Language::English => "The Palace of the Dead",
+                Language::Japanese => "死者の宮殿",
+                Language::German => "Palast der Toten",
+                Language::French => "Palais des morts",
+            }),
+            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 2 => return Cow::from(match lang {
+                Language::English => "Heaven-on-High",
+                Language::Japanese => "アメノミハシラ",
+                Language::German => "Himmelssäule",
+                Language::French => "Pilier des Cieux",
+            }),
             (DutyType::Normal, _) => {
                 if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name.from_codes(codes));
+                    return Cow::from(info.name.text(lang));
                 }
             }
             (DutyType::Roulette, _) => {
                 if let Some(info) = crate::ffxiv::ROULETTES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name.from_codes(codes));
+                    return Cow::from(info.name.text(lang));
                 }
             }
-            (_, DutyCategory::QuestBattles) => return Cow::from("Quest Battles"),
+            (_, DutyCategory::QuestBattles) => return Cow::from(match lang {
+                Language::English => "Quest Battles",
+                Language::Japanese => "クエストバトル",
+                Language::German => "Auftragskampf",
+                Language::French => "Batailles de quête",
+            }),
             (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(self.duty)) {
-                return Cow::from(name.from_codes(codes));
+                return Cow::from(name.text(lang));
             }
             _ => {}
         }
@@ -547,23 +573,98 @@ impl PartyFinderCategory {
         }
     }
 
-    pub fn name(self) -> &'static str {
+    pub fn name(self) -> LocalisedText {
         match self {
-            Self::DutyRoulette => "Duty Roulette",
-            Self::Dungeons => "Dungeons",
-            Self::Guildhests => "Guildhests",
-            Self::Trials => "Trials",
-            Self::Raids => "Raids",
-            Self::HighEndDuty => "High-end Duty",
-            Self::Pvp => "PvP",
-            Self::QuestBattles => "Quest Battles",
-            Self::Fates => "FATEs",
-            Self::TreasureHunt => "Treasure Hunt",
-            Self::TheHunt => "The Hunt",
-            Self::GatheringForays => "Gathering Forays",
-            Self::DeepDungeons => "Deep Dungeons",
-            Self::AdventuringForays => "Adventuring Forays",
-            Self::None => "None",
+            Self::DutyRoulette => LocalisedText {
+                en: "Duty Roulette",
+                ja: "コンテンツルーレット",
+                de: "Zufallsinhalte",
+                fr: "Missions aléatoires",
+            },
+            Self::Dungeons => LocalisedText {
+                en: "Dungeons",
+                ja: "ダンジョン",
+                de: "Dungeons",
+                fr: "Donjons",
+            },
+            Self::Guildhests => LocalisedText {
+                en: "Guildhests",
+                ja: "ギルドオーダー",
+                de: "Gildengeheiße",
+                fr: "Opérations de guilde",
+            },
+            Self::Trials => LocalisedText {
+                en: "Trials",
+                ja: "討伐・討滅戦",
+                de: "Prüfungen",
+                fr: "Défis",
+            },
+            Self::Raids => LocalisedText {
+                en: "Raids",
+                ja: "レイド",
+                de: "Raids",
+                fr: "Raids",
+            },
+            Self::HighEndDuty => LocalisedText {
+                en: "High-end Duty",
+                ja: "高難易度コンテンツ",
+                de: "Schwierige Inhalte",
+                fr: "Missions à difficulté élevée",
+            },
+            Self::Pvp => LocalisedText {
+                en: "PvP",
+                ja: "PvP",
+                de: "PvP",
+                fr: "JcJ",
+            },
+            Self::QuestBattles => LocalisedText {
+                en: "Quest Battles",
+                ja: "クエストバトル",
+                de: "Auftragskampf",
+                fr: "Batailles de quête",
+            },
+            Self::Fates => LocalisedText {
+                en: "FATEs",
+                ja: "F.A.T.E.",
+                de: "FATEs",
+                fr: "ALÉA",
+            },
+            Self::TreasureHunt => LocalisedText {
+                en: "Treasure Hunt",
+                ja: "トレジャーハント",
+                de: "Schatzsuche",
+                fr: "Chasse aux trésors",
+            },
+            Self::TheHunt => LocalisedText {
+                en: "The Hunt",
+                ja: "モブハント ",
+                de: "Hohe Jagd",
+                fr: "Contrats de chasse",
+            },
+            Self::GatheringForays => LocalisedText {
+                en: "Gathering Forays",
+                ja: "採集活動",
+                de: "Sammeln",
+                fr: "Récolte",
+            },
+            Self::DeepDungeons => LocalisedText {
+                en: "Deep Dungeons",
+                ja: "ディープダンジョン",
+                de: "Tiefe Gewölbe",
+                fr: "Donjons sans fond",
+            },
+            Self::AdventuringForays => LocalisedText {
+                en: "Adventuring Forays",
+                ja: "特殊フィールド探索",
+                de: "Feldexkursion",
+                fr: "Missions d'exploration",
+            },
+            Self::None => LocalisedText {
+                en: "None",
+                ja: "設定なし",
+                de: "Nicht festgelegt",
+                fr: "Non spécifiée",
+            },
         }
     }
 }

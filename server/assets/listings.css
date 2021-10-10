@@ -84,6 +84,11 @@ details > summary {
     margin-top: 1em;
 }
 
+#container > .settings {
+    display: flex;
+    justify-content: space-between;
+}
+
 #listings > .no-listings {
     margin-top: 1em;
 }
