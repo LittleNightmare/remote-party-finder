@@ -8,4 +8,5 @@ use crate::listing::PartyFinderCategory;
 #[template(path = "listings.html")]
 pub struct ListingsTemplate {
     pub containers: Vec<QueriedListing>,
+    pub codes: String,
 }

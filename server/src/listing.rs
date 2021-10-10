@@ -45,11 +45,11 @@ impl PartyFinderListing {
         self.search_area.contains(SearchAreaFlags::DATA_CENTRE)
     }
 
-    pub fn duty_name(&self) -> Cow<str> {
+    pub fn duty_name(&self, codes: &str) -> Cow<str> {
         match (&self.duty_type, &self.category) {
             (DutyType::Other, DutyCategory::Fates) => {
-                if let Some(&name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(self.duty)) {
-                    return Cow::from(name);
+                if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(self.duty)) {
+                    return Cow::from(name.from_codes(codes));
                 }
 
                 return Cow::from("Fates");
@@ -60,17 +60,17 @@ impl PartyFinderListing {
             (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 2 => return Cow::from("Heaven-on-High"),
             (DutyType::Normal, _) => {
                 if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name);
+                    return Cow::from(info.name.from_codes(codes));
                 }
             }
             (DutyType::Roulette, _) => {
                 if let Some(info) = crate::ffxiv::ROULETTES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name);
+                    return Cow::from(info.name.from_codes(codes));
                 }
             }
             (_, DutyCategory::QuestBattles) => return Cow::from("Quest Battles"),
-            (_, DutyCategory::TreasureHunt) => if let Some(&name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(self.duty)) {
-                return Cow::from(name);
+            (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(self.duty)) {
+                return Cow::from(name.from_codes(codes));
             }
             _ => {}
         }
