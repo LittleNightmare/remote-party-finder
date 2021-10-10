@@ -1,11 +1,15 @@
+mod stats;
+
 use std::cmp::Ordering;
 use std::convert::Infallible;
 use anyhow::{Result, Context};
 use std::sync::Arc;
+use std::time::Duration;
 use chrono::Utc;
 use mongodb::{Client as MongoClient, Collection, IndexModel};
 use mongodb::options::{IndexOptions, UpdateOptions};
 use mongodb::results::UpdateResult;
+use tokio::sync::RwLock;
 use tokio_stream::StreamExt;
 use warp::{Filter, Reply};
 use warp::filters::BoxedFilter;
@@ -14,7 +18,9 @@ use crate::config::Config;
 use crate::ffxiv::Language;
 use crate::listing::PartyFinderListing;
 use crate::listing_container::{ListingContainer, QueriedListing};
+use crate::stats::Statistics;
 use crate::template::listings::ListingsTemplate;
+use crate::template::stats::StatsTemplate;
 
 pub async fn start(config: Arc<Config>) -> Result<()> {
     let state = State::new(Arc::clone(&config)).await?;
@@ -26,9 +32,10 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
     Ok(())
 }
 
-struct State {
+pub struct State {
     config: Arc<Config>,
     mongo: MongoClient,
+    stats: RwLock<Option<Statistics>>,
 }
 
 impl State {
@@ -40,6 +47,7 @@ impl State {
         let state = Arc::new(Self {
             config,
             mongo,
+            stats: Default::default(),
         });
 
         state.collection()
@@ -59,6 +67,23 @@ impl State {
             .await
             .context("could not create index")?;
 
+        let task_state = Arc::clone(&state);
+        tokio::task::spawn(async move {
+            loop {
+                let stats = match self::stats::get_stats(&*task_state).await {
+                    Ok(stats) => stats,
+                    Err(e) => {
+                        eprintln!("error generating stats: {:#?}", e);
+                        continue;
+                    }
+                };
+
+                *task_state.stats.write().await = Some(stats);
+
+                tokio::time::sleep(Duration::from_secs(60 * 5)).await;
+            }
+        });
+
         Ok(state)
     }
 
@@ -72,6 +97,7 @@ fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         .or(listings(Arc::clone(&state)))
         .or(contribute(Arc::clone(&state)))
         .or(contribute_multiple(Arc::clone(&state)))
+        .or(stats(Arc::clone(&state)))
         .or(assets())
         .boxed()
 }
@@ -82,8 +108,11 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
         .and(
             icons()
                 .or(minireset())
+                .or(common_css())
                 .or(listings_css())
                 .or(listings_js())
+                .or(stats_css())
+                .or(stats_js())
         )
         .boxed()
 }
@@ -102,6 +131,13 @@ fn minireset() -> BoxedFilter<(impl Reply, )> {
         .boxed()
 }
 
+fn common_css() -> BoxedFilter<(impl Reply, )> {
+    warp::path("common.css")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/common.css"))
+        .boxed()
+}
+
 fn listings_css() -> BoxedFilter<(impl Reply, )> {
     warp::path("listings.css")
         .and(warp::path::end())
@@ -113,6 +149,20 @@ fn listings_js() -> BoxedFilter<(impl Reply, )> {
     warp::path("listings.js")
         .and(warp::path::end())
         .and(warp::fs::file("./assets/listings.js"))
+        .boxed()
+}
+
+fn stats_css() -> BoxedFilter<(impl Reply, )> {
+    warp::path("stats.css")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/stats.css"))
+        .boxed()
+}
+
+fn stats_js() -> BoxedFilter<(impl Reply, )> {
+    warp::path("stats.js")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/stats.js"))
         .boxed()
 }
 
@@ -168,8 +218,7 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
                 while let Ok(Some(container)) = cursor.try_next().await {
                     let res: Result<QueriedListing> = try {
-                        let json = serde_json::to_vec(&container)?;
-                        let result: QueriedListing = serde_json::from_slice(&json)?;
+                        let result: QueriedListing = mongodb::bson::from_document(container)?;
                         result
                     };
                     if let Ok(listing) = res {
@@ -201,6 +250,34 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     }
 
     let route = warp::path("listings")
+        .and(warp::path::end())
+        .and(
+            warp::cookie::<String>("lang")
+                .or(warp::header::<String>("accept-language"))
+                .unify()
+                .map(Some)
+                .or(warp::any().map(|| None))
+                .unify()
+        )
+        .and_then(move |codes: Option<String>| logic(Arc::clone(&state), codes));
+
+    warp::get().and(route).boxed()
+}
+
+fn stats(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
+    async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
+        let lang = Language::from_codes(codes.as_deref());
+        let stats = state.stats.read().await.clone();
+        Ok(match stats {
+            Some(stats) => StatsTemplate {
+                stats,
+                lang,
+            },
+            None => panic!(),
+        })
+    }
+
+    let route = warp::path("stats")
         .and(warp::path::end())
         .and(
             warp::cookie::<String>("lang")

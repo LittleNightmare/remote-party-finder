@@ -20,6 +20,8 @@ use std::{
     cmp::Ordering,
     str::FromStr,
 };
+use std::borrow::Cow;
+use crate::listing::{DutyCategory, DutyType};
 
 #[derive(Debug, Copy, Clone)]
 pub enum Language {
@@ -94,4 +96,62 @@ impl LocalisedText {
             Language::French => self.fr,
         }
     }
+}
+
+pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
+    match (duty_type, category) {
+        (DutyType::Other, DutyCategory::Fates) => {
+            if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(duty)) {
+                return Cow::from(name.text(&lang));
+            }
+
+            return Cow::from("FATEs");
+        }
+        (DutyType::Other, DutyCategory::TheHunt) => return Cow::from(match lang {
+            Language::English => "The Hunt",
+            Language::Japanese => "モブハント",
+            Language::German => "Hohe Jagd",
+            Language::French => "Contrats de chasse",
+        }),
+        (DutyType::Other, DutyCategory::Duty) if duty == 0 => return Cow::from(match lang {
+            Language::English => "None",
+            Language::Japanese => "設定なし",
+            Language::German => "Nicht festgelegt",
+            Language::French => "Non spécifiée",
+        }),
+        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 1 => return Cow::from(match lang {
+            Language::English => "The Palace of the Dead",
+            Language::Japanese => "死者の宮殿",
+            Language::German => "Palast der Toten",
+            Language::French => "Palais des morts",
+        }),
+        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 2 => return Cow::from(match lang {
+            Language::English => "Heaven-on-High",
+            Language::Japanese => "アメノミハシラ",
+            Language::German => "Himmelssäule",
+            Language::French => "Pilier des Cieux",
+        }),
+        (DutyType::Normal, _) => {
+            if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(duty)) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
+        (DutyType::Roulette, _) => {
+            if let Some(info) = crate::ffxiv::ROULETTES.get(&u32::from(duty)) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
+        (_, DutyCategory::QuestBattles) => return Cow::from(match lang {
+            Language::English => "Quest Battles",
+            Language::Japanese => "クエストバトル",
+            Language::German => "Auftragskampf",
+            Language::French => "Batailles de quête",
+        }),
+        (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {
+            return Cow::from(name.text(&lang));
+        }
+        _ => {}
+    }
+
+    Cow::from(format!("{:?}", category))
 }

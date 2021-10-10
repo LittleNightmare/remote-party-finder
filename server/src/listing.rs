@@ -47,61 +47,7 @@ impl PartyFinderListing {
     }
 
     pub fn duty_name(&self, lang: &Language) -> Cow<str> {
-        match (&self.duty_type, &self.category) {
-            (DutyType::Other, DutyCategory::Fates) => {
-                if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(self.duty)) {
-                    return Cow::from(name.text(lang));
-                }
-
-                return Cow::from("FATEs");
-            }
-            (DutyType::Other, DutyCategory::TheHunt) => return Cow::from(match lang {
-                Language::English => "The Hunt",
-                Language::Japanese => "モブハント",
-                Language::German => "Hohe Jagd",
-                Language::French => "Contrats de chasse",
-            }),
-            (DutyType::Other, DutyCategory::Duty) if self.duty == 0 => return Cow::from(match lang {
-                Language::English => "None",
-                Language::Japanese => "設定なし",
-                Language::German => "Nicht festgelegt",
-                Language::French => "Non spécifiée",
-            }),
-            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 1 => return Cow::from(match lang {
-                Language::English => "The Palace of the Dead",
-                Language::Japanese => "死者の宮殿",
-                Language::German => "Palast der Toten",
-                Language::French => "Palais des morts",
-            }),
-            (DutyType::Other, DutyCategory::DeepDungeons) if self.duty == 2 => return Cow::from(match lang {
-                Language::English => "Heaven-on-High",
-                Language::Japanese => "アメノミハシラ",
-                Language::German => "Himmelssäule",
-                Language::French => "Pilier des Cieux",
-            }),
-            (DutyType::Normal, _) => {
-                if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name.text(lang));
-                }
-            }
-            (DutyType::Roulette, _) => {
-                if let Some(info) = crate::ffxiv::ROULETTES.get(&u32::from(self.duty)) {
-                    return Cow::from(info.name.text(lang));
-                }
-            }
-            (_, DutyCategory::QuestBattles) => return Cow::from(match lang {
-                Language::English => "Quest Battles",
-                Language::Japanese => "クエストバトル",
-                Language::German => "Auftragskampf",
-                Language::French => "Batailles de quête",
-            }),
-            (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(self.duty)) {
-                return Cow::from(name.text(lang));
-            }
-            _ => {}
-        }
-
-        Cow::from(format!("{:?}", self.category))
+        crate::ffxiv::duty_name(self.duty_type, self.category, self.duty, *lang)
     }
 
     pub fn slots(&self) -> Vec<std::result::Result<ClassJob, (String, String)>> {
@@ -295,6 +241,20 @@ impl DutyCategory {
     pub fn as_u32(self) -> u32 {
         unsafe { std::mem::transmute(self) }
     }
+
+    pub fn from_u32(u: u32) -> Option<Self> {
+        Some(match u {
+            0 => Self::Duty,
+            1 => Self::QuestBattles,
+            2 => Self::Fates,
+            4 => Self::TreasureHunt,
+            8 => Self::TheHunt,
+            16 => Self::GatheringForays,
+            32 => Self::DeepDungeons,
+            64 => Self::AdventuringForays,
+            _ => return None,
+        })
+    }
 }
 
 #[derive(Debug, Clone, Copy, Deserialize_repr, Serialize_repr, PartialEq)]
@@ -308,6 +268,15 @@ pub enum DutyType {
 impl DutyType {
     pub fn as_u8(self) -> u8 {
         unsafe { std::mem::transmute(self) }
+    }
+
+    pub fn from_u8(u: u8) -> Option<Self> {
+        Some(match u {
+            0 => Self::Other,
+            1 => Self::Roulette,
+            2 => Self::Normal,
+            _ => return None,
+        })
     }
 }
 
