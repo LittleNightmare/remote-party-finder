@@ -64,6 +64,10 @@ Remote Party Finder
                     <td>{{ info.count }}</td>
                 </tr>
                 {%- endfor %}
+                <tr>
+                    <td>Other</td>
+                    <td>{{ stats.num_listings() - stats.num_host_listings() }}</td>
+                </tr>
                 </tbody>
             </table>
         </details>

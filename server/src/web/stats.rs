@@ -58,6 +58,9 @@ lazy_static::lazy_static! {
                         "$sort": {
                             "count": -1
                         }
+                    },
+                    {
+                        "$limit": 15
                     }
                 ],
                 "hours": [

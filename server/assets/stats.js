@@ -23,7 +23,7 @@
                         let total = context.dataset.data.reduce((total, next) => total + next);
                         let percentage = (context.raw / total * 100).toFixed(2);
 
-                        return `${context.label} (${percentage}%)`;
+                        return `${context.label} (${context.raw}, ${percentage}%)`;
                     }
                 }
             },
@@ -117,7 +117,7 @@
     }
 
     makeChart('duties', 'dutiesChart', 'pie', true);
-    makeChart('hosts', 'hostsChart', 'pie', true);
+    makeChart('hosts', 'hostsChart', 'pie');
     makeChart('hours', 'hoursChart', 'bar');
     makeChart('days', 'daysChart', 'bar');
 })();
