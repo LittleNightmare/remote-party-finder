@@ -49,6 +49,10 @@ impl Statistics {
 
         format!("{} @ {}", aliases[0].name.text(), world).into()
     }
+
+    pub fn num_host_listings(&self) -> usize {
+        self.hosts.iter().map(|info| info.count).sum()
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]
