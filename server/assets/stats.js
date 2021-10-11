@@ -1,4 +1,4 @@
-(function() {
+(function () {
     const colours = [
         '#D32F2F',
         '#1976D2',
@@ -17,6 +17,16 @@
 
     const options = {
         plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        let total = context.dataset.data.reduce((total, next) => total + next);
+                        let percentage = (context.raw / total * 100).toFixed(2);
+
+                        return `${context.label} (${percentage}%)`;
+                    }
+                }
+            },
             legend: {
                 display: false,
             },
