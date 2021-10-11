@@ -53,6 +53,28 @@
         return newData;
     }
 
+    function combineTopN(data, n) {
+        let newData = [];
+
+        let other = {
+            x: 'Other',
+            y: 0,
+        };
+
+        for (let i = 0; i < data.length; i++) {
+            if (i < n) {
+                newData.push(data[i]);
+                continue;
+            }
+
+            other.y += 1;
+        }
+
+        newData.push(other);
+
+        return newData;
+    }
+
     function makeChart(tableId, chartId, chartType, combine = false) {
         let table = document.getElementById(tableId);
         let data = [];
@@ -65,7 +87,7 @@
         }
 
         if (combine) {
-            data = combineUnderMedian(data);
+            data = combineTopN(data, 15);
         }
 
         new Chart(
