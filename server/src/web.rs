@@ -18,7 +18,7 @@ use crate::config::Config;
 use crate::ffxiv::Language;
 use crate::listing::PartyFinderListing;
 use crate::listing_container::{ListingContainer, QueriedListing};
-use crate::stats::Statistics;
+use crate::stats::CachedStatistics;
 use crate::template::listings::ListingsTemplate;
 use crate::template::stats::StatsTemplate;
 
@@ -35,7 +35,7 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
 pub struct State {
     config: Arc<Config>,
     mongo: MongoClient,
-    stats: RwLock<Option<Statistics>>,
+    stats: RwLock<Option<CachedStatistics>>,
 }
 
 impl State {
@@ -70,7 +70,7 @@ impl State {
         let task_state = Arc::clone(&state);
         tokio::task::spawn(async move {
             loop {
-                let stats = match self::stats::get_stats(&*task_state).await {
+                let all_time = match self::stats::get_stats(&*task_state).await {
                     Ok(stats) => stats,
                     Err(e) => {
                         eprintln!("error generating stats: {:#?}", e);
@@ -78,7 +78,18 @@ impl State {
                     }
                 };
 
-                *task_state.stats.write().await = Some(stats);
+                let seven_days = match self::stats::get_stats_seven_days(&*task_state).await {
+                    Ok(stats) => stats,
+                    Err(e) => {
+                        eprintln!("error generating stats: {:#?}", e);
+                        continue;
+                    },
+                };
+
+                *task_state.stats.write().await = Some(CachedStatistics {
+                    all_time,
+                    seven_days,
+                });
 
                 tokio::time::sleep(Duration::from_secs(60 * 5)).await;
             }
@@ -98,6 +109,7 @@ fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         .or(contribute(Arc::clone(&state)))
         .or(contribute_multiple(Arc::clone(&state)))
         .or(stats(Arc::clone(&state)))
+        .or(stats_seven_days(Arc::clone(&state)))
         .or(assets())
         .boxed()
 }
@@ -264,19 +276,19 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     warp::get().and(route).boxed()
 }
 
-fn stats(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
-    async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
-        let lang = Language::from_codes(codes.as_deref());
-        let stats = state.stats.read().await.clone();
-        Ok(match stats {
-            Some(stats) => StatsTemplate {
-                stats,
-                lang,
-            },
-            None => panic!(),
-        })
-    }
+async fn stats_logic(state: Arc<State>, codes: Option<String>, seven_days: bool) -> std::result::Result<impl Reply, Infallible> {
+    let lang = Language::from_codes(codes.as_deref());
+    let stats = state.stats.read().await.clone();
+    Ok(match stats {
+        Some(stats) => StatsTemplate {
+            stats: if seven_days { stats.seven_days } else { stats.all_time },
+            lang,
+        },
+        None => panic!(),
+    })
+}
 
+fn stats(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     let route = warp::path("stats")
         .and(warp::path::end())
         .and(
@@ -287,7 +299,24 @@ fn stats(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 .or(warp::any().map(|| None))
                 .unify()
         )
-        .and_then(move |codes: Option<String>| logic(Arc::clone(&state), codes));
+        .and_then(move |codes: Option<String>| stats_logic(Arc::clone(&state), codes, false));
+
+    warp::get().and(route).boxed()
+}
+
+fn stats_seven_days(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
+    let route = warp::path("stats")
+        .and(warp::path("7days"))
+        .and(warp::path::end())
+        .and(
+            warp::cookie::<String>("lang")
+                .or(warp::header::<String>("accept-language"))
+                .unify()
+                .map(Some)
+                .or(warp::any().map(|| None))
+                .unify()
+        )
+        .and_then(move |codes: Option<String>| stats_logic(Arc::clone(&state), codes, true));
 
     warp::get().and(route).boxed()
 }

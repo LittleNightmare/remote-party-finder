@@ -1,4 +1,4 @@
-#![feature(try_blocks)]
+#![feature(try_blocks, arbitrary_enum_discriminant, iter_intersperse)]
 
 use anyhow::Context;
 use std::borrow::Cow;

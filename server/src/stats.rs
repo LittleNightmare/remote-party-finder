@@ -6,6 +6,12 @@ use crate::ffxiv::Language;
 use crate::listing::{DutyCategory, DutyType};
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct CachedStatistics {
+    pub all_time: Statistics,
+    pub seven_days: Statistics,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Statistics {
     pub count: Vec<Count>,
     #[serde(deserialize_with = "alias_de")]
@@ -29,6 +35,10 @@ fn alias_de<'de, D>(de: D) -> std::result::Result<HashMap<u32, Vec<Alias>>, D::E
 
 impl Statistics {
     pub fn num_listings(&self) -> usize {
+        if self.count.is_empty() {
+            return 0;
+        }
+
         self.count[0].count
     }
 
