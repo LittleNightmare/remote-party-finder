@@ -1,4 +1,5 @@
 use anyhow::Result;
+use chrono::{Duration, Utc};
 use mongodb::bson::{Document, doc};
 use tokio_stream::StreamExt;
 use crate::stats::Statistics;
@@ -103,9 +104,28 @@ lazy_static::lazy_static! {
 }
 
 pub async fn get_stats(state: &State) -> Result<Statistics> {
+    get_stats_internal(state, QUERY.iter().cloned()).await
+}
+
+pub async fn get_stats_seven_days(state: &State) -> Result<Statistics> {
+    let last_week = Utc::now() - Duration::days(7);
+
+    let mut docs = QUERY.to_vec();
+    docs.insert(0, doc! {
+        "$match": {
+            "created_at": {
+                "$gte": last_week,
+            },
+        },
+    });
+
+    get_stats_internal(state, docs).await
+}
+
+async fn get_stats_internal(state: &State, docs: impl IntoIterator<Item = Document>) -> Result<Statistics> {
     let mut cursor = state
         .collection()
-        .aggregate(QUERY.iter().cloned(), None)
+        .aggregate(docs, None)
         .await?;
     let doc = cursor.try_next().await?;
     let doc = doc.ok_or_else(|| anyhow::anyhow!("missing document"))?;
