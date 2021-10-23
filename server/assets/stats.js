@@ -111,7 +111,10 @@
                     }],
                     labels: data.map(entry => entry.x),
                 },
-                options: options,
+                options: {
+                    borderWidth: chartType === 'doughnut' ? 0 : 2,
+                    ...options,
+                },
             },
         );
     }
