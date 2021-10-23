@@ -77,7 +77,7 @@
                 continue;
             }
 
-            other.y += 1;
+            other.y += data[i].y;
         }
 
         newData.push(other);
@@ -117,7 +117,7 @@
     }
 
     makeChart('duties', 'dutiesChart', 'pie', true);
-    makeChart('hosts', 'hostsChart', 'pie');
+    makeChart('hosts', 'hostsChart', 'doughnut');
     makeChart('hours', 'hoursChart', 'bar');
     makeChart('days', 'daysChart', 'bar');
 })();
