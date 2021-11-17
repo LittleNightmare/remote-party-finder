@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Lumina;
 using Lumina.Data;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
+using Pidgin;
 
 namespace SourceGenerator {
     internal class Program {
@@ -310,9 +312,100 @@ namespace SourceGenerator {
             sb.Append("\nlazy_static::lazy_static! {\n");
             sb.Append("    pub static ref AUTO_TRANSLATE: HashMap<(u32, u32), LocalisedText> = maplit::hashmap! {\n");
 
+            var parser = AutoTranslate.Parser();
             foreach (var row in this.Data[Language.English].GetExcelSheet<Completion>()!) {
                 var lookup = row.LookupTable.TextValue();
                 if (lookup is not ("" or "@")) {
+                    var (sheetName, selector) = parser.ParseOrThrow(lookup);
+                    var sheetType = typeof(Completion)
+                        .Assembly
+                        .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
+                    var getSheet = this.Data[Language.English]
+                        .GetType()
+                        .GetMethod("GetExcelSheet", Type.EmptyTypes)!
+                        .MakeGenericMethod(sheetType);
+                    var sheets = this.Data.ToDictionary(
+                        pair => pair.Key,
+                        pair => {
+                            var sheet = (ExcelSheetImpl) getSheet.Invoke(pair.Value, null)!;
+                            return (sheet, sheet.EnumerateRowParsers().ToArray());
+                        });
+
+                    var columns = new List<int>();
+                    var rows = new List<Range>();
+                    if (selector.HasValue) {
+                        columns.Clear();
+                        rows.Clear();
+
+                        foreach (var part in selector.Value) {
+                            switch (part) {
+                                case IndexRange range: {
+                                    var start = (int) range.Start;
+                                    var end = (int) (range.End + 1);
+                                    rows.Add(start..end);
+                                    break;
+                                }
+                                case SingleRow single: {
+                                    var idx = (int) single.Row;
+                                    rows.Add(idx..(idx + 1));
+                                    break;
+                                }
+                                case ColumnSpecifier col:
+                                    columns.Add((int) col.Column);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (columns.Count == 0) {
+                        columns.Add(0);
+                    }
+
+                    if (rows.Count == 0) {
+                        rows.Add(..);
+                    }
+
+                    var builder = new StringBuilder();
+                    foreach (var range in rows) {
+                        var validRows = sheets[Language.English]
+                            .Item2
+                            .Select(parser => parser.Row)
+                            .ToArray();
+                        for (var i = range.Start.Value; i < range.End.Value; i++) {
+                            if (!validRows.Contains((uint) i)) {
+                                continue;
+                            }
+
+                            builder.Clear();
+
+                            builder.Append($"        ({row.Group}, {i}) => LocalisedText {{\n");
+
+                            var lines = 0;
+                            foreach (var (lang, (_, parsers)) in sheets) {
+                                // take the first column that works
+                                foreach (var col in columns) {
+                                    var rowParser = parsers.FirstOrDefault(parser => parser.Row == i);
+                                    if (rowParser != null) {
+                                        var name = rowParser.ReadColumn<SeString>(col)!;
+                                        var text = name.TextValue().Replace("\"", "\\\"");
+                                        if (text.Length > 0) {
+                                            builder.Append($"            {Languages[lang]}: \"{text}\",\n");
+                                            lines += 1;
+                                            break;
+                                        }
+                                    }   
+                                }
+                            }
+
+                            builder.Append("        },\n");
+
+                            if (lines != 4) {
+                                continue;
+                            }
+
+                            sb.Append(builder);
+                        }
+                    }
                     // TODO: do lookup
                 } else {
                     var text = this.GetLocalisedStruct<Completion>(row.RowId, row => row.Text, 8);
