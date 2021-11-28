@@ -1,26 +1,38 @@
 mod stats;
 
-use std::cmp::Ordering;
-use std::convert::Infallible;
+use std::{
+    cmp::Ordering,
+    convert::Infallible,
+    sync::Arc,
+    time::Duration,
+};
 use anyhow::{Result, Context};
-use std::sync::Arc;
-use std::time::Duration;
 use chrono::Utc;
-use mongodb::{Client as MongoClient, Collection, IndexModel};
-use mongodb::options::{IndexOptions, UpdateOptions};
-use mongodb::results::UpdateResult;
+use mongodb::{
+    Client as MongoClient,
+    Collection,
+    IndexModel,
+    bson::doc,
+    options::{IndexOptions, UpdateOptions},
+    results::UpdateResult,
+};
 use tokio::sync::RwLock;
 use tokio_stream::StreamExt;
-use warp::{Filter, Reply};
-use warp::filters::BoxedFilter;
-use warp::http::Uri;
-use crate::config::Config;
-use crate::ffxiv::Language;
-use crate::listing::PartyFinderListing;
-use crate::listing_container::{ListingContainer, QueriedListing};
-use crate::stats::CachedStatistics;
-use crate::template::listings::ListingsTemplate;
-use crate::template::stats::StatsTemplate;
+use warp::{
+    Filter,
+    Reply,
+    filters::BoxedFilter,
+    http::Uri,
+};
+use crate::{
+    config::Config,
+    ffxiv::Language,
+    listing::PartyFinderListing,
+    listing_container::{ListingContainer, QueriedListing},
+    stats::CachedStatistics,
+    template::listings::ListingsTemplate,
+    template::stats::StatsTemplate,
+};
 
 pub async fn start(config: Arc<Config>) -> Result<()> {
     let state = State::new(Arc::clone(&config)).await?;
