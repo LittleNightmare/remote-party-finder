@@ -77,7 +77,19 @@ impl State {
                 None,
             )
             .await
-            .context("could not create index")?;
+            .context("could not create unique index")?;
+
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "created_at": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create created_at index")?;
 
         let task_state = Arc::clone(&state);
         tokio::task::spawn(async move {
@@ -95,7 +107,7 @@ impl State {
                     Err(e) => {
                         eprintln!("error generating stats: {:#?}", e);
                         continue;
-                    },
+                    }
                 };
 
                 *task_state.stats.write().await = Some(CachedStatistics {
@@ -198,13 +210,32 @@ fn index() -> BoxedFilter<(impl Reply, )> {
 
 fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
-        use mongodb::bson::doc;
         let lang = Language::from_codes(codes.as_deref());
 
+        let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
         let res = state
             .collection()
             .aggregate(
                 [
+                    // don't ask me why, but mongo shits itself unless you provide a hard date
+                    // doc! {
+                    //     "$match": {
+                    //         "created_at": {
+                    //             "$gte": {
+                    //                 "$dateSubtract": {
+                    //                     "startDate": "$$NOW",
+                    //                     "unit": "hour",
+                    //                     "amount": 2,
+                    //                 },
+                    //             },
+                    //         },
+                    //     }
+                    // },
+                    doc! {
+                        "$match": {
+                            "created_at": { "$gte": two_hours_ago },
+                        }
+                    },
                     doc! {
                         "$set": {
                             "time_left": {
@@ -380,8 +411,6 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 }
 
 async fn insert_listing(state: &State, listing: PartyFinderListing) -> mongodb::error::Result<UpdateResult> {
-    use mongodb::bson::doc;
-
     let opts = UpdateOptions::builder()
         .upsert(true)
         .build();
