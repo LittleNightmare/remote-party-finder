@@ -83,13 +83,13 @@ impl State {
             .create_index(
                 IndexModel::builder()
                     .keys(mongodb::bson::doc! {
-                        "created_at": 1,
+                        "updated_at": 1,
                     })
                     .build(),
                 None,
             )
             .await
-            .context("could not create created_at index")?;
+            .context("could not create updated_at index")?;
 
         let task_state = Arc::clone(&state);
         tokio::task::spawn(async move {
@@ -233,7 +233,7 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     // },
                     doc! {
                         "$match": {
-                            "created_at": { "$gte": two_hours_ago },
+                            "updated_at": { "$gte": two_hours_ago },
                         }
                     },
                     doc! {
