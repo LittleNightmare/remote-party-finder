@@ -261,7 +261,7 @@ namespace SourceGenerator {
             sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
             foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
-                if (world.RowId == 0 || !world.IsPublic || world.DataCenter.Row == 0) {
+                if (world.RowId == 0 || !world.Unknown5 || world.Unknown4 == 0 || world.DataCenter.Row == 0) {
                     continue;
                 }
 
@@ -328,7 +328,7 @@ namespace SourceGenerator {
                         pair => pair.Key,
                         pair => {
                             var sheet = (ExcelSheetImpl) getSheet.Invoke(pair.Value, null)!;
-                            return (sheet, sheet.EnumerateRowParsers().ToArray());
+                            return (sheet, sheet.GetRowParsers().ToArray());
                         });
 
                     var columns = new List<int>();
@@ -369,7 +369,7 @@ namespace SourceGenerator {
                     foreach (var range in rows) {
                         var validRows = sheets[Language.English]
                             .Item2
-                            .Select(parser => parser.Row)
+                            .Select(parser => parser.RowId)
                             .ToArray();
                         for (var i = range.Start.Value; i < range.End.Value; i++) {
                             if (!validRows.Contains((uint) i)) {
@@ -384,7 +384,7 @@ namespace SourceGenerator {
                             foreach (var (lang, (_, parsers)) in sheets) {
                                 // take the first column that works
                                 foreach (var col in columns) {
-                                    var rowParser = parsers.FirstOrDefault(parser => parser.Row == i);
+                                    var rowParser = parsers.FirstOrDefault(parser => parser.RowId == i);
                                     if (rowParser != null) {
                                         var name = rowParser.ReadColumn<SeString>(col)!;
                                         var text = name.TextValue().Replace("\"", "\\\"");

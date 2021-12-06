@@ -39,7 +39,7 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudLinter" Version="1.0.3"/>
-        <PackageReference Include="DalamudPackager" Version="2.1.4"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.5"/>
     </ItemGroup>
 
 </Project>
