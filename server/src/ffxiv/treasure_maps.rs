@@ -105,5 +105,17 @@ lazy_static::lazy_static! {
             de: "Mythenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle II",
         },
+        17 => LocalisedText {
+            en: "Saigaskin Treasure Map",
+            ja: "古ぼけた地図G13",
+            de: "Gajaleder-Schatzkarte",
+            fr: "Carte au trésor en peau de gaja",
+        },
+        18 => LocalisedText {
+            en: "Kumbhiraskin Treasure Map",
+            ja: "古ぼけた地図G14",
+            de: "Ophiotaurosleder-Schatzkarte",
+            fr: "Carte au trésor en peau d'ophiotauros",
+        },
     };
 }
