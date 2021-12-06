@@ -4,7 +4,7 @@ let
 in
 pkgs.mkShell {
     buildInputs = [
-        (pkgs.rustChannelOf { date = "2021-10-03"; channel = "nightly"; }).rust
+        (pkgs.rustChannelOf { date = "2021-12-05"; channel = "nightly"; }).rust
         pkgs.gcc
         pkgs.patchelf
     ];
