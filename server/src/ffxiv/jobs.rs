@@ -41,5 +41,7 @@ lazy_static::lazy_static! {
         36 => ClassJob::Job(Job::BlueMage),
         37 => ClassJob::Job(Job::Gunbreaker),
         38 => ClassJob::Job(Job::Dancer),
+        39 => ClassJob::Job(Job::Reaper),
+        40 => ClassJob::Job(Job::Sage),
     };
 }

@@ -5440,7 +5440,7 @@ lazy_static::lazy_static! {
                 de: "Edens Verheißung - Litanei (episch)",
                 fr: "La Promesse d'Éden - Litanie (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         749 => DutyInfo {
@@ -5460,7 +5460,7 @@ lazy_static::lazy_static! {
                 de: "Edens Verheißung - Umbra (episch)",
                 fr: "La Promesse d'Éden - Nuée (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         751 => DutyInfo {
@@ -5480,7 +5480,7 @@ lazy_static::lazy_static! {
                 de: "Edens Verheißung - Anamorphose (episch)",
                 fr: "La Promesse d'Éden - Anamorphose (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         753 => DutyInfo {
@@ -5540,7 +5540,7 @@ lazy_static::lazy_static! {
                 de: "Edens Verheißung - Ewigkeit (episch)",
                 fr: "La Promesse d'Éden - Éternité (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         760 => DutyInfo {
@@ -5703,16 +5703,6 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::DisciplesoftheLand,
         },
-        776 => DutyInfo {
-            name: LocalisedText {
-                en: "The Whorleater (Unreal)",
-                ja: "幻リヴァイアサン討滅戦",
-                de: "Traumprüfung - Leviathan",
-                fr: "Le Briseur de marées (irréel)",
-            },
-            high_end: true,
-            content_kind: ContentKind::Trials,
-        },
         777 => DutyInfo {
             name: LocalisedText {
                 en: "Paglth'an",
@@ -5772,6 +5762,286 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Trials,
+        },
+        783 => DutyInfo {
+            name: LocalisedText {
+                en: "The Tower of Zot",
+                ja: "異形楼閣 ゾットの塔",
+                de: "Der Turm von Zot",
+                fr: "La tour de Zott",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        784 => DutyInfo {
+            name: LocalisedText {
+                en: "The Stigma Dreamscape",
+                ja: "電脳夢想 スティグマ・フォー",
+                de: "Stigma-Holometrie",
+                fr: "Rêve électrique de Stigma-4",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        785 => DutyInfo {
+            name: LocalisedText {
+                en: "The Tower of Babil",
+                ja: "魔導神門 バブイルの塔",
+                de: "Der Turm von Babil",
+                fr: "La tour de Babil",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        786 => DutyInfo {
+            name: LocalisedText {
+                en: "The Aitiascope",
+                ja: "星海潜航 アイティオン星晶鏡",
+                de: "Das Aitiaskop",
+                fr: "Le Prisme de l'Aitia",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        787 => DutyInfo {
+            name: LocalisedText {
+                en: "Ktisis Hyperboreia",
+                ja: "創造環境 ヒュペルボレア造物院",
+                de: "Ktisis Hyperboreia",
+                fr: "L'Hyperborée",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        789 => DutyInfo {
+            name: LocalisedText {
+                en: "Vanaspati",
+                ja: "終末樹海 ヴァナスパティ",
+                de: "Vanaspati",
+                fr: "Vanaspati",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        790 => DutyInfo {
+            name: LocalisedText {
+                en: "The Mothercrystal",
+                ja: "ハイデリン討滅戦",
+                de: "Prophetie - Hydaelyn",
+                fr: "Le Cristal-mère",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        791 => DutyInfo {
+            name: LocalisedText {
+                en: "The Minstrel's Ballad: Hydaelyn's Call",
+                ja: "極ハイデリン討滅戦",
+                de: "Eschatos - Hydaelyn",
+                fr: "Le Cristal-mère (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        792 => DutyInfo {
+            name: LocalisedText {
+                en: "The Dead Ends",
+                ja: "最終幻想 レムナント",
+                de: "Das Sternengrab",
+                fr: "L'Issue aux Impasses",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        793 => DutyInfo {
+            name: LocalisedText {
+                en: "In from the Cold",
+                ja: "寒夜のこと",
+                de: "In fremder Haut",
+                fr: "Le voleur de corps",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        794 => DutyInfo {
+            name: LocalisedText {
+                en: "Smileton",
+                ja: "楽園都市 スマイルトン",
+                de: "Smileton",
+                fr: "Risette-sur-lune",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        795 => DutyInfo {
+            name: LocalisedText {
+                en: "Worthy of His Back",
+                ja: "前代アゼムの手ほどき",
+                de: " Es reimt sich auf Gebell",
+                fr: "Le défi de l'ancienne Azem",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        796 => DutyInfo {
+            name: LocalisedText {
+                en: "The Final Day",
+                ja: "終焉の戦い",
+                de: "Prophetie - Endsängerin",
+                fr: "Le Répons final",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        797 => DutyInfo {
+            name: LocalisedText {
+                en: "The Phantoms' Feast",
+                ja: "道化饗宴 ホーンテッドフィースト",
+                de: "Lustiges Bankett",
+                fr: "Le banquet cauchemardesque",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(22),
+        },
+        798 => DutyInfo {
+            name: LocalisedText {
+                en: "Endwalker",
+                ja: "暁月のフィナーレ",
+                de: "Das Ende der Morgenröte",
+                fr: "Arpenteur des finitudes",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        799 => DutyInfo {
+            name: LocalisedText {
+                en: "To Calmer Seas",
+                ja: "融和への船出",
+                de: "Im Hafen des Friedens",
+                fr: "Cap sur la paix",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        802 => DutyInfo {
+            name: LocalisedText {
+                en: "The Dark Inside",
+                ja: "ゾディアーク討滅戦",
+                de: "Prophetie - Zodiark",
+                fr: "Le Cratère des Martyrs",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        803 => DutyInfo {
+            name: LocalisedText {
+                en: "The Minstrel's Ballad: Zodiark's Fall",
+                ja: "極ゾディアーク討滅戦",
+                de: "Eschatos - Zodiark",
+                fr: "Le Cratère des Martyrs (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        804 => DutyInfo {
+            name: LocalisedText {
+                en: "As the Heavens Burn",
+                ja: "拡がる終末",
+                de: "Rote Himmel, roter Schnee",
+                fr: "L'arène des neiges",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        805 => DutyInfo {
+            name: LocalisedText {
+                en: "A Path Unveiled",
+                ja: "開かれた道の先へ",
+                de: "Offen für neue Wege",
+                fr: "Des esprits et des hommes",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        812 => DutyInfo {
+            name: LocalisedText {
+                en: "A Frosty Reception",
+                ja: "霜雪を踏みしめて",
+                de: "Ein frostiger Empfang",
+                fr: "Un accueil glacial",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        813 => DutyInfo {
+            name: LocalisedText {
+                en: "Sage's Focus",
+                ja: "賢者の短杖",
+                de: "Des Weisen wundersames Werkzeug",
+                fr: "Les armes du sage",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        814 => DutyInfo {
+            name: LocalisedText {
+                en: "The Harvest Begins",
+                ja: "大鎌の意味",
+                de: "Die Bedeutung der Sense",
+                fr: "La vraie puissance de la faux",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        815 => DutyInfo {
+            name: LocalisedText {
+                en: "Ever March Heavensward",
+                ja: "蒼天を仰ぎ、歩み続ける",
+                de: "Der Weg zur Erneuerung",
+                fr: "La voie du renouveau",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        816 => DutyInfo {
+            name: LocalisedText {
+                en: "The Killing Art",
+                ja: "暗殺道",
+                de: "Die Kunst des Tötens",
+                fr: "La voie du néant",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        817 => DutyInfo {
+            name: LocalisedText {
+                en: "Life Ephemeral, Path Eternal",
+                ja: "人命は儚く、術のみちは永久に",
+                de: "Das Leben ist kurz, die Kunst ist lang",
+                fr: "Existences éphémères et savoir éternel",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        818 => DutyInfo {
+            name: LocalisedText {
+                en: "Laid to Rest",
+                ja: "ドマの弔い",
+                de: "Domanisches Begräbnis",
+                fr: "Des adieux domiens",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        820 => DutyInfo {
+            name: LocalisedText {
+                en: "The Gift of Mercy",
+                ja: "僕たちは還り、君を見送ろう",
+                de: "Trauer und Hoffnung",
+                fr: "Acceptation",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
     };
 }
