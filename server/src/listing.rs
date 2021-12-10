@@ -365,6 +365,8 @@ bitflags! {
         const BLUE_MAGE = 1 << 25;
         const GUNBREAKER = 1 << 26;
         const DANCER = 1 << 27;
+        const REAPER = 1 << 28;
+        const SAGE = 1 << 29;
     }
 }
 
@@ -478,6 +480,14 @@ impl JobFlags {
 
         if self.contains(Self::DANCER) {
             cjs.push(ClassJob::Job(Job::Dancer));
+        }
+
+        if self.contains(Self::REAPER) {
+            cjs.push(ClassJob::Job(Job::Reaper));
+        }
+
+        if self.contains(Self::SAGE) {
+            cjs.push(ClassJob::Job(Job::Sage));
         }
 
         cjs
