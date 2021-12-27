@@ -4971,6 +4971,30 @@ lazy_static::lazy_static! {
             de: "Strategieraum",
             fr: "Salle des opérations",
         },
+        1002 => LocalisedText {
+            en: "The Gates of Pandæmonium",
+            ja: "パンデモニウム正門",
+            de: "Pforten des Pandæmoniums",
+            fr: "Limbes du Pandæmonium - Parvis",
+        },
+        1004 => LocalisedText {
+            en: "The Stagnant Limbo",
+            ja: "パンデモニウム辺獄水道",
+            de: "Trister Limbus",
+            fr: "Limbes du Pandæmonium - Cloaque",
+        },
+        1006 => LocalisedText {
+            en: "The Fervid Limbo",
+            ja: "パンデモニウム辺獄下層",
+            de: "Glühender Limbus",
+            fr: "Limbes du Pandæmonium - Fournaise",
+        },
+        1008 => LocalisedText {
+            en: "The Sanguine Limbo",
+            ja: "パンデモニウム辺獄深層",
+            de: "Blutender Limbus",
+            fr: "Limbes du Pandæmonium - Abîme",
+        },
         1010 => LocalisedText {
             en: "Magna Glacies",
             ja: "マグナ・グラキエス",
@@ -5060,6 +5084,12 @@ lazy_static::lazy_static! {
             ja: "神門の間",
             de: "Gottesportal",
             fr: "Porte des Dieux",
+        },
+        1025 => LocalisedText {
+            en: "The Gates of Pandæmonium",
+            ja: "パンデモニウム正門",
+            de: "Pforten des Pandæmoniums",
+            fr: "Limbes du Pandæmonium - Parvis",
         },
         1026 => LocalisedText {
             en: "Beyond the Stars",
