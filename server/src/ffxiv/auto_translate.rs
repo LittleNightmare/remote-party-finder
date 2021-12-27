@@ -13476,8 +13476,7 @@ lazy_static::lazy_static! {
         (56, 24375) => LocalisedText {
             en: "Infernal Slice",
             ja: "インファナルスライス",
-            de: "Infernalischer Schlitzer
-",
+            de: "Infernalischer Schlitzer",
             fr: "Tranchage infernal",
         },
         (56, 24376) => LocalisedText {
@@ -14066,19 +14065,19 @@ lazy_static::lazy_static! {
             en: "Ruby Ruin II",
             ja: "ルビー・ルインラ",
             de: "Rubin-Ruinra",
-            fr: "Ruine rubis II",
+            fr: "Extra Ruine rubis",
         },
         (56, 25812) => LocalisedText {
             en: "Topaz Ruin II",
             ja: "トパーズ・ルインラ",
             de: "Topas-Ruinra",
-            fr: "Ruine topaze II",
+            fr: "Extra Ruine topaze",
         },
         (56, 25813) => LocalisedText {
             en: "Emerald Ruin II",
             ja: "エメラルド・ルインラ",
             de: "Smaragd-Ruinra",
-            fr: "Ruine émeraude II",
+            fr: "Extra Ruine émeraude",
         },
         (56, 25814) => LocalisedText {
             en: "Ruby Outburst",
@@ -14102,19 +14101,19 @@ lazy_static::lazy_static! {
             en: "Ruby Ruin III",
             ja: "ルビー・ルインガ",
             de: "Rubin-Ruinga",
-            fr: "Ruine rubis III",
+            fr: "Méga Ruine rubis",
         },
         (56, 25818) => LocalisedText {
             en: "Topaz Ruin III",
             ja: "トパーズ・ルインガ",
             de: "Topas-Ruinga",
-            fr: "Ruine topaze III",
+            fr: "Méga Ruine topaze",
         },
         (56, 25819) => LocalisedText {
             en: "Emerald Ruin III",
             ja: "エメラルド・ルインガ",
             de: "Smaragd-Ruinga",
-            fr: "Ruine émeraude III",
+            fr: "Méga Ruine émeraude",
         },
         (56, 25820) => LocalisedText {
             en: "Astral Impulse",
@@ -15118,6 +15117,12 @@ lazy_static::lazy_static! {
             de: "Imaginär",
             fr: "Virtuel",
         },
+        (60, 157) => LocalisedText {
+            en: "Pandæmonium",
+            ja: "万魔殿",
+            de: "Pandæmonium",
+            fr: "Pandæmonium",
+        },
         (61, 1) => LocalisedText {
             en: "Stance",
             ja: "納刀する/抜刀する",
@@ -15725,7 +15730,7 @@ lazy_static::lazy_static! {
             fr: "/siteofficiel",
         },
         (62, 33) => LocalisedText {
-            en: "/petmirage",
+            en: "/petglamour",
             ja: "/petmirage",
             de: "/familiarprojektion",
             fr: "/miragefamilier",
@@ -16421,7 +16426,7 @@ lazy_static::lazy_static! {
             fr: "/quitterréseaunovices",
         },
         (62, 226) => LocalisedText {
-            en: "/petglamour",
+            en: "/egiglamour",
             ja: "/egimirage",
             de: "/egiprojektion",
             fr: "/mirageegi",
@@ -22845,6 +22850,12 @@ lazy_static::lazy_static! {
             ja: "マメット・グレビュオフ",
             de: "Typhoid-Puppe",
             fr: "Grébuloff miniature",
+        },
+        (65, 440) => LocalisedText {
+            en: "nosferatu",
+            ja: "ノスフェラトゥ",
+            de: "Nosferatu-Puppe",
+            fr: "Nosferatu",
         },
         (65, 441) => LocalisedText {
             en: "wind-up herois",

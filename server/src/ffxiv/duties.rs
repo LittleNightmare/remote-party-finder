@@ -5907,7 +5907,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "Endwalker",
                 ja: "暁月のフィナーレ",
-                de: "Das Ende der Morgenröte",
+                de: "Endschreiter",
                 fr: "Arpenteur des finitudes",
             },
             high_end: false,
@@ -5922,6 +5922,16 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        800 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Fourth Circle",
+                ja: "万魔殿パンデモニウム：辺獄編4",
+                de: "Asphodelos - Vierter Kreis",
+                fr: "Les Limbes du Pandæmonium - Abîme",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
         },
         802 => DutyInfo {
             name: LocalisedText {
@@ -5962,6 +5972,36 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        806 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Third Circle",
+                ja: "万魔殿パンデモニウム：辺獄編3",
+                de: "Asphodelos - Dritter Kreis",
+                fr: "Les Limbes du Pandæmonium - Fournaise",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        808 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The First Circle",
+                ja: "万魔殿パンデモニウム：辺獄編1",
+                de: "Asphodelos - Erster Kreis",
+                fr: "Les Limbes du Pandæmonium - Parvis",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        810 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Second Circle",
+                ja: "万魔殿パンデモニウム：辺獄編2",
+                de: "Asphodelos - Zweiter Kreis",
+                fr: "Les Limbes du Pandæmonium - Cloaque",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
         },
         812 => DutyInfo {
             name: LocalisedText {
