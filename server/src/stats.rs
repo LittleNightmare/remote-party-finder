@@ -12,9 +12,15 @@ pub struct CachedStatistics {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct Aliases {
+    #[serde(deserialize_with = "alias_de")]
+    pub aliases: HashMap<u32, Vec<Alias>>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Statistics {
     pub count: Vec<Count>,
-    #[serde(deserialize_with = "alias_de")]
+    #[serde(default)]
     pub aliases: HashMap<u32, Vec<Alias>>,
     pub duties: Vec<DutyInfo>,
     pub hosts: Vec<HostInfo>,
