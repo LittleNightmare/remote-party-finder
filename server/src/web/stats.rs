@@ -126,9 +126,9 @@ pub async fn get_stats_seven_days(state: &State) -> Result<Statistics> {
 async fn get_stats_internal(state: &State, docs: impl IntoIterator<Item = Document>) -> Result<Statistics> {
     let mut cursor = state
         .collection()
-        .aggregate(docs, Some(AggregateOptions::builder()
+        .aggregate(docs, AggregateOptions::builder()
             .allow_disk_use(true)
-            .build()))
+            .build())
         .await?;
     let doc = cursor.try_next().await?;
     let doc = doc.ok_or_else(|| anyhow::anyhow!("missing document"))?;
