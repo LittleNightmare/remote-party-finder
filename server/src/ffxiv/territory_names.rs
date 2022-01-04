@@ -4965,6 +4965,12 @@ lazy_static::lazy_static! {
             de: "Am Rande des Endes",
             fr: "Orée de la fin",
         },
+        1000 => LocalisedText {
+            en: "The Excitatron 6000",
+            ja: "エキサイトロン",
+            de: "Euphoratron",
+            fr: "Ludodrome",
+        },
         1001 => LocalisedText {
             en: "Strategy Room",
             ja: "作戦立案室",
@@ -4977,7 +4983,19 @@ lazy_static::lazy_static! {
             de: "Pforten des Pandæmoniums",
             fr: "Limbes du Pandæmonium - Parvis",
         },
+        1003 => LocalisedText {
+            en: "The Gates of Pandæmonium",
+            ja: "パンデモニウム正門",
+            de: "Pforten des Pandæmoniums",
+            fr: "Limbes du Pandæmonium - Parvis",
+        },
         1004 => LocalisedText {
+            en: "The Stagnant Limbo",
+            ja: "パンデモニウム辺獄水道",
+            de: "Trister Limbus",
+            fr: "Limbes du Pandæmonium - Cloaque",
+        },
+        1005 => LocalisedText {
             en: "The Stagnant Limbo",
             ja: "パンデモニウム辺獄水道",
             de: "Trister Limbus",
@@ -4989,7 +5007,19 @@ lazy_static::lazy_static! {
             de: "Glühender Limbus",
             fr: "Limbes du Pandæmonium - Fournaise",
         },
+        1007 => LocalisedText {
+            en: "The Fervid Limbo",
+            ja: "パンデモニウム辺獄下層",
+            de: "Glühender Limbus",
+            fr: "Limbes du Pandæmonium - Fournaise",
+        },
         1008 => LocalisedText {
+            en: "The Sanguine Limbo",
+            ja: "パンデモニウム辺獄深層",
+            de: "Blutender Limbus",
+            fr: "Limbes du Pandæmonium - Abîme",
+        },
+        1009 => LocalisedText {
             en: "The Sanguine Limbo",
             ja: "パンデモニウム辺獄深層",
             de: "Blutender Limbus",
