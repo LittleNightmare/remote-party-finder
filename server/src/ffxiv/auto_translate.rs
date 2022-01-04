@@ -4617,6 +4617,36 @@ lazy_static::lazy_static! {
             de: "Diamant-Waffe",
             fr: "Arme Diamant",
         },
+        (23, 1952) => LocalisedText {
+            en: "Matanga",
+            ja: "マタンガ",
+            de: "Matanga",
+            fr: "Matanga",
+        },
+        (23, 1953) => LocalisedText {
+            en: "Arkasodara",
+            ja: "アルカソーダラ",
+            de: "Arkasodara",
+            fr: "Arkasodara",
+        },
+        (23, 1954) => LocalisedText {
+            en: "Loporrit",
+            ja: "レポリット",
+            de: "Loporrit",
+            fr: "Loporrite",
+        },
+        (23, 1955) => LocalisedText {
+            en: "Zodiark",
+            ja: "ゾディアーク",
+            de: "Zodiark",
+            fr: "Zordiarche",
+        },
+        (23, 1956) => LocalisedText {
+            en: "Hydaelyn",
+            ja: "ハイデリン",
+            de: "Hydaelyn",
+            fr: "Hydaelyn",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -6992,6 +7022,12 @@ lazy_static::lazy_static! {
             ja: "ドレッドノート",
             de: "Brummonaut",
             fr: "cuirassé Dreadnaught",
+        },
+        (49, 265) => LocalisedText {
+            en: "Demi-Phoinix",
+            ja: "デミフェネクス",
+            de: "Demi-Phoinix",
+            fr: "demi-protophénix",
         },
         (49, 266) => LocalisedText {
             en: "Calydontis",
@@ -22869,6 +22905,12 @@ lazy_static::lazy_static! {
             de: "Daivadipa-Puppe",
             fr: "Daïvadipa miniature",
         },
+        (65, 443) => LocalisedText {
+            en: "royal lunatender",
+            ja: "ルナテンダー・ロイヤル",
+            de: "königlich[a] Lunatender",
+            fr: "Roi pampa sélénien",
+        },
         (67, 2) => LocalisedText {
             en: "Royal Authority Combo",
             ja: "コンボ：ロイヤルアソリティ",
@@ -26019,6 +26061,12 @@ lazy_static::lazy_static! {
             de: "Allagische Steine des Aphorismus",
             fr: "mémoquartz allagois aphoristiques",
         },
+        (17, 4036) => LocalisedText {
+            en: "Allagan tomestone of astronomy",
+            ja: "アラガントームストーン:天文",
+            de: "Allagische Steine der Astronomie",
+            fr: "mémoquartz allagois astronomiques",
+        },
         (24, 5000) => LocalisedText {
             en: "normal raid",
             ja: "ノーマルレイド",
@@ -26468,6 +26516,102 @@ lazy_static::lazy_static! {
             ja: "旗艦ダル・リアータ攻略戦",
             de: "Sturm auf die Dalriada",
             fr: "Assaut sur le Dalriada",
+        },
+        (24, 5078) => LocalisedText {
+            en: "The Tower of Zot",
+            ja: "ゾットの塔",
+            de: "Turm von Zot",
+            fr: "Tour de Zott",
+        },
+        (24, 5079) => LocalisedText {
+            en: "The Tower of Babil",
+            ja: "バブイルの塔",
+            de: "Turm von Babil",
+            fr: "Tour de Babil",
+        },
+        (24, 5080) => LocalisedText {
+            en: "Vanaspati",
+            ja: "ヴァナスパティ",
+            de: "Vanaspati",
+            fr: "Vanaspati",
+        },
+        (24, 5081) => LocalisedText {
+            en: "Ktisis Hyperboreia",
+            ja: "ヒュペルボレア造物院",
+            de: "Ktisis Hyperboreia",
+            fr: "L'Hyperborée",
+        },
+        (24, 5082) => LocalisedText {
+            en: "The Aitiascope",
+            ja: "アイティオン星晶鏡",
+            de: "Das Aitiaskop",
+            fr: "Prisme de l'Aitia",
+        },
+        (24, 5083) => LocalisedText {
+            en: "The Dead Ends",
+            ja: "レムナント",
+            de: "Das Sternengrab",
+            fr: "L'Issue aux Impasses",
+        },
+        (24, 5084) => LocalisedText {
+            en: "Smileton",
+            ja: "スマイルトン",
+            de: "Smileton",
+            fr: "Risette-sur-lune",
+        },
+        (24, 5085) => LocalisedText {
+            en: "Stigma-4",
+            ja: "スティグマ・フォー",
+            de: "Stigma-4",
+            fr: "Rêve électrique de Stigma-4",
+        },
+        (24, 5086) => LocalisedText {
+            en: "The Dark Inside",
+            ja: "ゾディアーク討滅戦",
+            de: "Prophetie - Zodiark",
+            fr: "Le Cratère des Martyrs",
+        },
+        (24, 5087) => LocalisedText {
+            en: "The Minstrel's Ballad: Zodiark's Fall",
+            ja: "極ゾディアーク討滅戦",
+            de: "Eschatos - Zodiark",
+            fr: "Le Cratère des Martyrs (extrême)",
+        },
+        (24, 5088) => LocalisedText {
+            en: "The Mothercrystal",
+            ja: "ハイデリン討滅戦",
+            de: "Prophetie - Hydaelyn",
+            fr: "Le Cristal-mère",
+        },
+        (24, 5089) => LocalisedText {
+            en: "The Minstrel's Ballad: Hydaelyn's Call",
+            ja: "極ハイデリン討滅戦",
+            de: "Eschatos - Hydaelyn",
+            fr: "Le Cristal-mère (extrême)",
+        },
+        (24, 5090) => LocalisedText {
+            en: "The Final Day",
+            ja: "終焉の戦い",
+            de: "Prophetie - Endsängerin",
+            fr: "Le Répons final",
+        },
+        (24, 5091) => LocalisedText {
+            en: "Pandæmonium",
+            ja: "万魔殿パンデモニウム",
+            de: "Pandæmonium",
+            fr: "Pandæmonium",
+        },
+        (24, 5092) => LocalisedText {
+            en: "Pandæmonium (Savage)",
+            ja: "万魔殿パンデモニウム零式",
+            de: "Pandæmonium (episch)",
+            fr: "Pandæmonium (sadique)",
+        },
+        (24, 5093) => LocalisedText {
+            en: "Asphodelos",
+            ja: "辺獄編",
+            de: "Asphodelos",
+            fr: "Limbes du Pandæmonium",
         },
     };
 }

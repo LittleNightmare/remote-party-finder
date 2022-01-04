@@ -5933,6 +5933,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        801 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Fourth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：辺獄編4",
+                de: "Asphodelos - Vierter Kreis (episch)",
+                fr: "Les Limbes du Pandæmonium - Abîme (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
         802 => DutyInfo {
             name: LocalisedText {
                 en: "The Dark Inside",
@@ -5983,6 +5993,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        807 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Third Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：辺獄編3",
+                de: "Asphodelos - Dritter Kreis (episch)",
+                fr: "Les Limbes du Pandæmonium - Fournaise (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
         808 => DutyInfo {
             name: LocalisedText {
                 en: "Asphodelos: The First Circle",
@@ -5993,6 +6013,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        809 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The First Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：辺獄編1",
+                de: "Asphodelos - Erster Kreis (episch)",
+                fr: "Les Limbes du Pandæmonium - Parvis (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
         810 => DutyInfo {
             name: LocalisedText {
                 en: "Asphodelos: The Second Circle",
@@ -6001,6 +6031,16 @@ lazy_static::lazy_static! {
                 fr: "Les Limbes du Pandæmonium - Cloaque",
             },
             high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        811 => DutyInfo {
+            name: LocalisedText {
+                en: "Asphodelos: The Second Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：辺獄編2",
+                de: "Asphodelos - Zweiter Kreis (episch)",
+                fr: "Les Limbes du Pandæmonium - Cloaque (sadique)",
+            },
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         812 => DutyInfo {
@@ -6072,6 +6112,16 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        819 => DutyInfo {
+            name: LocalisedText {
+                en: "The Excitatron 6000",
+                ja: "宝物庫 エキサイトロン",
+                de: "Euphoratron",
+                fr: "Le Ludodrome",
+            },
+            high_end: false,
+            content_kind: ContentKind::TreasureHunt,
         },
         820 => DutyInfo {
             name: LocalisedText {
