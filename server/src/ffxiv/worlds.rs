@@ -3,6 +3,8 @@ use ffxiv_types::World;
 
 lazy_static::lazy_static! {
     pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {
+        21 => World::Ravana,
+        22 => World::Bismarck,
         23 => World::Asura,
         24 => World::Belias,
         28 => World::Pandaemonium,
@@ -61,6 +63,9 @@ lazy_static::lazy_static! {
         82 => World::Mandragora,
         83 => World::Louisoix,
         85 => World::Spriggan,
+        86 => World::Sephirot,
+        87 => World::Sophia,
+        88 => World::Zurvan,
         90 => World::Aegis,
         91 => World::Balmung,
         92 => World::Durandal,
