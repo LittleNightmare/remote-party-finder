@@ -713,16 +713,6 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Trials,
         },
-        62 => DutyInfo {
-            name: LocalisedText {
-                en: "Cape Westwind",
-                ja: "リットアティン強襲戦",
-                de: "Kap Westwind",
-                fr: "Le Cap Vendouest",
-            },
-            high_end: false,
-            content_kind: ContentKind::Trials,
-        },
         63 => DutyInfo {
             name: LocalisedText {
                 en: "The Bowl of Embers (Extreme)",
@@ -1426,32 +1416,12 @@ lazy_static::lazy_static! {
         141 => DutyInfo {
             name: LocalisedText {
                 en: "The Antitower",
-                ja: "星海観測 逆さの塔 ",
+                ja: "星海観測 逆さの塔",
                 de: "Antiturm",
                 fr: "L'Antitour",
             },
             high_end: false,
             content_kind: ContentKind::Dungeons,
-        },
-        143 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (4 on 4 - Training)",
-                ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
-                de: "The Feast (4 gegen 4, Übungskampf)",
-                fr: "The Feast (4x4/entraînement)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        145 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (4 on 4 - Ranked)",
-                ja: "ザ・フィースト (4対4 / ランクマッチ)",
-                de: "The Feast (4 gegen 4, gewertet)",
-                fr: "The Feast (4x4/classé)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
         },
         147 => DutyInfo {
             name: LocalisedText {
@@ -1973,16 +1943,6 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
         },
-        201 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Custom Match - Feasting Grounds)",
-                ja: "ザ・フィースト (ウルヴズジェイル演習場：カスタムマッチ）",
-                de: "The Feast (Wolfshöhle: Schaukampf)",
-                fr: "The Feast (personnalisé/Festin des loups)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
         202 => DutyInfo {
             name: LocalisedText {
                 en: "The Diadem Hunting Grounds (Easy)",
@@ -2222,36 +2182,6 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Other(23),
-        },
-        228 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (4 on 4 - Training)",
-                ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
-                de: "The Feast (4 gegen 4, Übungskampf)",
-                fr: "The Feast (4x4/entraînement)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        230 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (4 on 4 - Ranked)",
-                ja: "ザ・フィースト (4対4 / ランクマッチ)",
-                de: "The Feast (4 gegen 4, gewertet)",
-                fr: "The Feast (4x4/classé)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        233 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Custom Match - Lichenweed)",
-                ja: "ザ・フィースト (ライケンウィード演習場：カスタムマッチ）",
-                de: "The Feast (Flechtenhain: Schaukampf)",
-                fr: "The Feast (personnalisé/Pré-de-lichen)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
         },
         234 => DutyInfo {
             name: LocalisedText {
@@ -2902,46 +2832,6 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Trials,
-        },
-        476 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Team Ranked)",
-                ja: "ザ・フィースト (チーム用ランクマッチ)",
-                de: "The Feast (Team, gewertet)",
-                fr: "The Feast (classé/équipe JcJ)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        478 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Ranked)",
-                ja: "ザ・フィースト (ランクマッチ)",
-                de: "The Feast (gewertet)",
-                fr: "The Feast (classé)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        479 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Training)",
-                ja: "ザ・フィースト (カジュアルマッチ)",
-                de: "The Feast (Übungskampf)",
-                fr: "The Feast (entraînement)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
-        },
-        480 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Custom Match - Crystal Tower)",
-                ja: "ザ・フィースト (クリスタルタワー演習場：カスタムマッチ）",
-                de: "The Feast (Kristallturm-Arena: Schaukampf)",
-                fr: "The Feast (personnalisé/Tour de Cristal)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
         },
         481 => DutyInfo {
             name: LocalisedText {
@@ -3922,16 +3812,6 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
-        },
-        580 => DutyInfo {
-            name: LocalisedText {
-                en: "The Feast (Team Custom Match - Crystal Tower)",
-                ja: "ザ・フィースト (クリスタルタワー演習場：チーム用カスタムマッチ)",
-                de: "The Feast (Kristallturm-Arena: Team-Schaukampf) ",
-                fr: "The Feast (personnalisé/équipe JcJ/Tour de Cristal)",
-            },
-            high_end: false,
-            content_kind: ContentKind::PvP,
         },
         581 => DutyInfo {
             name: LocalisedText {
@@ -5813,6 +5693,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
+        788 => DutyInfo {
+            name: LocalisedText {
+                en: "Dragonsong's Reprise (Ultimate)",
+                ja: "絶竜詩戦争",
+                de: "Drachenkrieg (fatal)",
+                fr: "La Guerre du chant des dragons (fatal)",
+            },
+            high_end: true,
+            content_kind: ContentKind::UltimateRaids,
+        },
         789 => DutyInfo {
             name: LocalisedText {
                 en: "Vanaspati",
@@ -5840,7 +5730,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Hydaelyn",
                 fr: "Le Cristal-mère (extrême)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         792 => DutyInfo {
@@ -5960,7 +5850,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Zodiark",
                 fr: "Le Cratère des Martyrs (extrême)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         804 => DutyInfo {
@@ -6129,6 +6019,356 @@ lazy_static::lazy_static! {
                 ja: "僕たちは還り、君を見送ろう",
                 de: "Trauer und Hoffnung",
                 fr: "Acceptation",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        821 => DutyInfo {
+            name: LocalisedText {
+                en: "Ultima's Bane (Unreal)",
+                ja: "幻アルテマウェポン破壊作戦",
+                de: "Traumprüfung - Ultima",
+                fr: "Le fléau d'Ultima (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        830 => DutyInfo {
+            name: LocalisedText {
+                en: "The Porta Decumana",
+                ja: "アルテマウェポン破壊作戦",
+                de: "Porta Decumana",
+                fr: "Porta Decumana",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        835 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        836 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        837 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        838 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        839 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        840 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        841 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        842 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        843 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        844 => DutyInfo {
+            name: LocalisedText {
+                en: "Alzadaal's Legacy",
+                ja: "近東秘宝 アルザダール海底遺跡群",
+                de: "Alzadaals Vermächtnis",
+                fr: "Le legs d'Alzadaal",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        845 => DutyInfo {
+            name: LocalisedText {
+                en: "Forlorn Glory",
+                ja: "ネルウァの帝国",
+                de: "Nervas Reich",
+                fr: "Nerva, le patriote",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        846 => DutyInfo {
+            name: LocalisedText {
+                en: "The Minstrel's Ballad: Endsinger's Aria",
+                ja: "終極の戦い",
+                de: "Eschatos - Endsängerin",
+                fr: "Le Répons final (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        847 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        848 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        849 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        850 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        851 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        852 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        853 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        854 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        855 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        856 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        857 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        858 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        859 => DutyInfo {
+            name: LocalisedText {
+                en: "The Palaistra",
+                ja: "パライストラ",
+                de: "Die Palästra",
+                fr: "Le Palestre",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        860 => DutyInfo {
+            name: LocalisedText {
+                en: "The Volcanic Heart",
+                ja: "ヴォルカニック・ハート",
+                de: "Das Herz des Vulkans",
+                fr: "Le Cœur volcanique",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        861 => DutyInfo {
+            name: LocalisedText {
+                en: "Cloud Nine",
+                ja: "クラウドナイン",
+                de: "Wolke Sieben",
+                fr: "Le Petit Nuage",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        862 => DutyInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Custom Match - The Palaistra)",
+                ja: "クリスタルコンフリクト(パライストラ：カスタムマッチ)",
+                de: "Crystalline Conflict: Die Palästra (Schaukampf)",
+                fr: "Crystalline Conflict (partie personnalisée - Le Palestre)",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        863 => DutyInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Custom Match - The Volcanic Heart)",
+                ja: "クリスタルコンフリクト(ヴォルカニック・ハート：カスタムマッチ)",
+                de: "Crystalline Conflict: Das Herz des Vulkans (Schaukampf)",
+                fr: "Crystalline Conflict (partie personnalisée - Le Cœur volcanique)",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        864 => DutyInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Custom Match - Cloud Nine)",
+                ja: "クリスタルコンフリクト(クラウドナイン：カスタムマッチ)",
+                de: "Crystalline Conflict: Wolke Sieben (Schaukampf)",
+                fr: "Crystalline Conflict (partie personnalisée - Le Petit Nuage)",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        865 => DutyInfo {
+            name: LocalisedText {
+                en: "Cape Westwind",
+                ja: "リットアティン強襲戦",
+                de: "Kap Westwind",
+                fr: "Le Cap Vendouest",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        866 => DutyInfo {
+            name: LocalisedText {
+                en: "Aglaia",
+                ja: "輝ける神域 アグライア",
+                de: "Aglaia",
+                fr: "Domaine divin - Aglaé",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        867 => DutyInfo {
+            name: LocalisedText {
+                en: "Devastation",
+                ja: "アシエン・ラハブレア討伐戦",
+                de: "Das Antlitz der Kaltblütigkeit",
+                fr: "Le Praetorium en flammes",
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
