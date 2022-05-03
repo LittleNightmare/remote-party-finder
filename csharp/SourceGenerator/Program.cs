@@ -261,7 +261,7 @@ namespace SourceGenerator {
             sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
             foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
-                if (world.RowId == 0 || !world.Unknown5 || world.Unknown4 == 0 || world.DataCenter.Row == 0) {
+                if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.Row == 0) {
                     continue;
                 }
 
@@ -406,7 +406,6 @@ namespace SourceGenerator {
                             sb.Append(builder);
                         }
                     }
-                    // TODO: do lookup
                 } else {
                     var text = this.GetLocalisedStruct<Completion>(row.RowId, row => row.Text, 8);
                     if (text != null) {
