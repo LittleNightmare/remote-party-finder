@@ -90,24 +90,6 @@ lazy_static::lazy_static! {
             },
             pvp: false,
         },
-        11 => RouletteInfo {
-            name: LocalisedText {
-                en: "The Feast (Training Match)",
-                ja: "ザ・フィースト (カジュアルマッチ)",
-                de: "The Feast (Übungskampf)",
-                fr: "The Feast (entraînement)",
-            },
-            pvp: true,
-        },
-        13 => RouletteInfo {
-            name: LocalisedText {
-                en: "The Feast (Ranked Match)",
-                ja: "ザ・フィースト (ランクマッチ)",
-                de: "The Feast (gewertet)",
-                fr: "The Feast (classé)",
-            },
-            pvp: true,
-        },
         15 => RouletteInfo {
             name: LocalisedText {
                 en: "Duty Roulette: Alliance Raids",
@@ -116,15 +98,6 @@ lazy_static::lazy_static! {
                 fr: "Mission aléatoire : raids en alliance",
             },
             pvp: false,
-        },
-        16 => RouletteInfo {
-            name: LocalisedText {
-                en: "The Feast (Team Ranked Match)",
-                ja: "ザ・フィースト (チーム用ランクマッチ)",
-                de: "The Feast (Team, gewertet)",
-                fr: "The Feast (classé/équipe JcJ)",
-            },
-            pvp: true,
         },
         17 => RouletteInfo {
             name: LocalisedText {
@@ -323,6 +296,24 @@ lazy_static::lazy_static! {
                 fr: "Course de chocobos : aléatoire",
             },
             pvp: false,
+        },
+        40 => RouletteInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Casual Match)",
+                ja: "クリスタルコンフリクト(カジュアルマッチ)",
+                de: "Crystalline Conflict: Freies Spiel",
+                fr: "Crystalline Conflict (partie non classée)",
+            },
+            pvp: true,
+        },
+        41 => RouletteInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Ranked Match)",
+                ja: "クリスタルコンフリクト(ランクマッチ)",
+                de: "Crystalline Conflict: Gewertetes Spiel",
+                fr: "Crystalline Conflict (partie classée)",
+            },
+            pvp: true,
         },
     };
 }

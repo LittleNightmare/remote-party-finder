@@ -115,7 +115,7 @@ lazy_static::lazy_static! {
             en: "Kumbhiraskin Treasure Map",
             ja: "古ぼけた地図G14",
             de: "Ophiotaurosleder-Schatzkarte",
-            fr: "Carte au trésor en peau d'ophiotauros",
+            fr: "Carte au trésor en peau de khumbira",
         },
     };
 }

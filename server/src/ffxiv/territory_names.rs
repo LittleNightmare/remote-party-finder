@@ -177,18 +177,6 @@ lazy_static::lazy_static! {
             de: "Mor Dhona",
             fr: "Mor Dhona",
         },
-        157 => LocalisedText {
-            en: "Sastasha",
-            ja: "サスタシャ浸食洞",
-            de: "Sastasha-Höhle",
-            fr: "Sastasha",
-        },
-        158 => LocalisedText {
-            en: "Brayflox's Longstop",
-            ja: "ブレイフロクスの野営地",
-            de: "Brüllvolx' Langrast",
-            fr: "Bivouac de Brayflox",
-        },
         159 => LocalisedText {
             en: "The Wanderer's Palace",
             ja: "ワンダラーパレス",
@@ -200,12 +188,6 @@ lazy_static::lazy_static! {
             ja: "シリウス大灯台",
             de: "Pharos Sirius",
             fr: "Phare de Sirius",
-        },
-        161 => LocalisedText {
-            en: "Copperbell Mines",
-            ja: "カッパーベル銅山",
-            de: "Kupferglocken-Mine",
-            fr: "Mines de Clochecuivre",
         },
         162 => LocalisedText {
             en: "Halatali",
@@ -219,35 +201,11 @@ lazy_static::lazy_static! {
             de: "Versunkener Tempel von Qarn",
             fr: "Temple enseveli de Qarn",
         },
-        164 => LocalisedText {
-            en: "The Tam-Tara Deepcroft",
-            ja: "タムタラの墓所",
-            de: "Totenacker Tam-Tara",
-            fr: "Hypogée de Tam-Tara",
-        },
-        166 => LocalisedText {
-            en: "Haukke Manor",
-            ja: "ハウケタ御用邸",
-            de: "Haukke-Herrenhaus",
-            fr: "Manoir des Haukke",
-        },
         167 => LocalisedText {
             en: "Amdapor Keep",
             ja: "古城アムダプール",
             de: "Ruinen von Amdapor",
             fr: "Château d'Amdapor",
-        },
-        168 => LocalisedText {
-            en: "Stone Vigil",
-            ja: "ストーンヴィジル",
-            de: "Steinerne Wacht",
-            fr: "Vigile de Pierre",
-        },
-        169 => LocalisedText {
-            en: "The Thousand Maws of Toto-Rak",
-            ja: "トトラクの千獄",
-            de: "Tausend Löcher von Toto-Rak",
-            fr: "Mille Gueules de Toto-Rak",
         },
         170 => LocalisedText {
             en: "Cutter's Cry",
@@ -381,12 +339,6 @@ lazy_static::lazy_static! {
             de: "Admiralsbrücke",
             fr: "Salon de l'Amiral",
         },
-        202 => LocalisedText {
-            en: "Bowl of Embers",
-            ja: "炎帝祭跡",
-            de: "Das Grab der Lohe",
-            fr: "Cratère des tisons",
-        },
         204 => LocalisedText {
             en: "Seat of the First Bow",
             ja: "神勇隊司令室",
@@ -399,23 +351,11 @@ lazy_static::lazy_static! {
             de: "Wasserrosentisch",
             fr: "Chaire du Lotus",
         },
-        206 => LocalisedText {
-            en: "The Navel",
-            ja: "オ・ゴモロ火口神殿",
-            de: "Der Nabel",
-            fr: "Le Nombril",
-        },
         207 => LocalisedText {
             en: "Thornmarch",
             ja: "茨の園",
             de: "Dornmarsch",
             fr: "Lisière de ronces",
-        },
-        208 => LocalisedText {
-            en: "The Howling Eye",
-            ja: "ハウリングアイ石塔群",
-            de: "Das Tosende Auge",
-            fr: "Hurlœil",
         },
         210 => LocalisedText {
             en: "Heart of the Sworn",
@@ -447,12 +387,6 @@ lazy_static::lazy_static! {
             de: "Zentrales Thanalan",
             fr: "Thanalan central",
         },
-        217 => LocalisedText {
-            en: "Castrum Meridianum",
-            ja: "カストルム・メリディアヌム",
-            de: "Castrum Meridianum",
-            fr: "Castrum Meridianum",
-        },
         219 => LocalisedText {
             en: "Central Shroud",
             ja: "黒衣森：中央森林",
@@ -482,12 +416,6 @@ lazy_static::lazy_static! {
             ja: "クルザス中央高地",
             de: "Zentrales Hochland von Coerthas",
             fr: "Hautes terres du Coerthas central",
-        },
-        224 => LocalisedText {
-            en: "The Praetorium",
-            ja: "魔導城プラエトリウム",
-            de: "Praetorium",
-            fr: "Praetorium",
         },
         225 => LocalisedText {
             en: "Central Shroud",
@@ -1131,12 +1059,6 @@ lazy_static::lazy_static! {
             de: "Das Tosende Auge",
             fr: "Hurlœil (abord)",
         },
-        332 => LocalisedText {
-            en: "Western Thanalan",
-            ja: "西ザナラーン",
-            de: "Westliches Thanalan",
-            fr: "Thanalan occidental",
-        },
         335 => LocalisedText {
             en: "Mor Dhona",
             ja: "モードゥナ",
@@ -1207,7 +1129,7 @@ lazy_static::lazy_static! {
             en: "Porta Decumana",
             ja: "ポルタ・デクマーナ",
             de: "Porta Decumana",
-            fr: "Porta decumana",
+            fr: "Porta Decumana",
         },
         349 => LocalisedText {
             en: "Copperbell Mines",
@@ -2247,18 +2169,6 @@ lazy_static::lazy_static! {
             de: "Arretur S1T7",
             fr: "Unité de contention S1P7",
         },
-        525 => LocalisedText {
-            en: "The Feasting Grounds",
-            ja: "ウルヴズジェイル演習場",
-            de: "Kampfplatz",
-            fr: "Festin des loups",
-        },
-        527 => LocalisedText {
-            en: "The Feasting Grounds",
-            ja: "ウルヴズジェイル演習場",
-            de: "Kampfplatz",
-            fr: "Festin des loups",
-        },
         529 => LocalisedText {
             en: "The Fist of the Son",
             ja: "フィスト・オブ・ミダース",
@@ -2793,12 +2703,6 @@ lazy_static::lazy_static! {
             de: "Sohm Al",
             fr: "Sohm Al",
         },
-        619 => LocalisedText {
-            en: "The Feasting Grounds",
-            ja: "ウルヴズジェイル演習場",
-            de: "Kampfplatz",
-            fr: "Festin des loups",
-        },
         620 => LocalisedText {
             en: "The Peaks",
             ja: "ギラバニア山岳地帯",
@@ -2865,12 +2769,6 @@ lazy_static::lazy_static! {
             de: "Das Diadem",
             fr: "Le Diadème",
         },
-        632 => LocalisedText {
-            en: "Lichenweed",
-            ja: "ライケンウィード演習場",
-            de: "Flechtenhain",
-            fr: "Pré-de-lichen",
-        },
         633 => LocalisedText {
             en: "Carteneau Flats: Borderland Ruins",
             ja: "カルテノー平原：外縁遺跡群",
@@ -2924,18 +2822,6 @@ lazy_static::lazy_static! {
             ja: "シロガネ",
             de: "Shirogane",
             fr: "Shirogane",
-        },
-        644 => LocalisedText {
-            en: "Lichenweed",
-            ja: "ライケンウィード演習場",
-            de: "Flechtenhain",
-            fr: "Pré-de-lichen",
-        },
-        646 => LocalisedText {
-            en: "Lichenweed",
-            ja: "ライケンウィード演習場",
-            de: "Flechtenhain",
-            fr: "Pré-de-lichen",
         },
         647 => LocalisedText {
             en: "The Fringes",
@@ -3525,12 +3411,6 @@ lazy_static::lazy_static! {
             de: "Kienkan",
             fr: "Kienkan",
         },
-        745 => LocalisedText {
-            en: "Crystal Tower Training Grounds",
-            ja: "クリスタルタワー演習場",
-            de: "Kristallturm-Arena",
-            fr: "Arène de la Tour de Cristal",
-        },
         746 => LocalisedText {
             en: "The Jade Stoa",
             ja: "白帝の竹林",
@@ -3638,24 +3518,6 @@ lazy_static::lazy_static! {
             ja: "醴泉神社境内",
             de: "Reisen-Schrein",
             fr: "Sanctuaire Reisen",
-        },
-        765 => LocalisedText {
-            en: "Crystal Tower Training Grounds",
-            ja: "クリスタルタワー演習場",
-            de: "Kristallturm-Arena",
-            fr: "Arène de la Tour de Cristal",
-        },
-        766 => LocalisedText {
-            en: "Crystal Tower Training Grounds",
-            ja: "クリスタルタワー演習場",
-            de: "Kristallturm-Arena",
-            fr: "Arène de la Tour de Cristal",
-        },
-        767 => LocalisedText {
-            en: "Crystal Tower Training Grounds",
-            ja: "クリスタルタワー演習場",
-            de: "Kristallturm-Arena",
-            fr: "Arène de la Tour de Cristal",
         },
         768 => LocalisedText {
             en: "The Swallow's Compass",
@@ -4833,6 +4695,12 @@ lazy_static::lazy_static! {
             de: "Trockendock von Castrum Marinum",
             fr: "Cale sèche de Castrum Marinum",
         },
+        968 => LocalisedText {
+            en: "Medias Res",
+            ja: "詩想空間",
+            de: "Medias Res",
+            fr: "Interstice du chant onirique",
+        },
         969 => LocalisedText {
             en: "The Tower of Babil",
             ja: "バブイルの塔",
@@ -4899,6 +4767,36 @@ lazy_static::lazy_static! {
             de: "Empyreum",
             fr: "Empyrée",
         },
+        980 => LocalisedText {
+            en: "Private Cottage - Empyreum",
+            ja: "エンピレアム：コテージ",
+            de: "Privathütte (Empyreum)",
+            fr: "Maisonnette - Empyrée",
+        },
+        981 => LocalisedText {
+            en: "Private House - Empyreum",
+            ja: "エンピレアム：ハウス",
+            de: "Privathaus (Empyreum)",
+            fr: "Pavillon - Empyrée",
+        },
+        982 => LocalisedText {
+            en: "Private Mansion - Empyreum",
+            ja: "エンピレアム：レジデンス",
+            de: "Privatresidenz (Empyreum)",
+            fr: "Villa - Empyrée",
+        },
+        983 => LocalisedText {
+            en: "Private Chambers - Empyreum",
+            ja: "エンピレアム：プライベートルーム",
+            de: "Empyreum - Zimmer",
+            fr: "Chambre individuelle - Empyrée",
+        },
+        984 => LocalisedText {
+            en: "Company Workshop - Empyreum",
+            ja: "エンピレアム：地下工房",
+            de: "Gesellschaftswerkstätte: Empyreum",
+            fr: "Atelier de compagnie - Empyrée",
+        },
         985 => LocalisedText {
             en: "Ingleside Apartment Lobby",
             ja: "イングルサイド：ロビー",
@@ -4964,6 +4862,18 @@ lazy_static::lazy_static! {
             ja: "果ての終焉",
             de: "Am Rande des Endes",
             fr: "Orée de la fin",
+        },
+        998 => LocalisedText {
+            en: "The Final Day",
+            ja: "果ての終焉",
+            de: "Am Rande des Endes",
+            fr: "Orée de la fin",
+        },
+        999 => LocalisedText {
+            en: "Ingleside Apartment",
+            ja: "イングルサイド：部屋",
+            de: "Adlerblick (Wohnung)",
+            fr: "Le Coin de l'Âtre (appartement)",
         },
         1000 => LocalisedText {
             en: "The Excitatron 6000",
@@ -5156,6 +5066,180 @@ lazy_static::lazy_static! {
             ja: "プロピュライオン",
             de: "Propylaion",
             fr: "Le Propylée",
+        },
+        1032 => LocalisedText {
+            en: "The Palaistra",
+            ja: "パライストラ",
+            de: "Die Palästra",
+            fr: "Le Palestre",
+        },
+        1033 => LocalisedText {
+            en: "The Volcanic Heart",
+            ja: "ヴォルカニック・ハート",
+            de: "Das Herz des Vulkans",
+            fr: "Le Cœur volcanique",
+        },
+        1034 => LocalisedText {
+            en: "Cloud Nine",
+            ja: "クラウドナイン",
+            de: "Wolke Sieben",
+            fr: "Le Petit Nuage",
+        },
+        1035 => LocalisedText {
+            en: "Porta Decumana",
+            ja: "ポルタ・デクマーナ",
+            de: "Porta Decumana",
+            fr: "Porta Decumana",
+        },
+        1036 => LocalisedText {
+            en: "Sastasha",
+            ja: "サスタシャ浸食洞",
+            de: "Sastasha-Höhle",
+            fr: "Sastasha",
+        },
+        1037 => LocalisedText {
+            en: "The Tam-Tara Deepcroft",
+            ja: "タムタラの墓所",
+            de: "Totenacker Tam-Tara",
+            fr: "Hypogée de Tam-Tara",
+        },
+        1038 => LocalisedText {
+            en: "Copperbell Mines",
+            ja: "カッパーベル銅山",
+            de: "Kupferglocken-Mine",
+            fr: "Mines de Clochecuivre",
+        },
+        1039 => LocalisedText {
+            en: "The Thousand Maws of Toto-Rak",
+            ja: "トトラクの千獄",
+            de: "Tausend Löcher von Toto-Rak",
+            fr: "Mille Gueules de Toto-Rak",
+        },
+        1040 => LocalisedText {
+            en: "Haukke Manor",
+            ja: "ハウケタ御用邸",
+            de: "Haukke-Herrenhaus",
+            fr: "Manoir des Haukke",
+        },
+        1041 => LocalisedText {
+            en: "Brayflox's Longstop",
+            ja: "ブレイフロクスの野営地",
+            de: "Brüllvolx' Langrast",
+            fr: "Bivouac de Brayflox",
+        },
+        1042 => LocalisedText {
+            en: "Stone Vigil",
+            ja: "ストーンヴィジル",
+            de: "Steinerne Wacht",
+            fr: "Vigile de Pierre",
+        },
+        1043 => LocalisedText {
+            en: "Castrum Meridianum",
+            ja: "カストルム・メリディアヌム",
+            de: "Castrum Meridianum",
+            fr: "Castrum Meridianum",
+        },
+        1044 => LocalisedText {
+            en: "The Praetorium",
+            ja: "魔導城プラエトリウム",
+            de: "Praetorium",
+            fr: "Praetorium",
+        },
+        1045 => LocalisedText {
+            en: "Bowl of Embers",
+            ja: "炎帝祭跡",
+            de: "Das Grab der Lohe",
+            fr: "Cratère des tisons",
+        },
+        1046 => LocalisedText {
+            en: "The Navel",
+            ja: "オ・ゴモロ火口神殿",
+            de: "Der Nabel",
+            fr: "Le Nombril",
+        },
+        1047 => LocalisedText {
+            en: "The Howling Eye",
+            ja: "ハウリングアイ石塔群",
+            de: "Das Tosende Auge",
+            fr: "Hurlœil",
+        },
+        1048 => LocalisedText {
+            en: "Porta Decumana",
+            ja: "ポルタ・デクマーナ",
+            de: "Porta Decumana",
+            fr: "Porta Decumana",
+        },
+        1049 => LocalisedText {
+            en: "Western Thanalan",
+            ja: "西ザナラーン",
+            de: "Westliches Thanalan",
+            fr: "Thanalan occidental",
+        },
+        1050 => LocalisedText {
+            en: "Alzadaal's Legacy",
+            ja: "アルザダール海底遺跡群",
+            de: "Alzadaals Vermächtnis",
+            fr: "Legs d'Alzadaal",
+        },
+        1051 => LocalisedText {
+            en: "The Tower of Babil",
+            ja: "バブイルの塔",
+            de: "Turm von Babil",
+            fr: "Tour de Babil",
+        },
+        1052 => LocalisedText {
+            en: "The Porta Decumana",
+            ja: "ポルタ・デクマーナ",
+            de: "Porta Decumana",
+            fr: "Porta Decumana",
+        },
+        1053 => LocalisedText {
+            en: "The Porta Decumana",
+            ja: "ポルタ・デクマーナ",
+            de: "Porta Decumana",
+            fr: "Porta Decumana",
+        },
+        1054 => LocalisedText {
+            en: "Aglaia",
+            ja: "輝ける神域 アグライア",
+            de: "Aglaia",
+            fr: "Domaine divin - Aglaé",
+        },
+        1056 => LocalisedText {
+            en: "Alzadaal's Legacy",
+            ja: "アルザダール海底遺跡群",
+            de: "Alzadaals Vermächtnis",
+            fr: "Legs d'Alzadaal",
+        },
+        1057 => LocalisedText {
+            en: "Restricted Archives",
+            ja: "ヌーメノン大書院：禁書庫",
+            de: "Verbotener Flügel",
+            fr: "Archives interdites du Noumène",
+        },
+        1058 => LocalisedText {
+            en: "The Palaistra",
+            ja: "パライストラ",
+            de: "Die Palästra",
+            fr: "Le Palestre",
+        },
+        1059 => LocalisedText {
+            en: "The Volcanic Heart",
+            ja: "ヴォルカニック・ハート",
+            de: "Das Herz des Vulkans",
+            fr: "Le Cœur volcanique",
+        },
+        1060 => LocalisedText {
+            en: "Cloud Nine",
+            ja: "クラウドナイン",
+            de: "Wolke Sieben",
+            fr: "Le Petit Nuage",
+        },
+        1061 => LocalisedText {
+            en: "The Omphalos",
+            ja: "オムファロス",
+            de: "Omphalos",
+            fr: "Omphalos",
         },
     };
 }
