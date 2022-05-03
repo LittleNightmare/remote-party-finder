@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>1.0.4</Version>
+        <Version>1.0.5</Version>
         <TargetFramework>net5.0-windows</TargetFramework>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     </PropertyGroup>
@@ -39,7 +39,7 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudLinter" Version="1.0.3"/>
-        <PackageReference Include="DalamudPackager" Version="2.1.5"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.7"/>
     </ItemGroup>
 
 </Project>
