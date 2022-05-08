@@ -1,13 +1,13 @@
 {% extends "_frame.html" %}
 
 {% block title -%}
-Remote Party Finder
+xivpf - stats
 {%- endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="/assets/common.css"/>
 <link rel="stylesheet" href="/assets/stats.css"/>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script defer src="/assets/d3.js"></script>
 <script defer src="/assets/stats.js"></script>
 {% endblock %}
 
@@ -19,8 +19,7 @@ Remote Party Finder
 <div class="chart-containers">
     <div class="container">
         <h1>Top categories</h1>
-        <div class="chart">
-            <canvas id="dutiesChart"></canvas>
+        <div id="dutiesChart" class="chart">
         </div>
         <details>
             <summary>Details</summary>
@@ -45,29 +44,33 @@ Remote Party Finder
 
     <div class="container">
         <h1>Top hosts</h1>
-        <div class="chart">
-            <canvas id="hostsChart"></canvas>
+        <div id="hostsChart" class="chart">
         </div>
         <details>
             <summary>Details</summary>
             <table id="hosts">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Count</th>
-                </tr>
+                    <tr>
+                        <th>World (created)</th>
+                        <th>Name</th>
+                        <th>Count</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {%- for info in stats.hosts %}
-                <tr>
-                    <td>{{ stats.player_name(info.content_id_lower) }}</td>
-                    <td>{{ info.count }}</td>
-                </tr>
-                {%- endfor %}
-                <tr>
-                    <td>Other</td>
-                    <td>{{ stats.num_listings() - stats.num_host_listings() }}</td>
-                </tr>
+                    {%- for info in stats.hosts %}
+                    {%- for entry in info.content_ids %}
+                    <tr>
+                        <td>{{ info.world_name() }}</td>
+                        <td>{{ stats.player_name(entry.content_id) }}</td>
+                        <td>{{ entry.count }}</td>
+                    </tr>
+                    {%- endfor %}
+                    <tr>
+                        <td>{{ info.world_name() }}</td>
+                        <td>Other</td>
+                        <td>{{ info.num_other() }}
+                    </tr>
+                    {%- endfor %}
                 </tbody>
             </table>
         </details>
@@ -75,8 +78,7 @@ Remote Party Finder
 
     <div class="container">
         <h1>Top hours (UTC)</h1>
-        <div class="chart">
-            <canvas id="hoursChart"></canvas>
+        <div id="hoursChart" class="chart">
         </div>
         <details>
             <summary>Details</summary>
@@ -101,8 +103,7 @@ Remote Party Finder
 
     <div class="container">
         <h1>Top days (UTC)</h1>
-        <div class="chart">
-            <canvas id="daysChart"></canvas>
+        <div id="daysChart" class="chart">
         </div>
         <details>
             <summary>Details</summary>

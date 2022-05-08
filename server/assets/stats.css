@@ -1,5 +1,5 @@
 body {
-    margin: 1em;
+    margin-top: 1em;
 }
 
 .total {
@@ -10,10 +10,15 @@ body {
 }
 
 .chart {
+    height: 50vh;
     max-height: 50vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.chart canvas {
+.chart svg {
     max-width: 100%;
     max-height: 100%;
 }
@@ -35,11 +40,12 @@ body {
 }
 
 .chart-containers .container table tr {
-    background-color: var(--row-background);
+    /*     background-color: var(--row-background); */
 }
 
 .chart-containers .container table tr:nth-child(2n) {
-    background-color: var(--row-background-alternate);
+    /*     background-color: var(--row-background-alternate); */
+    background-color: var(--muted-border-color);
 }
 
 .chart-containers .container table tr td {

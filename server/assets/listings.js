@@ -64,15 +64,14 @@
         let language = document.getElementById('language');
         if (state.lang === null) {
             state.lang = language.dataset.accept;
-            let cookie = document.cookie
-                .split(';')
-                .find(row => row.trim().startsWith('lang='));
-            if (cookie !== undefined) {
-                state.lang = decodeURIComponent(cookie.split('=')[1]);
-            }
         }
 
-        language.value = state.lang;
+        let cookie = document.cookie
+                             .split(';')
+                             .find(row => row.trim().startsWith('lang='));
+        if (cookie !== undefined) {
+            state.lang = decodeURIComponent(cookie.split('=')[1]);
+        }
     }
 
     function setUpList() {
@@ -156,19 +155,9 @@
         });
     }
 
-    function setUpLanguage() {
-        let language = document.getElementById('language');
-        language.addEventListener('change', () => {
-            state.lang = language.value;
-            document.cookie = `lang=${encodeURIComponent(language.value)};path=/;max-age=31536000;samesite=lax`;
-            window.location.reload();
-        });
-    }
-
     addJsClass();
     saveLoadState();
     reflectState();
-    setUpLanguage();
     state.list = setUpList();
     setUpDataCentreFilter();
     setUpCategoryFilter();

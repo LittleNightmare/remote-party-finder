@@ -14,27 +14,27 @@ pub struct CachedStatistics {
 #[derive(Debug, Clone, Deserialize)]
 pub struct Aliases {
     #[serde(deserialize_with = "alias_de")]
-    pub aliases: HashMap<u32, Vec<Alias>>,
+    pub aliases: HashMap<u32, Alias>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Statistics {
     pub count: Vec<Count>,
     #[serde(default)]
-    pub aliases: HashMap<u32, Vec<Alias>>,
+    pub aliases: HashMap<u32, Alias>,
     pub duties: Vec<DutyInfo>,
     pub hosts: Vec<HostInfo>,
     pub hours: Vec<HourInfo>,
     pub days: Vec<DayInfo>,
 }
 
-fn alias_de<'de, D>(de: D) -> std::result::Result<HashMap<u32, Vec<Alias>>, D::Error>
-    where D: Deserializer<'de>
+fn alias_de<'de, D>(de: D) -> std::result::Result<HashMap<u32, Alias>, D::Error>
+where D: Deserializer<'de>
 {
     let aliases: Vec<AliasInfo> = Deserialize::deserialize(de)?;
     let map = aliases
         .into_iter()
-        .map(|info| (info.content_id_lower, info.aliases))
+        .map(|info| (info.content_id, info.alias))
         .collect();
     Ok(map)
 }
@@ -49,25 +49,17 @@ impl Statistics {
     }
 
     pub fn player_name(&self, cid: &u32) -> Cow<str> {
-        let aliases = match self.aliases.get(cid) {
+        let alias = match self.aliases.get(cid) {
             Some(a) => a,
             None => return "<unknown>".into(),
         };
 
-        if aliases.is_empty() {
-            return "<unknown>".into();
-        }
-
-        let world = match crate::ffxiv::WORLDS.get(&aliases[0].home_world) {
+        let world = match crate::ffxiv::WORLDS.get(&alias.home_world) {
             Some(world) => world.name(),
             None => "<unknown>",
         };
 
-        format!("{} @ {}", aliases[0].name.text(), world).into()
-    }
-
-    pub fn num_host_listings(&self) -> usize {
-        self.hosts.iter().map(|info| info.count).sum()
+        format!("{} @ {}", alias.name.text(), world).into()
     }
 }
 
@@ -79,8 +71,8 @@ pub struct Count {
 #[derive(Debug, Clone, Deserialize)]
 pub struct AliasInfo {
     #[serde(rename = "_id")]
-    pub content_id_lower: u32,
-    pub aliases: Vec<Alias>,
+    pub content_id: u32,
+    pub alias: Alias,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -114,7 +106,28 @@ impl DutyInfo {
 #[derive(Debug, Clone, Deserialize)]
 pub struct HostInfo {
     #[serde(rename = "_id")]
-    pub content_id_lower: u32,
+    pub created_world: u32,
+    pub count: usize,
+    pub content_ids: Vec<HostInfoInfo>,
+}
+
+impl HostInfo {
+    pub fn num_other(&self) -> usize {
+        let top15: usize = self.content_ids.iter().map(|info| info.count).sum();
+        self.count - top15
+    }
+
+    pub fn world_name(&self) -> &'static str {
+        match crate::ffxiv::WORLDS.get(&self.created_world) {
+            Some(world) => world.name(),
+            None => "<unknown>",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct HostInfoInfo {
+    pub content_id: u32,
     pub count: usize,
 }
 
