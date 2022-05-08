@@ -37,20 +37,42 @@ lazy_static::lazy_static! {
                 "hosts": [
                     {
                         "$group": {
-                            "_id": "$listing.content_id_lower",
-                            "count": {
-                                "$sum": 1
+                            "_id": {
+                                "world": "$listing.created_world",
+                                "content_id": "$listing.content_id_lower",
                             },
+                            "count": { "$sum": 1 },
                         }
                     },
                     {
                         "$sort": {
-                            "count": -1
+                            "count": -1,
                         }
                     },
                     {
-                        "$limit": 15
-                    }
+                        "$group": {
+                            "_id": "$_id.world",
+                            "count": {
+                                "$sum": "$count",
+                            },
+                            "content_ids": {
+                                "$push": {
+                                    "content_id": "$_id.content_id",
+                                    "count": "$count",
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "$addFields": {
+                            "content_ids": {
+                                "$slice": ["$content_ids", 0, 15],
+                            },
+                        }
+                    },
+                    {
+                        "$sort": { "count": -1 }
+                    },
                 ],
                 "hours": [
                     {
@@ -95,10 +117,15 @@ lazy_static::lazy_static! {
             "$facet": {
                 "aliases": [
                     {
+                        "$sort": {
+                            "created_at": -1,
+                        }
+                    },
+                    {
                         "$group": {
                             "_id": "$listing.content_id_lower",
-                            "aliases": {
-                                "$addToSet": {
+                            "alias": {
+                                "$first": {
                                     "name": "$listing.name",
                                     "home_world": "$listing.home_world",
                                 },
@@ -141,7 +168,7 @@ async fn get_stats_internal(state: &State, docs: impl IntoIterator<Item = Docume
     let doc = doc.ok_or_else(|| anyhow::anyhow!("missing document"))?;
     let mut stats: Statistics = mongodb::bson::from_document(doc)?;
 
-    let ids: Vec<u32> = stats.hosts.iter().map(|host| host.content_id_lower).collect();
+    let ids: Vec<u32> = stats.hosts.iter().flat_map(|host| host.content_ids.iter().map(|entry| entry.content_id)).collect();
     let mut aliases_query: Vec<Document> = ALIASES_QUERY.iter().cloned().collect();
     aliases_query.insert(0, doc! {
         "$match": {

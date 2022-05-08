@@ -41,6 +41,15 @@ impl Language {
         }
     }
 
+    pub fn name(&self) -> &'static str {
+        match self {
+            Self::English => "english",
+            Self::Japanese => "日本語",
+            Self::German => "deutsch",
+            Self::French => "français",
+        }
+    }
+
     pub fn from_codes(val: Option<&str>) -> Self {
         let val = match val {
             Some(v) => v,

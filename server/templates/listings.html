@@ -1,7 +1,7 @@
 {% extends "_frame.html" %}
 
 {% block title -%}
-Remote Party Finder
+xivpf - listings
 {%- endblock %}
 
 {% block head %}
@@ -14,51 +14,45 @@ Remote Party Finder
 {% block body %}
 <div id="container">
     <div class="requires-js settings">
-        <div class="left">
-            <input type="search" class="search" placeholder="Search"/>
+        <div class="controls">
+            <input type="search" class="search" placeholder="search"/>
             <select id="data-centre-filter">
-                <option value="All">All</option>
-                <optgroup label="North America">
-                    <option value="Aether">Aether</option>
-                    <option value="Crystal">Crystal</option>
-                    <option value="Primal">Primal</option>
+                <option value="All">all</option>
+                <optgroup label="north america">
+                    <option value="Aether">aether</option>
+                    <option value="Crystal">crystal</option>
+                    <option value="Primal">primal</option>
                 </optgroup>
-                <optgroup label="Europe">
-                    <option value="Chaos">Chaos</option>
-                    <option value="Light">Light</option>
+                <optgroup label="europe">
+                    <option value="Chaos">chaos</option>
+                    <option value="Light">light</option>
                 </optgroup>
-                <optgroup label="Japan">
-                    <option value="Elemental">Elemental</option>
-                    <option value="Gaia">Gaia</option>
-                    <option value="Mana">Mana</option>
+                <optgroup label="japan">
+                    <option value="Elemental">elemental</option>
+                    <option value="Gaia">gaia</option>
+                    <option value="Mana">mana</option>
                 </optgroup>
-                <optgroup label="Oceania">
-                    <option value="Materia">Materia</option>
+                <optgroup label="oceania">
+                    <option value="Materia">materia</option>
                 </optgroup>
             </select>
+        </div>
+        <div>
             <details class="filter-controls">
-                <summary>Advanced</summary>
+                <summary>advanced</summary>
                 <div>
                     <div class="control">
                         <label>
                             Categories
                             <select multiple id="category-filter">
                                 {%- for category in PartyFinderCategory::ALL %}
-                                    <option value="{{ category.as_str() }}">{{ category.name().text(lang) }}</option>
+                                <option value="{{ category.as_str() }}">{{ category.name().text(lang) }}</option>
                                 {%- endfor %}
                             </select>
                         </label>
                     </div>
                 </div>
             </details>
-        </div>
-        <div class="right">
-            <select id="language" data-accept="{{ lang.code() }}">
-                <option value="en">English</option>
-                <option value="ja">日本語</option>
-                <option value="de">Deutsch</option>
-                <option value="fr">Français</option>
-            </select>
         </div>
     </div>
     <div id="listings" class="list">
@@ -68,10 +62,10 @@ Remote Party Finder
         {%- for container in containers %}
         {%- let listing = container.listing.borrow() %}
         <div
-                class="listing"
-                data-id="{{ listing.id }}"
-                data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
-                data-pf-category="{{ listing.html_pf_category() }}">
+          class="listing"
+          data-id="{{ listing.id }}"
+          data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
+          data-pf-category="{{ listing.html_pf_category() }}">
             <div class="left">
                 {%- let duty_class %}
                 {%- if listing.is_cross_world() %}

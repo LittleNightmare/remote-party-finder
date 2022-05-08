@@ -149,6 +149,9 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
                 .or(listings_js())
                 .or(stats_css())
                 .or(stats_js())
+                .or(d3())
+                .or(pico())
+                .or(common_js())
         )
         .boxed()
 }
@@ -199,6 +202,27 @@ fn stats_js() -> BoxedFilter<(impl Reply, )> {
     warp::path("stats.js")
         .and(warp::path::end())
         .and(warp::fs::file("./assets/stats.js"))
+        .boxed()
+}
+
+fn d3() -> BoxedFilter<(impl Reply, )> {
+    warp::path("d3.js")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/d3.v7.min.js"))
+        .boxed()
+}
+
+fn pico() -> BoxedFilter<(impl Reply, )> {
+    warp::path("pico.css")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/pico.min.css"))
+        .boxed()
+}
+
+fn common_js() -> BoxedFilter<(impl Reply, )> {
+    warp::path("common.js")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/common.js"))
         .boxed()
 }
 

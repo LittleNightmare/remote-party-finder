@@ -1,11 +1,40 @@
 <!doctype html>
-<html lang="{{ lang.code() }}" class="no-js">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/assets/minireset.css"/>
-    {%- block head %}{% endblock -%}
-</head>
-<body>{% block body %}{% endblock %}</body>
+<html lang="{{ lang.code() }}" class="no-js" data-theme="dark">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/minireset.css"/>
+        <link rel="stylesheet" href="/assets/pico.css"/>
+        <script defer src="/assets/common.js"></script>
+        {%- block head %}{% endblock -%}
+    </head>
+    <body>
+        <nav class="container">
+            <ul>
+                <li><strong><a href="/" class="contrast">xivpf</a></strong></li>
+            </ul>
+            <ul>
+                <li role="list" dir="rtl">
+                    <a href="javascript:void(0)" aria-haspopup="listbox">stats</a>
+                    <ul role="listbox">
+                        <li><a href="/stats">all time</a></li>
+                        <li><a href="/stats/7days">7 days</a></li>
+                    </ul>
+                </li>
+                <li role="list" dir="rtl">
+                    <a href="javascript:void(0)" aria-haspopup="listbox">{{ lang.name() }}</a>
+                    <ul role="listbox" aria-haspopup="listbox" id="language" data-accept="{{ lang.code() }}">
+                        <li><a href="javascript:void(0)" data-value="en">english</a></li>
+                        <li><a href="javascript:void(0)" data-value="ja">日本語</a></li>
+                        <li><a href="javascript:void(0)" data-value="de">deutsch</a></li>
+                        <li><a href="javascript:void(0)" data-value="fr">français</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
 </html>

@@ -28,9 +28,13 @@
     margin-top: 1em;
 }
 
-#container > .settings {
+#container > .settings > .controls {
     display: flex;
     justify-content: space-between;
+}
+
+#container > .settings > .controls > .search {
+    margin-right: 1em;
 }
 
 #listings > .no-listings {
@@ -45,11 +49,12 @@
     margin: 0 -1em;
     padding: 1em;
 
-    background-color: var(--row-background);
+    /*     background-color: var(--row-background); */
 }
 
 #listings > .listing:nth-child(2n) {
-    background-color: var(--row-background-alternate);
+    background-color: var(--muted-border-color);
+    /*     background-color: var(--row-background-alternate); */
 }
 
 #listings > .listing .description {
