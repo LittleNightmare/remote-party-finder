@@ -7,7 +7,13 @@ use crate::stats::{Aliases, Statistics};
 use crate::web::State;
 
 lazy_static::lazy_static! {
-    static ref QUERY: [Document; 1] = [
+    static ref QUERY: [Document; 2] = [
+        doc! {
+            "$match": {
+                // filter private pfs
+                "listing.search_area": { "$bitsAllClear": 2 },
+            }
+        },
         doc! {
             "$facet": {
                 "count": [
