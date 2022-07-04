@@ -261,6 +261,12 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         }
                     },
                     doc! {
+                        "$match": {
+                            // filter private pfs
+                            "listing.search_area": { "$bitsAllClear": 2 },
+                        }
+                    },
+                    doc! {
                         "$set": {
                             "time_left": {
                                 "$divide": [
