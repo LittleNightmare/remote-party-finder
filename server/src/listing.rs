@@ -134,7 +134,7 @@ impl PartyFinderListing {
             return false;
         }
 
-        crate::ffxiv::DUTIES.get(&u32::from(self.duty))
+        crate::ffxiv::duty(u32::from(self.duty))
             .map(|info| info.high_end)
             .unwrap_or_default()
     }
@@ -144,14 +144,14 @@ impl PartyFinderListing {
             return 0;
         }
 
-        crate::ffxiv::DUTIES.get(&u32::from(self.duty))
+        crate::ffxiv::duty(u32::from(self.duty))
             .map(|info| info.content_kind.as_u32())
             .unwrap_or_default()
     }
 
     pub fn pf_category(&self) -> Option<PartyFinderCategory> {
         let duty_type = self.duty_type;
-        let duty_info = crate::ffxiv::DUTIES.get(&u32::from(self.duty));
+        let duty_info = crate::ffxiv::duty(u32::from(self.duty));
         let duty_category = self.category;
 
         let category = match (duty_type, duty_info, duty_category) {

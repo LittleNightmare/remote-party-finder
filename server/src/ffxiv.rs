@@ -107,6 +107,16 @@ impl LocalisedText {
     }
 }
 
+pub fn duty(duty: u32) -> Option<&'static duties::DutyInfo> {
+    crate::ffxiv::DUTIES.get(&duty)
+        .or_else(|| old::OLD_DUTIES.get(&duty))
+}
+
+pub fn roulette(roulette: u32) -> Option<&'static roulettes::RouletteInfo> {
+    crate::ffxiv::ROULETTES.get(&roulette)
+        .or_else(|| old::OLD_ROULETTES.get(&roulette))
+}
+
 pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
     match (duty_type, category) {
         (DutyType::Other, DutyCategory::Fates) => {
@@ -141,12 +151,12 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::French => "Pilier des Cieux",
         }),
         (DutyType::Normal, _) => {
-            if let Some(info) = crate::ffxiv::DUTIES.get(&u32::from(duty)) {
+            if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
                 return Cow::from(info.name.text(&lang));
             }
         }
         (DutyType::Roulette, _) => {
-            if let Some(info) = crate::ffxiv::ROULETTES.get(&u32::from(duty)) {
+            if let Some(info) = roulette(u32::from(duty)) {
                 return Cow::from(info.name.text(&lang));
             }
         }
@@ -163,4 +173,179 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
     }
 
     Cow::from(format!("{:?}", category))
+}
+
+mod old {
+    use std::collections::HashMap;
+
+    use crate::ffxiv::{
+        duties::{ContentKind, DutyInfo},
+        LocalisedText,
+        roulettes::RouletteInfo,
+    };
+
+    lazy_static::lazy_static! {
+        pub static ref OLD_DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {
+            62 => DutyInfo {
+                name: LocalisedText {
+                    en: "Cape Westwind",
+                    ja: "リットアティン強襲戦",
+                    de: "Kap Westwind",
+                    fr: "Le Cap Vendouest",
+                },
+                high_end: false,
+                content_kind: ContentKind::Trials,
+            },
+            143 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (4 on 4 - Training)",
+                    ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
+                    de: "The Feast (4 gegen 4, Übungskampf)",
+                    fr: "The Feast (4x4/entraînement)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            145 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (4 on 4 - Ranked)",
+                    ja: "ザ・フィースト (4対4 / ランクマッチ)",
+                    de: "The Feast (4 gegen 4, gewertet)",
+                    fr: "The Feast (4x4/classé)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            201 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Custom Match - Feasting Grounds)",
+                    ja: "ザ・フィースト (ウルヴズジェイル演習場：カスタムマッチ）",
+                    de: "The Feast (Wolfshöhle: Schaukampf)",
+                    fr: "The Feast (personnalisé/Festin des loups)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            228 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (4 on 4 - Training)",
+                    ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
+                    de: "The Feast (4 gegen 4, Übungskampf)",
+                    fr: "The Feast (4x4/entraînement)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            230 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (4 on 4 - Ranked)",
+                    ja: "ザ・フィースト (4対4 / ランクマッチ)",
+                    de: "The Feast (4 gegen 4, gewertet)",
+                    fr: "The Feast (4x4/classé)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            233 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Custom Match - Lichenweed)",
+                    ja: "ザ・フィースト (ライケンウィード演習場：カスタムマッチ）",
+                    de: "The Feast (Flechtenhain: Schaukampf)",
+                    fr: "The Feast (personnalisé/Pré-de-lichen)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            476 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Team Ranked)",
+                    ja: "ザ・フィースト (チーム用ランクマッチ)",
+                    de: "The Feast (Team, gewertet)",
+                    fr: "The Feast (classé/équipe JcJ)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            478 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Ranked)",
+                    ja: "ザ・フィースト (ランクマッチ)",
+                    de: "The Feast (gewertet)",
+                    fr: "The Feast (classé)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            479 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Training)",
+                    ja: "ザ・フィースト (カジュアルマッチ)",
+                    de: "The Feast (Übungskampf)",
+                    fr: "The Feast (entraînement)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            480 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Custom Match - Crystal Tower)",
+                    ja: "ザ・フィースト (クリスタルタワー演習場：カスタムマッチ）",
+                    de: "The Feast (Kristallturm-Arena: Schaukampf)",
+                    fr: "The Feast (personnalisé/Tour de Cristal)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            580 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Feast (Team Custom Match - Crystal Tower)",
+                    ja: "ザ・フィースト (クリスタルタワー演習場：チーム用カスタムマッチ)",
+                    de: "The Feast (Kristallturm-Arena: Team-Schaukampf) ",
+                    fr: "The Feast (personnalisé/équipe JcJ/Tour de Cristal)",
+                },
+                high_end: false,
+                content_kind: ContentKind::PvP,
+            },
+            776 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Whorleater (Unreal)",
+                    ja: "幻リヴァイアサン討滅戦",
+                    de: "Traumprüfung - Leviathan",
+                    fr: "Le Briseur de marées (irréel)",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
+        };
+
+        pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
+            11 => RouletteInfo {
+                name: LocalisedText {
+                    en: "The Feast (Training Match)",
+                    ja: "ザ・フィースト (カジュアルマッチ)",
+                    de: "The Feast (Übungskampf)",
+                    fr: "The Feast (entraînement)",
+                },
+                pvp: true,
+            },
+            13 => RouletteInfo {
+                name: LocalisedText {
+                    en: "The Feast (Ranked Match)",
+                    ja: "ザ・フィースト (ランクマッチ)",
+                    de: "The Feast (gewertet)",
+                    fr: "The Feast (classé)",
+                },
+                pvp: true,
+            },
+            16 => RouletteInfo {
+                name: LocalisedText {
+                    en: "The Feast (Team Ranked Match)",
+                    ja: "ザ・フィースト (チーム用ランクマッチ)",
+                    de: "The Feast (Team, gewertet)",
+                    fr: "The Feast (classé/équipe JcJ)",
+                },
+                pvp: true,
+            },
+        };
+    }
 }
