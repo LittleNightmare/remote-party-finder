@@ -1,11 +1,15 @@
 let
     sources = import ./nix/sources.nix { };
     pkgs = import sources.nixpkgs { overlays = [ (import sources.mozilla) ]; };
+    rust = pkgs.rustChannelOfTargets "nightly" "2022-07-04" [ "x86_64-unknown-linux-musl" ];
 in
 pkgs.mkShell {
     buildInputs = [
-        (pkgs.rustChannelOf { date = "2021-12-05"; channel = "nightly"; }).rust
+        rust
         pkgs.gcc
+        pkgs.glibc
         pkgs.patchelf
+        pkgs.musl
+        pkgs.musl.dev
     ];
 }
