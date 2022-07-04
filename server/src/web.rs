@@ -152,6 +152,7 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
                 .or(d3())
                 .or(pico())
                 .or(common_js())
+                .or(list_js())
         )
         .boxed()
 }
@@ -230,6 +231,13 @@ fn index() -> BoxedFilter<(impl Reply, )> {
     let route = warp::path::end()
         .map(|| warp::redirect(Uri::from_static("/listings")));
     warp::get().and(route).boxed()
+}
+
+fn list_js() -> BoxedFilter<(impl Reply, )> {
+    warp::path("list.js")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/list.min.js"))
+        .boxed()
 }
 
 fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
