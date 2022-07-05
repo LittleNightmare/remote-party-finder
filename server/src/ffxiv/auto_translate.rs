@@ -3835,7 +3835,7 @@ lazy_static::lazy_static! {
             en: "Crystal Credit",
             ja: "クリスタルポイント",
             de: "Kristallpunkt",
-            fr: "points Crystal",
+            fr: "points de cristal",
         },
         (18, 1525) => LocalisedText {
             en: "Rising Stars",
@@ -7106,6 +7106,12 @@ lazy_static::lazy_static! {
             ja: "ポッド602",
             de: "Pod 602",
             fr: "pod 602",
+        },
+        (49, 287) => LocalisedText {
+            en: "hippo cart",
+            ja: "ヒッポカート",
+            de: "Hippowagen",
+            fr: "hippochar",
         },
         (49, 288) => LocalisedText {
             en: "troll",
@@ -22857,6 +22863,12 @@ lazy_static::lazy_static! {
             ja: "ルナテンダー・ロイヤル",
             de: "königlich[a] Lunatender",
             fr: "Roi pampa sélénien",
+        },
+        (65, 444) => LocalisedText {
+            en: "wind-up Arkasodara",
+            ja: "マメット・アルカソーダラ",
+            de: "Arkasodara-Puppe",
+            fr: "Arkasodara miniature",
         },
         (65, 445) => LocalisedText {
             en: "wind-up kangaroo",
