@@ -76,5 +76,9 @@ lazy_static::lazy_static! {
         97 => World::Ragnarok,
         98 => World::Ridill,
         99 => World::Sargatanas,
+        400 => World::Sagittarius,
+        401 => World::Phantom,
+        402 => World::Alpha,
+        403 => World::Raiden,
     };
 }
