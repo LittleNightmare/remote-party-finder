@@ -13,9 +13,9 @@ namespace RemotePartyFinder {
         public uint ContentIdLower { get; }
         public byte[] Name { get; }
         public byte[] Description { get; }
-        public byte CreatedWorld { get; }
-        public byte HomeWorld { get; }
-        public byte CurrentWorld { get; }
+        public ushort CreatedWorld { get; }
+        public ushort HomeWorld { get; }
+        public ushort CurrentWorld { get; }
         public DutyCategory Category { get; }
         public ushort Duty { get; }
         public DutyType DutyType { get; }
@@ -38,9 +38,9 @@ namespace RemotePartyFinder {
             this.ContentIdLower = listing.ContentIdLower;
             this.Name = listing.Name.Encode();
             this.Description = listing.Description.Encode();
-            this.CreatedWorld = (byte) listing.World.Value.RowId;
-            this.HomeWorld = (byte) listing.HomeWorld.Value.RowId;
-            this.CurrentWorld = (byte) listing.CurrentWorld.Value.RowId;
+            this.CreatedWorld = (ushort) listing.World.Value.RowId;
+            this.HomeWorld = (ushort) listing.HomeWorld.Value.RowId;
+            this.CurrentWorld = (ushort) listing.CurrentWorld.Value.RowId;
             this.Category = listing.Category;
             this.Duty = listing.RawDuty;
             this.DutyType = listing.DutyType;
@@ -66,7 +66,7 @@ namespace RemotePartyFinder {
         public JobFlags Accepting { get; }
 
         internal UploadableSlot(PartyFinderSlot slot) {
-            this.Accepting = slot.Accepting.Aggregate((JobFlags) 0, ((agg, flag) => agg | flag));
+            this.Accepting = slot.Accepting.Aggregate((JobFlags) 0, (agg, flag) => agg | flag);
         }
     }
 }

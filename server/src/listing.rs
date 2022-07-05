@@ -16,9 +16,9 @@ pub struct PartyFinderListing {
     pub name: SeString,
     #[serde(with = "crate::base64_sestring")]
     pub description: SeString,
-    pub created_world: u8,
-    pub home_world: u8,
-    pub current_world: u8,
+    pub created_world: u16,
+    pub home_world: u16,
+    pub current_world: u16,
     pub category: DutyCategory,
     pub duty: u16,
     pub duty_type: DutyType,
