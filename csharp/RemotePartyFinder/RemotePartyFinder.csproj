@@ -2,43 +2,44 @@
 
     <PropertyGroup>
         <Version>1.0.6</Version>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
 
     <PropertyGroup>
-        <Dalamud>$(AppData)\XIVLauncher\addon\Hooks\dev</Dalamud>
+        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <Dalamud>$(HOME)/games/final-fantasy-xiv-online/drive_c/users/$(USER)/AppData/Roaming/XIVLauncher/addon/Hooks/dev</Dalamud>
+        <DalamudLibPath>$(HOME)/games/final-fantasy-xiv-online/drive_c/users/$(USER)/AppData/Roaming/XIVLauncher/addon/Hooks/dev</DalamudLibPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(IsCI)' == 'true'">
-        <Dalamud>$(HOME)/dalamud</Dalamud>
+        <DalamudLibPath>$(HOME)/dalamud</DalamudLibPath>
     </PropertyGroup>
 
     <ItemGroup>
         <Reference Include="Dalamud">
-            <HintPath>$(Dalamud)\Dalamud.dll</HintPath>
+            <HintPath>$(DalamudLibPath)\Dalamud.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="Lumina">
-            <HintPath>$(Dalamud)\Lumina.dll</HintPath>
+            <HintPath>$(DalamudLibPath)\Lumina.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="Lumina.Excel">
-            <HintPath>$(Dalamud)\Lumina.Excel.dll</HintPath>
+            <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <Reference Include="Newtonsoft.Json">
-            <HintPath>$(Dalamud)\Newtonsoft.Json.dll</HintPath>
+            <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
             <Private>false</Private>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudLinter" Version="1.0.3"/>
         <PackageReference Include="DalamudPackager" Version="2.1.7"/>
     </ItemGroup>
 
