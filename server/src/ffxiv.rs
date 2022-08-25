@@ -172,6 +172,7 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
         _ => {}
     }
 
+    eprintln!("unknown type/category/duty: {:?}/{:?}/{}", duty_type, category, duty);
     Cow::from(format!("{:?}", category))
 }
 
@@ -192,6 +193,16 @@ mod old {
                     ja: "リットアティン強襲戦",
                     de: "Kap Westwind",
                     fr: "Le Cap Vendouest",
+                },
+                high_end: false,
+                content_kind: ContentKind::Trials,
+            },
+            83 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Steps of Faith",
+                    ja: "皇都イシュガルド防衛戦",
+                    de: "Der Schicksalsweg",
+                    fr: "Le Siège de la sainte Cité d'Ishgard",
                 },
                 high_end: false,
                 content_kind: ContentKind::Trials,
@@ -312,6 +323,16 @@ mod old {
                     ja: "幻リヴァイアサン討滅戦",
                     de: "Traumprüfung - Leviathan",
                     fr: "Le Briseur de marées (irréel)",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
+            821 => DutyInfo {
+                name: LocalisedText {
+                    en: "Ultima's Bane (Unreal)",
+                    ja: "幻アルテマウェポン破壊作戦",
+                    de: "Traumprüfung - Ultima",
+                    fr: "Le fléau d'Ultima (irréel)",
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,

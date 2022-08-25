@@ -36,7 +36,7 @@ pub enum ContentKind {
     CustomDeliveries = 25,
     Eureka = 26,
     UltimateRaids = 28,
-    V&CDungeonFinder = 30,
+    VCDungeonFinder = 30,
     Other(u32),
 }
 
@@ -67,7 +67,7 @@ impl ContentKind {
             25 => Self::CustomDeliveries,
             26 => Self::Eureka,
             28 => Self::UltimateRaids,
-            30 => Self::V&CDungeonFinder,
+            30 => Self::VCDungeonFinder,
             x => Self::Other(x),
         }
     }
@@ -98,7 +98,7 @@ impl ContentKind {
             Self::CustomDeliveries => 25,
             Self::Eureka => 26,
             Self::UltimateRaids => 28,
-            Self::V&CDungeonFinder => 30,
+            Self::VCDungeonFinder => 30,
             Self::Other(x) => x,
         }
     }
