@@ -451,18 +451,6 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 }
 
 async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> mongodb::error::Result<UpdateResult> {
-    if listing.created_world >= 144 && listing.created_world <= 147 {
-        listing.created_world += 256;
-    }
-
-    if listing.home_world >= 144 && listing.home_world <= 147 {
-        listing.home_world += 256;
-    }
-
-    if listing.current_world >= 144 && listing.current_world <= 147 {
-        listing.current_world += 256;
-    }
-
     let opts = UpdateOptions::builder()
         .upsert(true)
         .build();
