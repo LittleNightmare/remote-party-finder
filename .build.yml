@@ -11,6 +11,6 @@ tasks:
       cd remote-party-finder/server
       nix-shell --command 'cargo build --release --target x86_64-unknown-linux-musl'
       strip -s target/x86_64-unknown-linux-musl/release/remote-party-finder
-      nix-shell --command 'patchelf --remove-rpath --set-interpreter /usr/lib64/ld-linux-x86-64.so.2 target/x86_64-unknown-linux-musl/release/remote-party-finder'
+      # nix-shell --command 'patchelf --remove-rpath --set-interpreter /usr/lib64/ld-linux-x86-64.so.2 target/x86_64-unknown-linux-musl/release/remote-party-finder'
 artifacts:
   - remote-party-finder/server/target/x86_64-unknown-linux-musl/release/remote-party-finder
