@@ -24,7 +24,7 @@ pub enum ContentKind {
     Levequests = 10,
     GrandCompany = 11,
     Companions = 12,
-    BeastTribeQuests = 13,
+    TribalQuests = 13,
     OverallCompletion = 14,
     PlayerCommendation = 15,
     DisciplesoftheLand = 16,
@@ -36,6 +36,7 @@ pub enum ContentKind {
     CustomDeliveries = 25,
     Eureka = 26,
     UltimateRaids = 28,
+    V&CDungeonFinder = 30,
     Other(u32),
 }
 
@@ -54,7 +55,7 @@ impl ContentKind {
             10 => Self::Levequests,
             11 => Self::GrandCompany,
             12 => Self::Companions,
-            13 => Self::BeastTribeQuests,
+            13 => Self::TribalQuests,
             14 => Self::OverallCompletion,
             15 => Self::PlayerCommendation,
             16 => Self::DisciplesoftheLand,
@@ -66,6 +67,7 @@ impl ContentKind {
             25 => Self::CustomDeliveries,
             26 => Self::Eureka,
             28 => Self::UltimateRaids,
+            30 => Self::V&CDungeonFinder,
             x => Self::Other(x),
         }
     }
@@ -84,7 +86,7 @@ impl ContentKind {
             Self::Levequests => 10,
             Self::GrandCompany => 11,
             Self::Companions => 12,
-            Self::BeastTribeQuests => 13,
+            Self::TribalQuests => 13,
             Self::OverallCompletion => 14,
             Self::PlayerCommendation => 15,
             Self::DisciplesoftheLand => 16,
@@ -96,6 +98,7 @@ impl ContentKind {
             Self::CustomDeliveries => 25,
             Self::Eureka => 26,
             Self::UltimateRaids => 28,
+            Self::V&CDungeonFinder => 30,
             Self::Other(x) => x,
         }
     }
@@ -909,16 +912,6 @@ lazy_static::lazy_static! {
                 ja: "闘神オーディン討滅戦",
                 de: "Jenseits Urths Quelle",
                 fr: "La Fontaine d'Urth",
-            },
-            high_end: false,
-            content_kind: ContentKind::Trials,
-        },
-        83 => DutyInfo {
-            name: LocalisedText {
-                en: "The Steps of Faith",
-                ja: "皇都イシュガルド防衛戦",
-                de: "Der Schicksalsweg",
-                fr: "Le Siège de la sainte Cité d'Ishgard",
             },
             high_end: false,
             content_kind: ContentKind::Trials,
@@ -5830,7 +5823,7 @@ lazy_static::lazy_static! {
                 de: "Asphodelos - Vierter Kreis (episch)",
                 fr: "Les Limbes du Pandæmonium - Abîme (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         802 => DutyInfo {
@@ -5890,7 +5883,7 @@ lazy_static::lazy_static! {
                 de: "Asphodelos - Dritter Kreis (episch)",
                 fr: "Les Limbes du Pandæmonium - Fournaise (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         808 => DutyInfo {
@@ -5910,7 +5903,7 @@ lazy_static::lazy_static! {
                 de: "Asphodelos - Erster Kreis (episch)",
                 fr: "Les Limbes du Pandæmonium - Parvis (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         810 => DutyInfo {
@@ -5930,7 +5923,7 @@ lazy_static::lazy_static! {
                 de: "Asphodelos - Zweiter Kreis (episch)",
                 fr: "Les Limbes du Pandæmonium - Cloaque (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         812 => DutyInfo {
@@ -6022,16 +6015,6 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
-        },
-        821 => DutyInfo {
-            name: LocalisedText {
-                en: "Ultima's Bane (Unreal)",
-                ja: "幻アルテマウェポン破壊作戦",
-                de: "Traumprüfung - Ultima",
-                fr: "Le fléau d'Ultima (irréel)",
-            },
-            high_end: true,
-            content_kind: ContentKind::Trials,
         },
         830 => DutyInfo {
             name: LocalisedText {
@@ -6160,7 +6143,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Endsängerin",
                 fr: "Le Répons final (extrême)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         847 => DutyInfo {
@@ -6369,6 +6352,146 @@ lazy_static::lazy_static! {
                 ja: "アシエン・ラハブレア討伐戦",
                 de: "Das Antlitz der Kaltblütigkeit",
                 fr: "Le Praetorium en flammes",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        869 => DutyInfo {
+            name: LocalisedText {
+                en: "The Fell Court of Troia",
+                ja: "異界孤城 トロイアコート",
+                de: "Der Schwarze Hof von Troia",
+                fr: "Le Château de Troïa",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        870 => DutyInfo {
+            name: LocalisedText {
+                en: "Storm's Crown",
+                ja: "バルバリシア討滅戦",
+                de: "Prophetie - Barbarizia",
+                fr: "La Toison des tempêtes",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        871 => DutyInfo {
+            name: LocalisedText {
+                en: "Storm's Crown (Extreme)",
+                ja: "極バルバリシア討滅戦",
+                de: "Eschatos - Barbarizia",
+                fr: "La Toison des tempêtes (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        872 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Fifth Circle",
+                ja: "万魔殿パンデモニウム：煉獄編1",
+                de: "Abyssos - Fünfter Kreis",
+                fr: "Le Purgatoire du Pandæmonium - Cages",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        873 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Fifth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：煉獄編1",
+                de: "Abyssos - Fünfter Kreis (episch)",
+                fr: "Le Purgatoire du Pandæmonium - Cages (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        874 => DutyInfo {
+            name: LocalisedText {
+                en: "Where Everything Begins",
+                ja: "失われた力",
+                de: "Wo alles seinen Anfang nimmt",
+                fr: "Au commencement était Zero",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        875 => DutyInfo {
+            name: LocalisedText {
+                en: "Containment Bay S1T7 (Unreal)",
+                ja: "幻魔神セフィロト討滅戦",
+                de: "Traumprüfung - Sephirot",
+                fr: "Unité de contention S1P7 (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        876 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Seventh Circle",
+                ja: "万魔殿パンデモニウム：煉獄編3",
+                de: "Abyssos - Siebter Kreis",
+                fr: "Le Purgatoire du Pandæmonium - Racines",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        877 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Seventh Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：煉獄編3",
+                de: "Abyssos - Siebter Kreis (episch)",
+                fr: "Le Purgatoire du Pandæmonium - Racines (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        880 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Sixth Circle",
+                ja: "万魔殿パンデモニウム：煉獄編2",
+                de: "Abyssos - Sechster Kreis",
+                fr: "Le Purgatoire du Pandæmonium - Croisements",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        881 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Sixth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：煉獄編2",
+                de: "Abyssos - Sechster Kreis (episch)",
+                fr: "Le Purgatoire du Pandæmonium - Croisements (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        883 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Eighth Circle",
+                ja: "万魔殿パンデモニウム：煉獄編4",
+                de: "Abyssos - Achter Kreis",
+                fr: "Le Purgatoire du Pandæmonium - Hérédité",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        884 => DutyInfo {
+            name: LocalisedText {
+                en: "Abyssos: The Eighth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：煉獄編4",
+                de: "Abyssos - Achter Kreis (episch)",
+                fr: "Le Purgatoire du Pandæmonium - Hérédité (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        885 => DutyInfo {
+            name: LocalisedText {
+                en: "The Steps of Faith",
+                ja: "皇都イシュガルド防衛戦",
+                de: "Der Schicksalsweg",
+                fr: "Le Siège de la sainte Cité d'Ishgard",
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,

@@ -93,12 +93,6 @@ lazy_static::lazy_static! {
             de: "Halatali",
             fr: "Halatali",
         },
-        143 => LocalisedText {
-            en: "Steps of Faith",
-            ja: "雲廊",
-            de: "Schicksalsweg",
-            fr: "Avancée de la Foi",
-        },
         144 => LocalisedText {
             en: "The Gold Saucer",
             ja: "ゴールドソーサー",
@@ -134,12 +128,6 @@ lazy_static::lazy_static! {
             ja: "ウルヴズジェイル演習場",
             de: "Kampfplatz",
             fr: "Festin des loups",
-        },
-        150 => LocalisedText {
-            en: "The Keeper of the Lake",
-            ja: "黙約の塔",
-            de: "Der Hüter des Sees",
-            fr: "Gardien du lac",
         },
         151 => LocalisedText {
             en: "The World of Darkness",
@@ -350,12 +338,6 @@ lazy_static::lazy_static! {
             ja: "不語仙の座卓",
             de: "Wasserrosentisch",
             fr: "Chaire du Lotus",
-        },
-        207 => LocalisedText {
-            en: "Thornmarch",
-            ja: "茨の園",
-            de: "Dornmarsch",
-            fr: "Lisière de ronces",
         },
         210 => LocalisedText {
             en: "Heart of the Sworn",
@@ -1257,12 +1239,6 @@ lazy_static::lazy_static! {
             de: "Kommandobrücke RVH-03",
             fr: "Premier pont RCI-03",
         },
-        371 => LocalisedText {
-            en: "Snowcloak",
-            ja: "スノークローク大氷壁",
-            de: "Schneekleid",
-            fr: "Manteneige",
-        },
         372 => LocalisedText {
             en: "Syrcus Tower",
             ja: "シルクスの塔",
@@ -1557,12 +1533,6 @@ lazy_static::lazy_static! {
             de: "Nimmerreich",
             fr: "Nalloncques",
         },
-        421 => LocalisedText {
-            en: "The Vault",
-            ja: "イシュガルド教皇庁",
-            de: "Erzbasilika",
-            fr: "La Voûte",
-        },
         423 => LocalisedText {
             en: "Company Workshop - Mist",
             ja: "ミスト・ヴィレッジ：地下工房",
@@ -1635,12 +1605,6 @@ lazy_static::lazy_static! {
             de: "Abendrot-Wacht",
             fr: "Vigile du Crépuscule",
         },
-        435 => LocalisedText {
-            en: "The Aery",
-            ja: "ドラゴンズエアリー",
-            de: "Nest des Drachen",
-            fr: "L'Aire",
-        },
         436 => LocalisedText {
             en: "The Limitless Blue",
             ja: "群青空域",
@@ -1670,12 +1634,6 @@ lazy_static::lazy_static! {
             ja: "決闘裁判場",
             de: "Gerichtssaal",
             fr: "Salle des sentences",
-        },
-        441 => LocalisedText {
-            en: "Sohm Al",
-            ja: "ソーム・アル",
-            de: "Sohm Al",
-            fr: "Sohm Al",
         },
         442 => LocalisedText {
             en: "The Fist of the Father",
@@ -4467,12 +4425,6 @@ lazy_static::lazy_static! {
             de: "Das Diadem",
             fr: "Le Diadème",
         },
-        930 => LocalisedText {
-            en: "Akh Afah Amphitheatre",
-            ja: "アク・アファー円形劇場",
-            de: "Akh Afah",
-            fr: "Amphithéâtre d'Akh Afah",
-        },
         931 => LocalisedText {
             en: "The Seat of Sacrifice",
             ja: "始皇帝の玉座",
@@ -4605,12 +4557,6 @@ lazy_static::lazy_static! {
             de: "Turm von Zot",
             fr: "Tour de Zott",
         },
-        953 => LocalisedText {
-            en: "The Navel",
-            ja: "オ・ゴモロ火口神殿",
-            de: "Der Nabel",
-            fr: "Le Nombril",
-        },
         954 => LocalisedText {
             en: "The Navel",
             ja: "オ・ゴモロ火口神殿",
@@ -4718,12 +4664,6 @@ lazy_static::lazy_static! {
             ja: "レムレースのオフィス",
             de: "Hauptquartier der Lemuren",
             fr: "Repaire des Lémures",
-        },
-        972 => LocalisedText {
-            en: "The Whorleater",
-            ja: "対リヴァイアサン双胴船",
-            de: "Der Wogenbrecher",
-            fr: "Briseur de marées",
         },
         973 => LocalisedText {
             en: "The Dead Ends",
@@ -5085,12 +5025,6 @@ lazy_static::lazy_static! {
             de: "Wolke Sieben",
             fr: "Le Petit Nuage",
         },
-        1035 => LocalisedText {
-            en: "Porta Decumana",
-            ja: "ポルタ・デクマーナ",
-            de: "Porta Decumana",
-            fr: "Porta Decumana",
-        },
         1036 => LocalisedText {
             en: "Sastasha",
             ja: "サスタシャ浸食洞",
@@ -5205,6 +5139,12 @@ lazy_static::lazy_static! {
             de: "Aglaia",
             fr: "Domaine divin - Aglaé",
         },
+        1055 => LocalisedText {
+            en: "Unnamed Island",
+            ja: "名もなき島",
+            de: "Einsame Insel",
+            fr: "Île sans nom",
+        },
         1056 => LocalisedText {
             en: "Alzadaal's Legacy",
             ja: "アルザダール海底遺跡群",
@@ -5240,6 +5180,168 @@ lazy_static::lazy_static! {
             ja: "オムファロス",
             de: "Omphalos",
             fr: "Omphalos",
+        },
+        1062 => LocalisedText {
+            en: "Snowcloak",
+            ja: "スノークローク大氷壁",
+            de: "Schneekleid",
+            fr: "Manteneige",
+        },
+        1063 => LocalisedText {
+            en: "The Keeper of the Lake",
+            ja: "黙約の塔",
+            de: "Der Hüter des Sees",
+            fr: "Gardien du lac",
+        },
+        1064 => LocalisedText {
+            en: "Sohm Al",
+            ja: "ソーム・アル",
+            de: "Sohm Al",
+            fr: "Sohm Al",
+        },
+        1065 => LocalisedText {
+            en: "The Aery",
+            ja: "ドラゴンズエアリー",
+            de: "Nest des Drachen",
+            fr: "L'Aire",
+        },
+        1066 => LocalisedText {
+            en: "The Vault",
+            ja: "イシュガルド教皇庁",
+            de: "Erzbasilika",
+            fr: "La Voûte",
+        },
+        1067 => LocalisedText {
+            en: "Thornmarch",
+            ja: "茨の園",
+            de: "Dornmarsch",
+            fr: "Lisière de ronces",
+        },
+        1068 => LocalisedText {
+            en: "Steps of Faith",
+            ja: "雲廊",
+            de: "Schicksalsweg",
+            fr: "Avancée de la Foi",
+        },
+        1070 => LocalisedText {
+            en: "The Fell Court of Troia",
+            ja: "トロイアコート",
+            de: "Schwarzer Hof von Troia",
+            fr: "Château de Troïa",
+        },
+        1071 => LocalisedText {
+            en: "Storm's Crown",
+            ja: "呪髪の風塔",
+            de: "Sturmes Krone",
+            fr: "Toison des tempêtes",
+        },
+        1072 => LocalisedText {
+            en: "Storm's Crown",
+            ja: "呪髪の風塔",
+            de: "Sturmes Krone",
+            fr: "Toison des tempêtes",
+        },
+        1077 => LocalisedText {
+            en: "Zero's Domain",
+            ja: "ゼロの領域",
+            de: "Zeros Unterschlupf",
+            fr: "Territoire de Zero",
+        },
+        1078 => LocalisedText {
+            en: "Meghaduta Guest Chambers",
+            ja: "メーガドゥータ宮の客間",
+            de: "Gästezimmer des Meghaduta-Tempels",
+            fr: "Appartements du palais du Meghaduta",
+        },
+        1079 => LocalisedText {
+            en: "The Aitiascope",
+            ja: "アイティオン星晶鏡",
+            de: "Aitiaskop",
+            fr: "Prisme de l'Aitia",
+        },
+        1081 => LocalisedText {
+            en: "The Caustic Purgatory",
+            ja: "猛毒生物隔離棟",
+            de: "Sicherheitstrakt für toxische Lebenformen",
+            fr: "Bloc des créatures extrêmement nocives",
+        },
+        1082 => LocalisedText {
+            en: "The Caustic Purgatory",
+            ja: "猛毒生物隔離棟",
+            de: "Sicherheitstrakt für toxische Lebenformen",
+            fr: "Bloc des créatures extrêmement nocives",
+        },
+        1083 => LocalisedText {
+            en: "The Pestilent Purgatory",
+            ja: "寄生生物隔離棟",
+            de: "Isolationstrakt für parasitäre Lebensformen",
+            fr: "Bloc des organismes parasites",
+        },
+        1084 => LocalisedText {
+            en: "The Pestilent Purgatory",
+            ja: "寄生生物隔離棟",
+            de: "Isolationstrakt für parasitäre Lebensformen",
+            fr: "Bloc des organismes parasites",
+        },
+        1085 => LocalisedText {
+            en: "The Hollow Purgatory",
+            ja: "創生樹隔離棟",
+            de: "Separationstrakt für pflanzliche Lebensformen",
+            fr: "Bloc des créations arborescentes",
+        },
+        1086 => LocalisedText {
+            en: "The Hollow Purgatory",
+            ja: "創生樹隔離棟",
+            de: "Separationstrakt für pflanzliche Lebensformen",
+            fr: "Bloc des créations arborescentes",
+        },
+        1087 => LocalisedText {
+            en: "Stygian Insenescence Cells",
+            ja: "生命神秘研究棟",
+            de: "Forschungstrakt für die Geheimnisse des Lebens",
+            fr: "Laboratoire d'études des secrets du vivant",
+        },
+        1088 => LocalisedText {
+            en: "Stygian Insenescence Cells",
+            ja: "生命神秘研究棟",
+            de: "Forschungstrakt für die Geheimnisse des Lebens",
+            fr: "Laboratoire d'études des secrets du vivant",
+        },
+        1089 => LocalisedText {
+            en: "The Fell Court of Troia",
+            ja: "トロイアコート",
+            de: "Schwarzer Hof von Troia",
+            fr: "Château de Troïa",
+        },
+        1090 => LocalisedText {
+            en: "Containment Bay S1T7",
+            ja: "コンテイメントベイS1T7",
+            de: "Arretur S1T7",
+            fr: "Unité de contention S1P7",
+        },
+        1091 => LocalisedText {
+            en: "Seat of the Foremost",
+            ja: "筆頭神官の間",
+            de: "Sitz der Hohepriesterin",
+            fr: "Salle des primiciers",
+        },
+        1092 => LocalisedText {
+            en: "Storm's Crown",
+            ja: "呪髪の風塔",
+            de: "Sturmes Krone",
+            fr: "Toison des tempêtes",
+        },
+        1093 => LocalisedText {
+            en: "Stygian Insenescence Cells",
+            ja: "生命神秘研究棟",
+            de: "Forschungstrakt für die Geheimnisse des Lebens",
+            fr: "Laboratoire d'études des secrets du vivant",
+        },
+        1094 => LocalisedText {
+            en: "Sneaky Hollow",
+            ja: "魔人の隠れ家",
+            de: "Versteck der Kürbishexe",
+            fr: "Demeure de la femme à tête de citrouille",
         },
     };
 }

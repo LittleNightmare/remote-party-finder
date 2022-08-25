@@ -74,10 +74,10 @@ lazy_static::lazy_static! {
         },
         8 => RouletteInfo {
             name: LocalisedText {
-                en: "Duty Roulette: Level 80 Dungeons",
-                ja: "コンテンツルーレット：レベル80ダンジョン",
-                de: "Zufallsinhalt: Stufe 80",
-                fr: "Mission aléatoire : donjons nv 80",
+                en: "Duty Roulette: Level 90 Dungeons",
+                ja: "コンテンツルーレット：レベル90ダンジョン",
+                de: "Zufallsinhalt: Stufe 90",
+                fr: "Mission aléatoire : donjons nv 90",
             },
             pvp: false,
         },

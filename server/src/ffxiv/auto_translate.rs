@@ -4341,6 +4341,30 @@ lazy_static::lazy_static! {
             de: "Speerfischen",
             fr: "pêche au harpon",
         },
+        (22, 1658) => LocalisedText {
+            en: "sanctuary gathering",
+            ja: "開拓採集",
+            de: "Inselsammeln",
+            fr: "collecte",
+        },
+        (22, 1659) => LocalisedText {
+            en: "sanctuary crafting",
+            ja: "開拓製作",
+            de: "Pionierswerk",
+            fr: "atelier",
+        },
+        (22, 1660) => LocalisedText {
+            en: "seafarer's cowrie",
+            ja: "シェルダレースクリップ:青船貨",
+            de: "Blaue Cieldaläen-Kauri",
+            fr: "assignats insulaires azur",
+        },
+        (22, 1661) => LocalisedText {
+            en: "islander's cowrie",
+            ja: "シェルダレースクリップ:緑島貨",
+            de: "Grüne Cieldaläen-Kauri",
+            fr: "assignats insulaires émeraude",
+        },
         (23, 1900) => LocalisedText {
             en: "【Primals】",
             ja: "【蛮神&蛮族】",
@@ -5188,21 +5212,21 @@ lazy_static::lazy_static! {
             fr: "JcJ",
         },
         (24, 2086) => LocalisedText {
-            en: "beast tribe quest",
-            ja: "蛮族クエスト",
-            de: "Auftrag der Wilden Stämme",
+            en: "tribal quest",
+            ja: "友好部族クエスト",
+            de: "Auftrag der Stammesvölker",
             fr: "Quêtes tribales",
         },
         (24, 2087) => LocalisedText {
-            en: "beast tribe sidequest",
-            ja: "蛮族デイリークエスト",
-            de: "Nebenauftrag der Wilden Stämme",
+            en: "tribal daily quest",
+            ja: "友好部族デイリークエスト",
+            de: "Nebenauftrag der Stammesvölker",
             fr: "Quêtes tribales quotidiennes",
         },
         (24, 2088) => LocalisedText {
-            en: "beast tribe main quest",
-            ja: "蛮族ストーリークエスト",
-            de: "Hauptauftrag der Wilden Stämme",
+            en: "tribal main quest",
+            ja: "友好部族ストーリークエスト",
+            de: "Hauptauftrag der Stammesvölker",
             fr: "Quêtes tribales (scénario)",
         },
         (24, 2089) => LocalisedText {
@@ -7035,6 +7059,24 @@ lazy_static::lazy_static! {
             de: "Magische Karte",
             fr: "carte magique",
         },
+        (49, 255) => LocalisedText {
+            en: "island mandragora",
+            ja: "アイル・マンドラゴラ",
+            de: "Paradies-Mandragora",
+            fr: "mandragore insulaire",
+        },
+        (49, 256) => LocalisedText {
+            en: "island Onion Prince",
+            ja: "アイル・オニオンプリンス",
+            de: "Prinz Paradieszwiebel",
+            fr: "Prince oignon insulaire",
+        },
+        (49, 257) => LocalisedText {
+            en: "island Eggplant Knight",
+            ja: "アイル・エッグナイト",
+            de: "Ritter Paradiesaubergine",
+            fr: "Chevalier aubergine insulaire",
+        },
         (49, 261) => LocalisedText {
             en: "lynx of eternal darkness",
             ja: "エターナルダークネス・リンクス",
@@ -7083,6 +7125,12 @@ lazy_static::lazy_static! {
             de: "Monitor",
             fr: "vérifiniveau",
         },
+        (49, 269) => LocalisedText {
+            en: "Papa Paissa",
+            ja: "パパ・パイッサ",
+            de: "Papa Paissa",
+            fr: "Papa Païssa",
+        },
         (49, 273) => LocalisedText {
             en: "wivre",
             ja: "ウィヴル",
@@ -7094,6 +7142,18 @@ lazy_static::lazy_static! {
             ja: "キングポークシー",
             de: "Quiexie-König",
             fr: "porxie royal",
+        },
+        (49, 277) => LocalisedText {
+            en: "Garlond GL-II",
+            ja: "ガーロンドGL-II",
+            de: "Garlond GL-II",
+            fr: "Garlond GL-II",
+        },
+        (49, 280) => LocalisedText {
+            en: "Fylgja",
+            ja: "フィルギャ",
+            de: "Fylgja",
+            fr: "Fylgja",
         },
         (49, 281) => LocalisedText {
             en: "alkonost",
@@ -7130,6 +7190,30 @@ lazy_static::lazy_static! {
             ja: "ブルーフェザー・リンクス",
             de: "Blaufeder-Luchs",
             fr: "lynx au pelage bleu",
+        },
+        (49, 294) => LocalisedText {
+            en: "megashiba",
+            ja: "大柴犬",
+            de: "Megashiba",
+            fr: "mégashiba",
+        },
+        (49, 299) => LocalisedText {
+            en: "wondrous lanner",
+            ja: "ワンダラスラナー",
+            de: "Wunderlanner",
+            fr: "lanier merveilleux",
+        },
+        (49, 305) => LocalisedText {
+            en: "sunforged",
+            ja: "炎霊獣",
+            de: "Glutgeborene",
+            fr: "bête en flammes",
+        },
+        (49, 306) => LocalisedText {
+            en: "lynx of imperious wind",
+            ja: "リンクス・オブ・ウィンド",
+            de: "Sturmwind-Luchs",
+            fr: "lynx des vents tempétueux",
         },
         (50, 1) => LocalisedText {
             en: "gladiator",
@@ -9621,6 +9705,12 @@ lazy_static::lazy_static! {
             de: "Vanaspati",
             fr: "Vanaspati",
         },
+        (51, 4043) => LocalisedText {
+            en: "Unnamed Island",
+            ja: "名もなき島",
+            de: "Einsame Insel",
+            fr: "Île sans nom",
+        },
         (51, 4090) => LocalisedText {
             en: "The Palaistra",
             ja: "パライストラ",
@@ -9692,6 +9782,42 @@ lazy_static::lazy_static! {
             ja: "輝ける神域 アグライア",
             de: "Aglaia",
             fr: "Domaine divin - Aglaé",
+        },
+        (51, 4180) => LocalisedText {
+            en: "The Fell Court of Troia",
+            ja: "トロイアコート",
+            de: "Schwarzer Hof von Troia",
+            fr: "Château de Troïa",
+        },
+        (51, 4196) => LocalisedText {
+            en: "The Pestilent Purgatory",
+            ja: "寄生生物隔離棟",
+            de: "Isolationstrakt für parasitäre Lebensformen",
+            fr: "Bloc des organismes parasites",
+        },
+        (51, 4197) => LocalisedText {
+            en: "Storm's Crown",
+            ja: "呪髪の風塔",
+            de: "Sturmes Krone",
+            fr: "Toison des tempêtes",
+        },
+        (51, 4198) => LocalisedText {
+            en: "The Hollow Purgatory",
+            ja: "創生樹隔離棟",
+            de: "Separationstrakt für pflanzliche Lebensformen",
+            fr: "Bloc des créations arborescentes",
+        },
+        (51, 4249) => LocalisedText {
+            en: "The Caustic Purgatory",
+            ja: "猛毒生物隔離棟",
+            de: "Sicherheitstrakt für toxische Lebenformen",
+            fr: "Bloc des créatures extrêmement nocives",
+        },
+        (51, 4250) => LocalisedText {
+            en: "Stygian Insenescence Cells",
+            ja: "生命神秘研究棟",
+            de: "Forschungstrakt für die Geheimnisse des Lebens",
+            fr: "Laboratoire d'études des secrets du vivant",
         },
         (54, 1) => LocalisedText {
             en: "Halone, the Fury",
@@ -14745,12 +14871,6 @@ lazy_static::lazy_static! {
             de: "Sturm und Drang",
             fr: "Thèse fluidique",
         },
-        (56, 25869) => LocalisedText {
-            en: "Crown Play",
-            ja: "クラウンプレイ",
-            de: "Spiel der Kronen",
-            fr: "Jeu des couronnes",
-        },
         (56, 25870) => LocalisedText {
             en: "Astrodyne",
             ja: "アストロダイン",
@@ -15518,6 +15638,12 @@ lazy_static::lazy_static! {
             ja: "神域",
             de: "Götterwetter",
             fr: "Mythologique",
+        },
+        (60, 171) => LocalisedText {
+            en: "Vacuity",
+            ja: "虚無",
+            de: "Leere",
+            fr: "Néant",
         },
         (61, 1) => LocalisedText {
             en: "Stance",
@@ -18555,6 +18681,12 @@ lazy_static::lazy_static! {
             de: "/kopffassen",
             fr: "/setenirlatête",
         },
+        (62, 636) => LocalisedText {
+            en: "/eategg",
+            ja: "/eategg",
+            de: "/eiessen",
+            fr: "/mangerunoeuf",
+        },
         (62, 637) => LocalisedText {
             en: "/content",
             ja: "/content",
@@ -18573,11 +18705,35 @@ lazy_static::lazy_static! {
             de: "/ziehen",
             fr: "/dégainer",
         },
+        (62, 640) => LocalisedText {
+            en: "/tea",
+            ja: "/tea",
+            de: "/tee",
+            fr: "/thé",
+        },
         (62, 641) => LocalisedText {
             en: "/determined",
             ja: "/determined",
             de: "/entschlossen",
             fr: "/détermination",
+        },
+        (62, 642) => LocalisedText {
+            en: "/showright",
+            ja: "/showright",
+            de: "/rechtszeigen",
+            fr: "/montrerdroite",
+        },
+        (62, 643) => LocalisedText {
+            en: "/showleft",
+            ja: "/showleft",
+            de: "/linkszeigen",
+            fr: "/montrergauche",
+        },
+        (62, 649) => LocalisedText {
+            en: "/spirit",
+            ja: "/spirit",
+            de: "/oleoleoleole",
+            fr: "/apprécierlespectacle",
         },
         (63, 29054) => LocalisedText {
             en: "Guard",
@@ -19814,6 +19970,12 @@ lazy_static::lazy_static! {
             ja: "コムニオ",
             de: "Communio",
             fr: "Communio",
+        },
+        (63, 29559) => LocalisedText {
+            en: "Hollow Nozuchi",
+            ja: "幻影野槌",
+            de: "Nozuchi-Schemen",
+            fr: "Nozuchi spectral",
         },
         (63, 29566) => LocalisedText {
             en: "Soul Slice",
@@ -22544,13 +22706,13 @@ lazy_static::lazy_static! {
             en: "Lord Enma",
             ja: "エンマ",
             de: "Meister Enma[p]",
-            fr: "Baron Enma",
+            fr: "baron Enma",
         },
         (65, 391) => LocalisedText {
             en: "Lord Ananta",
             ja: "蛇王カイラ",
             de: "Meister Ananta[p]",
-            fr: "Baron Ananta",
+            fr: "baron Ananta",
         },
         (65, 392) => LocalisedText {
             en: "Zazel",
@@ -22837,7 +22999,7 @@ lazy_static::lazy_static! {
         (65, 439) => LocalisedText {
             en: "wind-up Grebuloff",
             ja: "マメット・グレビュオフ",
-            de: "Typhoid-Puppe",
+            de: "Grebuloff-Puppe",
             fr: "Grébuloff miniature",
         },
         (65, 440) => LocalisedText {
@@ -22900,6 +23062,12 @@ lazy_static::lazy_static! {
             de: "Aufzieh-Novus[p] D",
             fr: "Novus D. mécanique",
         },
+        (65, 450) => LocalisedText {
+            en: "hatching bunny",
+            ja: "ハッピーエッグバニー",
+            de: "Wunderhäschen",
+            fr: "laprœuf joyeux",
+        },
         (65, 451) => LocalisedText {
             en: "wind-up Azeyma",
             ja: "マメット・アーゼマ",
@@ -22911,6 +23079,42 @@ lazy_static::lazy_static! {
             ja: "青足のカツォ",
             de: "Blaufußtölpel",
             fr: "fou à pattes bleues",
+        },
+        (65, 456) => LocalisedText {
+            en: "Felicitous Fuzzball",
+            ja: "こねこみみさん",
+            de: "Miaurizius-Puppe",
+            fr: "Madmiaouselle",
+        },
+        (65, 458) => LocalisedText {
+            en: "clockwork crimson chaser",
+            ja: "クロックワーク・レッドチェイサー",
+            de: "rot[a] Aufzieh-Chaser",
+            fr: "croiseur mécanique carmin",
+        },
+        (65, 459) => LocalisedText {
+            en: "clockwork cerulean chaser",
+            ja: "クロックワーク・ブルーチェイサー",
+            de: "blau[a] Aufzieh-Chaser",
+            fr: "croiseur mécanique céruléen",
+        },
+        (65, 460) => LocalisedText {
+            en: "wind-up Scarmiglione",
+            ja: "マメット・スカルミリョーネ",
+            de: "Scarmiglione-Puppe",
+            fr: "Scarmiglione miniature",
+        },
+        (65, 462) => LocalisedText {
+            en: "pterosquirrel",
+            ja: "モモンガ",
+            de: "Flughörnchen",
+            fr: "momonga",
+        },
+        (65, 466) => LocalisedText {
+            en: "wind-up Erichthonios",
+            ja: "マメット・エリクトニオス",
+            de: "Erichthonios-Puppe",
+            fr: "Érichthonios miniature",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -25876,12 +26080,6 @@ lazy_static::lazy_static! {
             de: "Wiederaufbau Ishgards",
             fr: "Reconstruction d'Ishgard",
         },
-        (17, 4018) => LocalisedText {
-            en: "Allagan tomestone of allegory",
-            ja: "アラガントームストーン:奇譚",
-            de: "Allagische Steine der Fantastik",
-            fr: "mémoquartz allagois fabuleux",
-        },
         (17, 4019) => LocalisedText {
             en: "ocean fishing",
             ja: "オーシャンフィッシング",
@@ -25942,12 +26140,6 @@ lazy_static::lazy_static! {
             de: "Erkundung",
             fr: "mode exploration",
         },
-        (17, 4029) => LocalisedText {
-            en: "Allagan tomestone of revelation",
-            ja: "アラガントームストーン:黙示",
-            de: "Allagische Steine der Offenbarung",
-            fr: "mémoquartz allagois révélateurs",
-        },
         (17, 4030) => LocalisedText {
             en: "Bozjan cluster",
             ja: "ボズヤクラスター",
@@ -26001,6 +26193,30 @@ lazy_static::lazy_static! {
             ja: "トロフィークリスタル",
             de: "Kristalltrophäen",
             fr: "cristaux-trophées",
+        },
+        (17, 4039) => LocalisedText {
+            en: "portrait",
+            ja: "ポートレート",
+            de: "Portrait",
+            fr: "portrait",
+        },
+        (17, 4040) => LocalisedText {
+            en: "adventurer plate",
+            ja: "アドベンチャラープレート",
+            de: "Abenteurerpass",
+            fr: "carte de personnage",
+        },
+        (17, 4041) => LocalisedText {
+            en: "Island Sanctuary",
+            ja: "無人島開拓",
+            de: "Inselparadies",
+            fr: "Félicité insulaire",
+        },
+        (17, 4042) => LocalisedText {
+            en: "Allagan tomestone of causality",
+            ja: "アラガントームストーン:因果",
+            de: "Allagische Steine der Kausalität",
+            fr: "mémoquartz allagois déterministes",
         },
         (24, 5000) => LocalisedText {
             en: "normal raid",
@@ -26560,12 +26776,6 @@ lazy_static::lazy_static! {
             de: "Eschatos - Endsängerin",
             fr: "Le Répons final (extrême)",
         },
-        (24, 5096) => LocalisedText {
-            en: "Ultima's Bane (Unreal)",
-            ja: "幻アルテマウェポン破壊作戦",
-            de: "Traumprüfung: Heldenlied von Ultima",
-            fr: "Le fléau d'Ultima (irréel)",
-        },
         (24, 5097) => LocalisedText {
             en: "Aglaia",
             ja: "輝ける神域 アグライア",
@@ -26601,6 +26811,24 @@ lazy_static::lazy_static! {
             ja: "クラウドナイン",
             de: "Wolke Sieben",
             fr: "Petit Nuage",
+        },
+        (24, 5105) => LocalisedText {
+            en: "Containment Bay S1T7 (Unreal)",
+            ja: "幻魔神セフィロト討滅戦",
+            de: "Traumprüfung - Sephirot",
+            fr: "Unité de contention S1P7 (irréel)",
+        },
+        (24, 5106) => LocalisedText {
+            en: "Abyssos",
+            ja: "煉獄編",
+            de: "Abyssos",
+            fr: "Purgatoire du Pandæmonium",
+        },
+        (24, 5107) => LocalisedText {
+            en: "The Fell Court of Troia",
+            ja: "トロイアコート",
+            de: "Schwarzer Hof von Troia",
+            fr: "Château de Troïa",
         },
     };
 }
