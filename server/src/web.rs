@@ -406,6 +406,10 @@ fn stats_seven_days(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
 fn contribute(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, listing: PartyFinderListing) -> std::result::Result<impl Reply, Infallible> {
+        if listing.created_world >= 10_000 || listing.home_world >= 10_000 || listing.current_world >= 10_000 {
+            return Ok("invalid listing".to_string());
+        }
+
         if listing.seconds_remaining > 60 * 60 {
             return Ok("invalid listing".to_string());
         }
