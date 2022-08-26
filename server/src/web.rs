@@ -406,10 +406,6 @@ fn stats_seven_days(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
 fn contribute(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, listing: PartyFinderListing) -> std::result::Result<impl Reply, Infallible> {
-        if listing.created_world >= 1_000 || listing.home_world >= 1_000 || listing.current_world >= 1_000 {
-            return Ok("invalid listing".to_string());
-        }
-
         if listing.seconds_remaining > 60 * 60 {
             return Ok("invalid listing".to_string());
         }
@@ -455,6 +451,10 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 }
 
 async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> mongodb::error::Result<UpdateResult> {
+    if listing.created_world >= 1_000 || listing.home_world >= 1_000 || listing.current_world >= 1_000 {
+        anyhow::bail!("invalid listing");
+    }
+
     let opts = UpdateOptions::builder()
         .upsert(true)
         .build();
