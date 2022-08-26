@@ -450,7 +450,7 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     warp::post().and(route).boxed()
 }
 
-async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> mongodb::error::Result<UpdateResult> {
+async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> Result<UpdateResult> {
     if listing.created_world >= 1_000 || listing.home_world >= 1_000 || listing.current_world >= 1_000 {
         anyhow::bail!("invalid listing");
     }
@@ -482,4 +482,5 @@ async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> mongo
             opts,
         )
         .await
+        .context("could not insert record")
 }
