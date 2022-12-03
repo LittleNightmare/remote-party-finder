@@ -80,5 +80,9 @@ lazy_static::lazy_static! {
         401 => World::Phantom,
         402 => World::Alpha,
         403 => World::Raiden,
+        404 => World::Marilith,
+        405 => World::Seraph,
+        406 => World::Halicarnassus,
+        407 => World::Maduin,
     };
 }
