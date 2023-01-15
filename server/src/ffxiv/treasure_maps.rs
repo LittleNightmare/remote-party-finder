@@ -100,7 +100,7 @@ lazy_static::lazy_static! {
             fr: "Carte au trésor en peau de glaucus",
         },
         16 => LocalisedText {
-            en: "Presumably Special Treasure Map",
+            en: "Ostensibly Special Treasure Map",
             ja: "古ぼけた地図S2",
             de: "Mythenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle II",
@@ -115,7 +115,19 @@ lazy_static::lazy_static! {
             en: "Kumbhiraskin Treasure Map",
             ja: "古ぼけた地図G14",
             de: "Ophiotaurosleder-Schatzkarte",
-            fr: "Carte au trésor en peau de khumbira",
+            fr: "Carte au trésor en peau de kumbhira",
+        },
+        19 => LocalisedText {
+            en: "Ophiotauroskin Treasure Map",
+            ja: "古ぼけた地図G15",
+            de: "Kumbhiraleder-Schatzkarte",
+            fr: "Carte au trésor en peau d'ophiotauros",
+        },
+        20 => LocalisedText {
+            en: "Potentially Special Treasure Map",
+            ja: "古ぼけた地図S3",
+            de: "Legendenleder-Schatzkarte",
+            fr: "Carte au trésor inhabituelle III",
         },
     };
 }

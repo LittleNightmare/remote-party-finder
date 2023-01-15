@@ -80,7 +80,7 @@ impl Language {
                 "ja" => return Self::Japanese,
                 "de" => return Self::German,
                 "fr" => return Self::French,
-                _ => {},
+                _ => {}
             }
         }
 
@@ -333,6 +333,16 @@ mod old {
                     ja: "幻アルテマウェポン破壊作戦",
                     de: "Traumprüfung - Ultima",
                     fr: "Le fléau d'Ultima (irréel)",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
+            875 => DutyInfo {
+                name: LocalisedText {
+                    en: "Containment Bay S1T7 (Unreal)",
+                    ja: "幻魔神セフィロト討滅戦",
+                    de: "Traumprüfung - Sephirot",
+                    fr: "Unité de contention S1P7 (irréel)",
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,

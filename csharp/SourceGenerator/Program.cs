@@ -16,6 +16,7 @@ namespace SourceGenerator {
             var data = new Dictionary<Language, GameData>(4);
             foreach (var lang in Languages.Keys) {
                 data[lang] = new GameData(args[0], new LuminaOptions {
+                    PanicOnSheetChecksumMismatch = false,
                     DefaultExcelLanguage = lang,
                 });
             }
@@ -107,7 +108,7 @@ namespace SourceGenerator {
             sb.Append("#[repr(u32)]\n");
             sb.Append("pub enum ContentKind {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "");
+                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"    {name} = {kind.RowId},\n");
                 }
@@ -121,7 +122,7 @@ namespace SourceGenerator {
             sb.Append("    fn from_u32(kind: u32) -> Self {\n");
             sb.Append("        match kind {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "");
+                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"            {kind.RowId} => Self::{name},\n");
                 }
@@ -134,7 +135,7 @@ namespace SourceGenerator {
             sb.Append("    pub fn as_u32(self) -> u32 {\n");
             sb.Append("        match self {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "");
+                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"            Self::{name} => {kind.RowId},\n");
                 }
@@ -238,7 +239,7 @@ namespace SourceGenerator {
                     continue;
                 }
 
-                var pvp = cr.Unknown28 == 6
+                var pvp = cr.IsPvP
                     ? "true"
                     : "false";
 
@@ -393,7 +394,7 @@ namespace SourceGenerator {
                                             lines += 1;
                                             break;
                                         }
-                                    }   
+                                    }
                                 }
                             }
 
