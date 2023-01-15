@@ -162,7 +162,7 @@ namespace SourceGenerator {
 
                 var highEnd = cfc.HighEndDuty ? "true" : "false";
                 var contentType = cfc.ContentType.Value;
-                var contentKind = contentType?.Name?.TextValue().Replace(" ", "");
+                var contentKind = contentType?.Name?.TextValue().Replace(" ", "").Replace("&", "");
                 if (string.IsNullOrEmpty(contentKind)) {
                     contentKind = $"Other({contentType?.RowId ?? 0})";
                 }
