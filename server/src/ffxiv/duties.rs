@@ -6364,7 +6364,7 @@ lazy_static::lazy_static! {
                 fr: "Les canalisations sildiennes - Donjon à embranchements",
             },
             high_end: false,
-            content_kind: ContentKind::V&CDungeonFinder,
+            content_kind: ContentKind::VCDungeonFinder,
         },
         869 => DutyInfo {
             name: LocalisedText {
@@ -6454,7 +6454,7 @@ lazy_static::lazy_static! {
                 fr: "Les canalisations sildiennes annexes - Donjon alternatif",
             },
             high_end: false,
-            content_kind: ContentKind::V&CDungeonFinder,
+            content_kind: ContentKind::VCDungeonFinder,
         },
         879 => DutyInfo {
             name: LocalisedText {
@@ -6464,7 +6464,7 @@ lazy_static::lazy_static! {
                 fr: "Les canalisations sildiennes annexes - Donjon alternatif (sadique)",
             },
             high_end: false,
-            content_kind: ContentKind::V&CDungeonFinder,
+            content_kind: ContentKind::VCDungeonFinder,
         },
         880 => DutyInfo {
             name: LocalisedText {
