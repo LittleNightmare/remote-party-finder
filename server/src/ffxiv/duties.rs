@@ -6356,6 +6356,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        868 => DutyInfo {
+            name: LocalisedText {
+                en: "The Sil'dihn Subterrane",
+                ja: "ヴァリアントダンジョン シラディハ水道",
+                de: "Die Unterstadt von Sil'dih",
+                fr: "Les canalisations sildiennes - Donjon à embranchements",
+            },
+            high_end: false,
+            content_kind: ContentKind::V&CDungeonFinder,
+        },
         869 => DutyInfo {
             name: LocalisedText {
                 en: "The Fell Court of Troia",
@@ -6383,7 +6393,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Barbarizia",
                 fr: "La Toison des tempêtes (extrême)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         872 => DutyInfo {
@@ -6416,16 +6426,6 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
-        875 => DutyInfo {
-            name: LocalisedText {
-                en: "Containment Bay S1T7 (Unreal)",
-                ja: "幻魔神セフィロト討滅戦",
-                de: "Traumprüfung - Sephirot",
-                fr: "Unité de contention S1P7 (irréel)",
-            },
-            high_end: true,
-            content_kind: ContentKind::Trials,
-        },
         876 => DutyInfo {
             name: LocalisedText {
                 en: "Abyssos: The Seventh Circle",
@@ -6445,6 +6445,26 @@ lazy_static::lazy_static! {
             },
             high_end: true,
             content_kind: ContentKind::Raids,
+        },
+        878 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Sil'dihn Subterrane",
+                ja: "アナザーダンジョン 異聞シラディハ水道",
+                de: "Die kuriose Unterstadt von Sil'dih",
+                fr: "Les canalisations sildiennes annexes - Donjon alternatif",
+            },
+            high_end: false,
+            content_kind: ContentKind::V&CDungeonFinder,
+        },
+        879 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Sil'dihn Subterrane (Savage)",
+                ja: "アナザーダンジョン 異聞シラディハ水道 零式",
+                de: "Die kuriose Unterstadt von Sil'dih (episch)",
+                fr: "Les canalisations sildiennes annexes - Donjon alternatif (sadique)",
+            },
+            high_end: false,
+            content_kind: ContentKind::V&CDungeonFinder,
         },
         880 => DutyInfo {
             name: LocalisedText {
@@ -6495,6 +6515,286 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        886 => DutyInfo {
+            name: LocalisedText {
+                en: "Mount Ordeals",
+                ja: "ルビカンテ討滅戦",
+                de: "Prophetie - Rubicante",
+                fr: "Le Mont du Supplice",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        896 => DutyInfo {
+            name: LocalisedText {
+                en: "Lapis Manalis",
+                ja: "雪山冥洞 ラピス・マナリス",
+                de: "Lapis Manalis",
+                fr: "Lapis Manalis",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        909 => DutyInfo {
+            name: LocalisedText {
+                en: "The Shifting Gymnasion Agonon",
+                ja: "宝物庫 エルピス・ギュムナシオン祭殿",
+                de: "Gymnasion Agonon",
+                fr: "Elpis Gymnasion",
+            },
+            high_end: false,
+            content_kind: ContentKind::TreasureHunt,
+        },
+        910 => DutyInfo {
+            name: LocalisedText {
+                en: "An Unforeseen Bargain",
+                ja: "パンひとつと引き換えに",
+                de: "Der Wert einer Buuds",
+                fr: "Pour une bouchée de pain",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        911 => DutyInfo {
+            name: LocalisedText {
+                en: "Euphrosyne",
+                ja: "喜びの神域 エウプロシュネ",
+                de: "Euphrosyne",
+                fr: "Domaine divin - Euphrosyne",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        912 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        913 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        914 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        915 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        916 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        917 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        918 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        919 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        920 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        921 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        922 => DutyInfo {
+            name: LocalisedText {
+                en: "The Clockwork Castletown",
+                ja: "東方絡繰御殿",
+                de: "Die Mechanische Menagerie",
+                fr: "Le Traquenard oriental",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        923 => DutyInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Custom Match - The Clockwork Castletown)",
+                ja: "クリスタルコンフリクト(東方絡繰御殿：カスタムマッチ)",
+                de: "Crystalline Conflict: Die Mechanische Menagerie (Schaukampf)",
+                fr: "Crystalline Conflict (partie personnalisée - Le Traquenard oriental)",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        924 => DutyInfo {
+            name: LocalisedText {
+                en: "Mount Ordeals (Extreme)",
+                ja: "極ルビカンテ討滅戦",
+                de: "Eschatos - Rubicante",
+                fr: "Le Mont du Supplice (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        926 => DutyInfo {
+            name: LocalisedText {
+                en: "Containment Bay P1T6 (Unreal)",
+                ja: "幻女神ソフィア討滅戦",
+                de: "Traumprüfung - Sophia",
+                fr: "Unité de contention P1P6 (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        927 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        928 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        929 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        930 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        931 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        932 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        933 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        934 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        935 => DutyInfo {
+            name: LocalisedText {
+                en: "Leap of Faith",
+                ja: "挑戦！ ジャンピングアスレチック",
+                de: "Kaktor-Kletterwand",
+                fr: "Haute voltige",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
         },
     };
 }

@@ -1503,12 +1503,6 @@ lazy_static::lazy_static! {
             de: "Unteres La Noscea",
             fr: "Basse-Noscea",
         },
-        416 => LocalisedText {
-            en: "The Great Gubal Library",
-            ja: "グブラ幻想図書館",
-            de: "Große Gubal-Bibliothek",
-            fr: "Grande bibliothèque de Gubal",
-        },
         417 => LocalisedText {
             en: "Chocobo Square",
             ja: "チョコボスクウェア",
@@ -1616,12 +1610,6 @@ lazy_static::lazy_static! {
             ja: "シンギュラリティ・リアクター",
             de: "Singularitäts-Reaktor",
             fr: "Réacteur de singularité",
-        },
-        438 => LocalisedText {
-            en: "Aetherochemical Research Facility",
-            ja: "魔科学研究所",
-            de: "Ätherochemisches Forschungslabor",
-            fr: "Laboratoire de magismologie",
         },
         439 => LocalisedText {
             en: "The Lightfeather Proving Grounds",
@@ -2079,12 +2067,6 @@ lazy_static::lazy_static! {
             de: "Das Diadem",
             fr: "Le Diadème",
         },
-        516 => LocalisedText {
-            en: "The Antitower",
-            ja: "逆さの塔",
-            de: "Antiturm",
-            fr: "L'Antitour",
-        },
         517 => LocalisedText {
             en: "Containment Bay S1T7",
             ja: "コンテイメントベイS1T7",
@@ -2283,12 +2265,6 @@ lazy_static::lazy_static! {
             de: "Feld der Ehre",
             fr: "Champs de la Gloire",
         },
-        555 => LocalisedText {
-            en: "Sohr Khai",
-            ja: "ソール・カイ",
-            de: "Sohr Khai",
-            fr: "Sohr Khai",
-        },
         556 => LocalisedText {
             en: "The Weeping City of Mhach",
             ja: "禁忌都市マハ",
@@ -2384,12 +2360,6 @@ lazy_static::lazy_static! {
             ja: "亡霊屋敷 ホーンテッドマナー",
             de: "Geisterschloss",
             fr: "Manoir hanté",
-        },
-        572 => LocalisedText {
-            en: "Xelphatol",
-            ja: "ゼルファトル",
-            de: "Xelphatol",
-            fr: "Xelphatol",
         },
         573 => LocalisedText {
             en: "Topmast Apartment Lobby",
@@ -2643,12 +2613,6 @@ lazy_static::lazy_static! {
             de: "Yanxia",
             fr: "Yanxia",
         },
-        615 => LocalisedText {
-            en: "Baelsar's Wall",
-            ja: "バエサルの長城",
-            de: "Baelsar-Wall",
-            fr: "Muraille de Baelsar",
-        },
         616 => LocalisedText {
             en: "Shisui of the Violet Tides",
             ja: "紫水宮",
@@ -2720,12 +2684,6 @@ lazy_static::lazy_static! {
             ja: "望海楼",
             de: "Badehaus Bokairo",
             fr: "Auberge du Bokairo",
-        },
-        630 => LocalisedText {
-            en: "The Diadem",
-            ja: "ディアデム諸島",
-            de: "Das Diadem",
-            fr: "Le Diadème",
         },
         633 => LocalisedText {
             en: "Carteneau Flats: Borderland Ruins",
@@ -5223,6 +5181,12 @@ lazy_static::lazy_static! {
             de: "Schicksalsweg",
             fr: "Avancée de la Foi",
         },
+        1069 => LocalisedText {
+            en: "The Sil'dihn Subterrane",
+            ja: "シラディハ水道",
+            de: "Unterstadt von Sil'dih",
+            fr: "Canalisations sildiennes",
+        },
         1070 => LocalisedText {
             en: "The Fell Court of Troia",
             ja: "トロイアコート",
@@ -5240,6 +5204,24 @@ lazy_static::lazy_static! {
             ja: "呪髪の風塔",
             de: "Sturmes Krone",
             fr: "Toison des tempêtes",
+        },
+        1073 => LocalisedText {
+            en: "Elysion",
+            ja: "エリュシオン",
+            de: "Elysium",
+            fr: "Élysée",
+        },
+        1075 => LocalisedText {
+            en: "Another Sil'dihn Subterrane",
+            ja: "異聞シラディハ水道",
+            de: "Kuriose Unterstadt von Sil'dih",
+            fr: "Canalisations sildiennes annexes",
+        },
+        1076 => LocalisedText {
+            en: "Another Sil'dihn Subterrane",
+            ja: "異聞シラディハ水道",
+            de: "Kuriose Unterstadt von Sil'dih",
+            fr: "Canalisations sildiennes annexes",
         },
         1077 => LocalisedText {
             en: "Zero's Domain",
@@ -5313,17 +5295,11 @@ lazy_static::lazy_static! {
             de: "Schwarzer Hof von Troia",
             fr: "Château de Troïa",
         },
-        1090 => LocalisedText {
-            en: "Containment Bay S1T7",
-            ja: "コンテイメントベイS1T7",
-            de: "Arretur S1T7",
-            fr: "Unité de contention S1P7",
-        },
         1091 => LocalisedText {
-            en: "Seat of the Foremost",
-            ja: "筆頭神官の間",
-            de: "Sitz der Hohepriesterin",
-            fr: "Salle des primiciers",
+            en: "The Fell Court of Troia",
+            ja: "トロイアコート",
+            de: "Schwarzer Hof von Troia",
+            fr: "Château de Troïa",
         },
         1092 => LocalisedText {
             en: "Storm's Crown",
@@ -5342,6 +5318,114 @@ lazy_static::lazy_static! {
             ja: "魔人の隠れ家",
             de: "Versteck der Kürbishexe",
             fr: "Demeure de la femme à tête de citrouille",
+        },
+        1095 => LocalisedText {
+            en: "Mount Ordeals",
+            ja: "試練の山",
+            de: "Berg der Tortur",
+            fr: "Mont du Supplice",
+        },
+        1096 => LocalisedText {
+            en: "Mount Ordeals",
+            ja: "試練の山",
+            de: "Berg der Tortur",
+            fr: "Mont du Supplice",
+        },
+        1097 => LocalisedText {
+            en: "Lapis Manalis",
+            ja: "ラピス・マナリス",
+            de: "Lapis Manalis",
+            fr: "Lapis Manalis",
+        },
+        1098 => LocalisedText {
+            en: "Sylphstep",
+            ja: "シルフ領風特設アスレチック",
+            de: "Sylphenland",
+            fr: "Sylve sylphe sibylline",
+        },
+        1109 => LocalisedText {
+            en: "The Great Gubal Library",
+            ja: "グブラ幻想図書館",
+            de: "Große Gubal-Bibliothek",
+            fr: "Grande bibliothèque de Gubal",
+        },
+        1110 => LocalisedText {
+            en: "Aetherochemical Research Facility",
+            ja: "魔科学研究所",
+            de: "Ätherochemisches Forschungslabor",
+            fr: "Laboratoire de magismologie",
+        },
+        1111 => LocalisedText {
+            en: "The Antitower",
+            ja: "逆さの塔",
+            de: "Antiturm",
+            fr: "L'Antitour",
+        },
+        1112 => LocalisedText {
+            en: "Sohr Khai",
+            ja: "ソール・カイ",
+            de: "Sohr Khai",
+            fr: "Sohr Khai",
+        },
+        1113 => LocalisedText {
+            en: "Xelphatol",
+            ja: "ゼルファトル",
+            de: "Xelphatol",
+            fr: "Xelphatol",
+        },
+        1114 => LocalisedText {
+            en: "Baelsar's Wall",
+            ja: "バエサルの長城",
+            de: "Baelsar-Wall",
+            fr: "Muraille de Baelsar",
+        },
+        1116 => LocalisedText {
+            en: "The Clockwork Castletown",
+            ja: "東方絡繰御殿",
+            de: "Die Mechanische Menagerie",
+            fr: "Le Traquenard oriental",
+        },
+        1117 => LocalisedText {
+            en: "The Clockwork Castletown",
+            ja: "東方絡繰御殿",
+            de: "Die Mechanische Menagerie",
+            fr: "Le Traquenard oriental",
+        },
+        1118 => LocalisedText {
+            en: "Euphrosyne",
+            ja: "喜びの神域 エウプロシュネ",
+            de: "Euphrosyne",
+            fr: "Domaine divin - Euphrosyne",
+        },
+        1119 => LocalisedText {
+            en: "Lapis Manalis",
+            ja: "ラピス・マナリス",
+            de: "Lapis Manalis",
+            fr: "Lapis Manalis",
+        },
+        1120 => LocalisedText {
+            en: "Garlemald",
+            ja: "ガレマルド",
+            de: "Garlemald",
+            fr: "Garlemald",
+        },
+        1121 => LocalisedText {
+            en: "Containment Bay P1T6",
+            ja: "コンテイメントベイP1T6",
+            de: "Arretur P1T6",
+            fr: "Unité de contention P1P6",
+        },
+        1123 => LocalisedText {
+            en: "The Shifting Gymnasion Agonon",
+            ja: "エルピス・ギュムナシオン祭殿",
+            de: "Gymnasion Agonon",
+            fr: "Elpis Gymnasion",
+        },
+        1125 => LocalisedText {
+            en: "Khadga",
+            ja: "カドガの大岩",
+            de: "Khadga-Felsen",
+            fr: "Khadga",
         },
     };
 }

@@ -70,7 +70,7 @@ lazy_static::lazy_static! {
                 de: "Tagesherausforderung: PvP-Front",
                 fr: "Challenge quotidien : Front",
             },
-            pvp: false,
+            pvp: true,
         },
         8 => RouletteInfo {
             name: LocalisedText {
