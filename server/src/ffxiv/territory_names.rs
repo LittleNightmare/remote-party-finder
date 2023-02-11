@@ -5415,6 +5415,12 @@ lazy_static::lazy_static! {
             de: "Arretur P1T6",
             fr: "Unité de contention P1P6",
         },
+        1122 => LocalisedText {
+            en: "The Interdimensional Rift",
+            ja: "次元の狭間",
+            de: "Interdimensionaler Riss",
+            fr: "Fissure interdimensionnelle",
+        },
         1123 => LocalisedText {
             en: "The Shifting Gymnasion Agonon",
             ja: "エルピス・ギュムナシオン祭殿",
