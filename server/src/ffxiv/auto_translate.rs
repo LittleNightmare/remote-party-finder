@@ -27214,6 +27214,12 @@ lazy_static::lazy_static! {
             de: "Lapis Manalis",
             fr: "Lapis Manalis",
         },
+        (24, 5115) => LocalisedText {
+            en: "The Omega Protocol (Ultimate)",
+            ja: "絶オメガ検証戦",
+            de: "Omega (fatal)",
+            fr: "Protocole Oméga (fatal)",
+        },
         (24, 5116) => LocalisedText {
             en: "Euphrosyne",
             ja: "喜びの神域 エウプロシュネ",

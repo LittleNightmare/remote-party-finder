@@ -6536,6 +6536,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
+        908 => DutyInfo {
+            name: LocalisedText {
+                en: "The Omega Protocol (Ultimate)",
+                ja: "絶オメガ検証戦",
+                de: "Omega (fatal)",
+                fr: "Le Protocole Oméga (fatal)",
+            },
+            high_end: true,
+            content_kind: ContentKind::UltimateRaids,
+        },
         909 => DutyInfo {
             name: LocalisedText {
                 en: "The Shifting Gymnasion Agonon",
