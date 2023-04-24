@@ -1,10 +1,10 @@
-pub mod auto_translate;
-pub mod duties;
-pub mod jobs;
-pub mod roulettes;
-pub mod territory_names;
-pub mod treasure_maps;
-pub mod worlds;
+use std::{
+    cmp::Ordering,
+    str::FromStr,
+};
+use std::borrow::Cow;
+
+use crate::listing::{DutyCategory, DutyType};
 
 pub use self::{
     auto_translate::AUTO_TRANSLATE,
@@ -16,12 +16,13 @@ pub use self::{
     worlds::WORLDS,
 };
 
-use std::{
-    cmp::Ordering,
-    str::FromStr,
-};
-use std::borrow::Cow;
-use crate::listing::{DutyCategory, DutyType};
+pub mod auto_translate;
+pub mod duties;
+pub mod jobs;
+pub mod roulettes;
+pub mod territory_names;
+pub mod treasure_maps;
+pub mod worlds;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Language {
@@ -149,6 +150,12 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::Japanese => "アメノミハシラ",
             Language::German => "Himmelssäule",
             Language::French => "Pilier des Cieux",
+        }),
+        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 3 => return Cow::from(match lang {
+            Language::English => "Eureka Orthos",
+            Language::Japanese => "オルト・エウレカ",
+            Language::German => "Eureka Orthos",
+            Language::French => "Eurêka Orthos",
         }),
         (DutyType::Normal, _) => {
             if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
