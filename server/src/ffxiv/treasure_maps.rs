@@ -114,13 +114,13 @@ lazy_static::lazy_static! {
         18 => LocalisedText {
             en: "Kumbhiraskin Treasure Map",
             ja: "古ぼけた地図G14",
-            de: "Ophiotaurosleder-Schatzkarte",
+            de: "Kumbhilaleder-Schatzkarte",
             fr: "Carte au trésor en peau de kumbhira",
         },
         19 => LocalisedText {
             en: "Ophiotauroskin Treasure Map",
             ja: "古ぼけた地図G15",
-            de: "Kumbhiraleder-Schatzkarte",
+            de: "Ophiotaurosleder-Schatzkarte",
             fr: "Carte au trésor en peau d'ophiotauros",
         },
         20 => LocalisedText {

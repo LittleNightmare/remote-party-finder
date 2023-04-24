@@ -4725,6 +4725,12 @@ lazy_static::lazy_static! {
             de: "Barbarizia",
             fr: "Barbariccia",
         },
+        (23, 1959) => LocalisedText {
+            en: "Rubicante",
+            ja: "ルビカンテ",
+            de: "Rubicante",
+            fr: "Rubicante",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -7197,6 +7203,12 @@ lazy_static::lazy_static! {
             de: "Pod 602",
             fr: "pod 602",
         },
+        (49, 285) => LocalisedText {
+            en: "moon-hopper",
+            ja: "ムーンホッパー",
+            de: "Mondhopper",
+            fr: "bondisseur lunaire",
+        },
         (49, 286) => LocalisedText {
             en: "island alligator",
             ja: "アイランド・アリゲーター",
@@ -7220,6 +7232,12 @@ lazy_static::lazy_static! {
             ja: "ビネガロン",
             de: "Geißelskorpion",
             fr: "vinaigrier",
+        },
+        (49, 292) => LocalisedText {
+            en: "Orthos craklaw",
+            ja: "オルト・クラックロー",
+            de: "Orthos-Kraklaw",
+            fr: "craqulov Orthos",
         },
         (49, 293) => LocalisedText {
             en: "bluefeather lynx",
@@ -7268,6 +7286,12 @@ lazy_static::lazy_static! {
             ja: "リンクス・オブ・ウィンド",
             de: "Sturmwind-Luchs",
             fr: "lynx des vents tempétueux",
+        },
+        (49, 308) => LocalisedText {
+            en: "aeturna",
+            ja: "アエテルナエ",
+            de: "Aeturna",
+            fr: "Aeturna",
         },
         (49, 311) => LocalisedText {
             en: "Anden III",
@@ -8894,6 +8918,12 @@ lazy_static::lazy_static! {
             ja: "蛇神大社",
             de: "Heiligtum der Schlange",
             fr: "Sanctuaire du Grand Serpent",
+        },
+        (51, 2529) => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
         },
         (51, 2530) => LocalisedText {
             en: "Eureka Pyros",
@@ -18987,6 +19017,12 @@ lazy_static::lazy_static! {
             de: "/kontaktperle",
             fr: "/appelvialinkperle",
         },
+        (62, 653) => LocalisedText {
+            en: "/earwiggle",
+            ja: "/earwiggle",
+            de: "/löffelwackeln",
+            fr: "/longuesoreillessoyeuses",
+        },
         (63, 29054) => LocalisedText {
             en: "Guard",
             ja: "防御",
@@ -23434,6 +23470,18 @@ lazy_static::lazy_static! {
             de: "Aufzieh-Cagnazzo",
             fr: "Cagnazzo miniature",
         },
+        (65, 472) => LocalisedText {
+            en: "Findingway",
+            ja: "ファインディングウェイ",
+            de: "Findingway",
+            fr: "Findingway",
+        },
+        (65, 473) => LocalisedText {
+            en: "private pachypodium",
+            ja: "プライベート・パキポディウム",
+            de: "Privat-Pachypodium",
+            fr: "soldate pachypodium",
+        },
         (65, 474) => LocalisedText {
             en: "wind-up Halone",
             ja: "マメット・ハルオーネ",
@@ -26332,6 +26380,132 @@ lazy_static::lazy_static! {
             de: "Totenlaterne",
             fr: "Lanterne de résurrection",
         },
+        (27, 3628) => LocalisedText {
+            en: "Pylon of Return",
+            ja: "再生装置",
+            de: "Reanimator",
+            fr: "résurrecteur",
+        },
+        (27, 3629) => LocalisedText {
+            en: "Pylon of Passage",
+            ja: "転移装置",
+            de: "Translokator",
+            fr: "téléporteur",
+        },
+        (27, 3630) => LocalisedText {
+            en: "Unei demiclone",
+            ja: "デミクローン・ウネ",
+            de: "Demiklon-Unei",
+            fr: "semi-clone d'Unéi",
+        },
+        (27, 3631) => LocalisedText {
+            en: "Doga demiclone",
+            ja: "デミクローン・ドーガ",
+            de: "Demiklon-Doga",
+            fr: "semi-clone de Doga",
+        },
+        (27, 3632) => LocalisedText {
+            en: "onion knight demiclone",
+            ja: "デミクローン・オニオンナイト",
+            de: "Demiklon-Zwiebelritter",
+            fr: "semi-clone du chevalier Oignon",
+        },
+        (27, 3633) => LocalisedText {
+            en: "Protomander of Lethargy",
+            ja: "魔科学器:スロウガ",
+            de: "Ätherogefäß der Trägheit",
+            fr: "magismobjet de ralentissement",
+        },
+        (27, 3634) => LocalisedText {
+            en: "Protomander of Storms",
+            ja: "魔科学器:ミールストーム",
+            de: "Ätherogefäß der Schwäche",
+            fr: "magismobjet de Charybde",
+        },
+        (27, 3635) => LocalisedText {
+            en: "Protomander of Dread",
+            ja: "魔科学器:ドレッドノート化",
+            de: "Ätherogefäß der Macht",
+            fr: "magismobjet de cuirassé Dreadnaught",
+        },
+        (27, 3636) => LocalisedText {
+            en: "Protomander of Safety",
+            ja: "魔科学器:呪印解除",
+            de: "Ätherogefäß des Siegelbruchs",
+            fr: "magismobjet de désamorçage",
+        },
+        (27, 3637) => LocalisedText {
+            en: "Protomander of Sight",
+            ja: "魔科学器:サイトロ",
+            de: "Ätherogefäß der Sicht",
+            fr: "magismobjet de localisation",
+        },
+        (27, 3638) => LocalisedText {
+            en: "Protomander of Strength",
+            ja: "魔科学器:自己強化",
+            de: "Ätherogefäß der Stärkung",
+            fr: "magismobjet de puissance",
+        },
+        (27, 3639) => LocalisedText {
+            en: "Protomander of Steel",
+            ja: "魔科学器:防御強化",
+            de: "Ätherogefäß der Abwehr",
+            fr: "magismobjet de protection",
+        },
+        (27, 3640) => LocalisedText {
+            en: "Protomander of Affluence",
+            ja: "魔科学器:宝箱増加",
+            de: "Ätherogefäß der Schätze",
+            fr: "magismobjet de décèlement",
+        },
+        (27, 3641) => LocalisedText {
+            en: "Protomander of Flight",
+            ja: "魔科学器:敵排除",
+            de: "Ätherogefäß des Feindtods",
+            fr: "magismobjet de sécurisation",
+        },
+        (27, 3642) => LocalisedText {
+            en: "Protomander of Alteration",
+            ja: "魔科学器:敵変化",
+            de: "Ätherogefäß der Feindwandlung",
+            fr: "magismobjet d'affaiblissement",
+        },
+        (27, 3643) => LocalisedText {
+            en: "Protomander of Purity",
+            ja: "魔科学器:解呪",
+            de: "Ätherogefäß der Entzauberung",
+            fr: "magismobjet d'anti-maléfice",
+        },
+        (27, 3644) => LocalisedText {
+            en: "Protomander of Fortune",
+            ja: "魔科学器:運気上昇",
+            de: "Ätherogefäß des Glücks",
+            fr: "magismobjet de chance",
+        },
+        (27, 3645) => LocalisedText {
+            en: "Protomander of Witching",
+            ja: "魔科学器:形態変化",
+            de: "Ätherogefäß der Wandlung",
+            fr: "magismobjet de mutation",
+        },
+        (27, 3646) => LocalisedText {
+            en: "Protomander of Serenity",
+            ja: "魔科学器:魔法効果解除",
+            de: "Ätherogefäß der Enthexung",
+            fr: "magismobjet de dissipation",
+        },
+        (27, 3647) => LocalisedText {
+            en: "Protomander of Intuition",
+            ja: "魔科学器:財宝感知",
+            de: "Ätherogefäß des Finders",
+            fr: "magismobjet d'intuition",
+        },
+        (27, 3648) => LocalisedText {
+            en: "Protomander of Raising",
+            ja: "魔科学器:リレイズ",
+            de: "Ätherogefäß des Lebens",
+            fr: "magismobjet de résurrection",
+        },
         (17, 4000) => LocalisedText {
             en: "magia board",
             ja: "マギアボード",
@@ -26559,6 +26733,12 @@ lazy_static::lazy_static! {
             ja: "マンダヴィルウェポン",
             de: "Manderville-Waffe",
             fr: "arme des Manderville",
+        },
+        (17, 4044) => LocalisedText {
+            en: "Splendorous tool",
+            ja: "モーエンツール",
+            de: "Mowen-Werkzeug",
+            fr: "outil des merveilles",
         },
         (24, 5000) => LocalisedText {
             en: "normal raid",
@@ -27214,6 +27394,12 @@ lazy_static::lazy_static! {
             de: "Lapis Manalis",
             fr: "Lapis Manalis",
         },
+        (24, 5114) => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
         (24, 5115) => LocalisedText {
             en: "The Omega Protocol (Ultimate)",
             ja: "絶オメガ検証戦",
@@ -27225,6 +27411,18 @@ lazy_static::lazy_static! {
             ja: "喜びの神域 エウプロシュネ",
             de: "Euphrosyne",
             fr: "Domaine divin - Euphrosyne",
+        },
+        (24, 5117) => LocalisedText {
+            en: "Mount Ordeals",
+            ja: "ルビカンテ討滅戦",
+            de: "Prophetie - Rubicante",
+            fr: "Mont du Supplice",
+        },
+        (24, 5118) => LocalisedText {
+            en: "Mount Ordeals (Extreme)",
+            ja: "極ルビカンテ討滅戦",
+            de: "Eschatos - Rubicante",
+            fr: "Mont du Supplice (extrême)",
         },
         (24, 5119) => LocalisedText {
             en: "Containment Bay P1T6 (Unreal)",

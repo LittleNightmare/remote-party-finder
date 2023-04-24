@@ -5343,6 +5343,66 @@ lazy_static::lazy_static! {
             de: "Sylphenland",
             fr: "Sylve sylphe sibylline",
         },
+        1099 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1100 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1101 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1102 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1103 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1104 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1105 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1106 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1107 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
+        1108 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
+        },
         1109 => LocalisedText {
             en: "The Great Gubal Library",
             ja: "グブラ幻想図書館",
@@ -5378,6 +5438,12 @@ lazy_static::lazy_static! {
             ja: "バエサルの長城",
             de: "Baelsar-Wall",
             fr: "Muraille de Baelsar",
+        },
+        1115 => LocalisedText {
+            en: "The Tower of Babil",
+            ja: "バブイルの塔",
+            de: "Turm von Babil",
+            fr: "Tour de Babil",
         },
         1116 => LocalisedText {
             en: "The Clockwork Castletown",
@@ -5426,6 +5492,12 @@ lazy_static::lazy_static! {
             ja: "エルピス・ギュムナシオン祭殿",
             de: "Gymnasion Agonon",
             fr: "Elpis Gymnasion",
+        },
+        1124 => LocalisedText {
+            en: "Eureka Orthos",
+            ja: "オルト・エウレカ",
+            de: "Eureka Orthos",
+            fr: "Eurêka Orthos",
         },
         1125 => LocalisedText {
             en: "Khadga",
