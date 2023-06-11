@@ -778,10 +778,10 @@ lazy_static::lazy_static! {
         },
         69 => DutyInfo {
             name: LocalisedText {
-                en: "Special Event III",
-                ja: "イベント用コンテンツ：3",
-                de: "Event-Inhalt 3",
-                fr: "Défi spécial III",
+                en: "The Gilded Araya",
+                ja: "アスラ討滅戦",
+                de: "Arayas Palast",
+                fr: "Le temple doré d'Araya",
             },
             high_end: false,
             content_kind: ContentKind::Trials,
@@ -6016,6 +6016,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        822 => DutyInfo {
+            name: LocalisedText {
+                en: "The Aetherfont",
+                ja: "星霊間欠 ハーム島",
+                de: "Ätherborn",
+                fr: "L'île de Haam",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
         830 => DutyInfo {
             name: LocalisedText {
                 en: "The Porta Decumana",
@@ -6413,7 +6423,7 @@ lazy_static::lazy_static! {
                 de: "Abyssos - Fünfter Kreis (episch)",
                 fr: "Le Purgatoire du Pandæmonium - Cages (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         874 => DutyInfo {
@@ -6443,7 +6453,7 @@ lazy_static::lazy_static! {
                 de: "Abyssos - Siebter Kreis (episch)",
                 fr: "Le Purgatoire du Pandæmonium - Racines (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         878 => DutyInfo {
@@ -6483,7 +6493,7 @@ lazy_static::lazy_static! {
                 de: "Abyssos - Sechster Kreis (episch)",
                 fr: "Le Purgatoire du Pandæmonium - Croisements (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         883 => DutyInfo {
@@ -6503,7 +6513,7 @@ lazy_static::lazy_static! {
                 de: "Abyssos - Achter Kreis (episch)",
                 fr: "Le Purgatoire du Pandæmonium - Hérédité (sadique)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         885 => DutyInfo {
@@ -6813,17 +6823,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Rubicante",
                 fr: "Le Mont du Supplice (extrême)",
             },
-            high_end: true,
-            content_kind: ContentKind::Trials,
-        },
-        926 => DutyInfo {
-            name: LocalisedText {
-                en: "Containment Bay P1T6 (Unreal)",
-                ja: "幻女神ソフィア討滅戦",
-                de: "Traumprüfung - Sophia",
-                fr: "Unité de contention P1P6 (irréel)",
-            },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         927 => DutyInfo {
@@ -6915,6 +6915,176 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
+        },
+        936 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Ninth Circle",
+                ja: "万魔殿パンデモニウム：天獄編1",
+                de: "Anabaseios - Neunter Kreis",
+                fr: "Le Paradis du Pandæmonium - Métempsycose",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        937 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Ninth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：天獄編1",
+                de: "Anabaseios - Neunter Kreis (episch)",
+                fr: "Le Paradis du Pandæmonium - Métempsycose (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        938 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Tenth Circle",
+                ja: "万魔殿パンデモニウム：天獄編2",
+                de: "Anabaseios - Zehnter Kreis",
+                fr: "Le Paradis du Pandæmonium - Monochrome",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        939 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Tenth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：天獄編2",
+                de: "Anabaseios - Zehnter Kreis (episch)",
+                fr: "Le Paradis du Pandæmonium - Monochrome (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        940 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Eleventh Circle",
+                ja: "万魔殿パンデモニウム：天獄編3",
+                de: "Anabaseios - Elfter Kreis",
+                fr: "Le Paradis du Pandæmonium - Tribunal",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        941 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Eleventh Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：天獄編3",
+                de: "Anabaseios - Elfter Kreis (episch)",
+                fr: "Le Paradis du Pandæmonium - Tribunal (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        942 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Twelfth Circle",
+                ja: "万魔殿パンデモニウム：天獄編4",
+                de: "Anabaseios - Zwölfter Kreis",
+                fr: "Le Paradis du Pandæmonium - Apothéose",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        943 => DutyInfo {
+            name: LocalisedText {
+                en: "Anabaseios: The Twelfth Circle (Savage)",
+                ja: "万魔殿パンデモニウム零式：天獄編4",
+                de: "Anabaseios - Zwölfter Kreis (episch)",
+                fr: "Le Paradis du Pandæmonium - Apothéose (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        949 => DutyInfo {
+            name: LocalisedText {
+                en: "The Voidcast Dais",
+                ja: "ゴルベーザ討滅戦",
+                de: "Prophetie - Golbez",
+                fr: "La Chaire de l'Exilée",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        950 => DutyInfo {
+            name: LocalisedText {
+                en: "The Voidcast Dais (Extreme)",
+                ja: "極ゴルベーザ討滅戦",
+                de: "Eschatos - Golbez",
+                fr: "La Chaire de l'Exilée (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        951 => DutyInfo {
+            name: LocalisedText {
+                en: "Containment Bay Z1T9 (Unreal)",
+                ja: "幻鬼神ズルワーン討滅戦",
+                de: "Traumprüfung - Zurvan",
+                fr: "Unité de contention Z1P9 (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        952 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
+        },
+        953 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
+        },
+        954 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
+        },
+        955 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
+        },
+        956 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
+        },
+        957 => DutyInfo {
+            name: LocalisedText {
+                en: "Ocean Fishing",
+                ja: "オーシャンフィッシング",
+                de: "Auf großer Fahrt",
+                fr: "Pêche en mer",
+            },
+            high_end: false,
+            content_kind: ContentKind::DisciplesoftheLand,
         },
     };
 }

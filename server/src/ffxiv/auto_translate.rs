@@ -7107,6 +7107,24 @@ lazy_static::lazy_static! {
             de: "Ritter Paradiesaubergine",
             fr: "Chevalier aubergine insulaire",
         },
+        (49, 258) => LocalisedText {
+            en: "island Garlic Jester",
+            ja: "アイル・ガーリックスター",
+            de: "Sir Paradiesknoblauch",
+            fr: "Baron ail insulaire",
+        },
+        (49, 259) => LocalisedText {
+            en: "island Tomato King ",
+            ja: "アイル・キングトマト",
+            de: "König Paradiestomate",
+            fr: "Roi tomate insulaire",
+        },
+        (49, 260) => LocalisedText {
+            en: "island Mandragora Queen",
+            ja: "アイル・マンドラクイーン",
+            de: "Königin Paradies-Mandragora",
+            fr: "Reine mandragore insulaire",
+        },
         (49, 261) => LocalisedText {
             en: "lynx of eternal darkness",
             ja: "エターナルダークネス・リンクス",
@@ -7197,6 +7215,12 @@ lazy_static::lazy_static! {
             de: "Alkonost",
             fr: "alkonost",
         },
+        (49, 282) => LocalisedText {
+            en: "island buffalo",
+            ja: "アイル・バッファロー",
+            de: "Inselbüffel",
+            fr: "buffle insulaire",
+        },
         (49, 284) => LocalisedText {
             en: "pod 602",
             ja: "ポッド602",
@@ -7251,6 +7275,12 @@ lazy_static::lazy_static! {
             de: "Megashiba",
             fr: "mégashiba",
         },
+        (49, 297) => LocalisedText {
+            en: "traveling supporter",
+            ja: "トラベリングサポーター",
+            de: "Reise-Support",
+            fr: "unité de voyage accompagné",
+        },
         (49, 298) => LocalisedText {
             en: "Miw Miisv",
             ja: "ミゥ・ミーシュ",
@@ -7262,6 +7292,24 @@ lazy_static::lazy_static! {
             ja: "ワンダラスラナー",
             de: "Wunderlanner",
             fr: "lanier merveilleux",
+        },
+        (49, 300) => LocalisedText {
+            en: "magicked umbrella",
+            ja: "マジックアンブレラ",
+            de: "Magischer Regenschirm",
+            fr: "parapluie enchanté",
+        },
+        (49, 301) => LocalisedText {
+            en: "magicked parasol",
+            ja: "マジックパラソル",
+            de: "Magischer Parasol",
+            fr: "parasol enchanté",
+        },
+        (49, 302) => LocalisedText {
+            en: "Starlight steed",
+            ja: "ミラージュ・ブリッツェン",
+            de: "Sternenlicht-Blitzen",
+            fr: "Blitzen illusoire",
         },
         (49, 303) => LocalisedText {
             en: "Sil'dihn throne",
@@ -7292,6 +7340,12 @@ lazy_static::lazy_static! {
             ja: "アエテルナエ",
             de: "Aeturna",
             fr: "Aeturna",
+        },
+        (49, 310) => LocalisedText {
+            en: "set of ceruleum balloons",
+            ja: "セルリウム・バルーン",
+            de: "Bündel bunter Erdseimballone",
+            fr: "ballons de céruleum",
         },
         (49, 311) => LocalisedText {
             en: "Anden III",
@@ -7334,6 +7388,24 @@ lazy_static::lazy_static! {
             ja: "クリュソマロス",
             de: "Chrysomallos",
             fr: "Chrysomallos",
+        },
+        (49, 319) => LocalisedText {
+            en: "megaloambystoma",
+            ja: "メガロアンビストマ",
+            de: "Megalo-Ambystoma",
+            fr: "mégalo-ambystoma",
+        },
+        (49, 324) => LocalisedText {
+            en: "magicked children's bed",
+            ja: "マジックキッズベッド",
+            de: "Magisches Kinderbett",
+            fr: "lit enfant magique",
+        },
+        (49, 325) => LocalisedText {
+            en: "lynx of fallen shadow",
+            ja: "リンクス・オブ・ダークネス",
+            de: "Dunkelheits-Luchs",
+            fr: "lynx de l'obscurité éternelle",
         },
         (50, 1) => LocalisedText {
             en: "gladiator",
@@ -9992,6 +10064,42 @@ lazy_static::lazy_static! {
             ja: "試練の山",
             de: "Berg der Tortur",
             fr: "Mont du Supplice",
+        },
+        (51, 4296) => LocalisedText {
+            en: "The Voidcast Dais",
+            ja: "立方魔法陣",
+            de: "Krone der Schatten",
+            fr: "Hypercube de Golbez",
+        },
+        (51, 4297) => LocalisedText {
+            en: "The Aetherfont",
+            ja: "ハーム島",
+            de: "Haam",
+            fr: "Île de Haam",
+        },
+        (51, 4307) => LocalisedText {
+            en: "The Chamber of Fourteen",
+            ja: "十四座の間",
+            de: "Halle der Vierzehn Sitze",
+            fr: "Prétoire des Quatorze",
+        },
+        (51, 4358) => LocalisedText {
+            en: "The Aetherial Slough",
+            ja: "星海滞留域",
+            de: "Sphäre des Pandæmoniums",
+            fr: "Nappe stagnante",
+        },
+        (51, 4362) => LocalisedText {
+            en: "The Dæmons' Nest",
+            ja: "万魔の産屋",
+            de: "Dæmonisches Nest",
+            fr: "Maternité démoniaque",
+        },
+        (51, 4375) => LocalisedText {
+            en: "Ascension",
+            ja: "神の座",
+            de: "Göttlicher Thron",
+            fr: "Trône divin",
         },
         (54, 1) => LocalisedText {
             en: "Halone, the Fury",
@@ -13832,12 +13940,6 @@ lazy_static::lazy_static! {
             ja: "サモン・エオス",
             de: "Eos-Beschwörung",
             fr: "Invocation Eos",
-        },
-        (56, 17216) => LocalisedText {
-            en: "Summon Selene",
-            ja: "サモン・セレネ",
-            de: "Selene-Beschwörung",
-            fr: "Invocation Selene",
         },
         (56, 17864) => LocalisedText {
             en: "Bio",
@@ -18939,6 +19041,12 @@ lazy_static::lazy_static! {
             de: "/kopffassen",
             fr: "/setenirlatête",
         },
+        (62, 635) => LocalisedText {
+            en: "/eatchocolate",
+            ja: "/eatchocolate",
+            de: "/schokoladeessen",
+            fr: "/mangerunchocolat",
+        },
         (62, 636) => LocalisedText {
             en: "/eategg",
             ja: "/eategg",
@@ -19011,6 +19119,12 @@ lazy_static::lazy_static! {
             de: "/oleoleoleole",
             fr: "/apprécierlespectacle",
         },
+        (62, 651) => LocalisedText {
+            en: "/littleladiesdance",
+            ja: "/littleladiesdance",
+            de: "/prinzessinnentanz",
+            fr: "/dansedesprincesses",
+        },
         (62, 652) => LocalisedText {
             en: "/linkpearl",
             ja: "/linkpearl",
@@ -19022,6 +19136,18 @@ lazy_static::lazy_static! {
             ja: "/earwiggle",
             de: "/löffelwackeln",
             fr: "/longuesoreillessoyeuses",
+        },
+        (62, 657) => LocalisedText {
+            en: "/frighten",
+            ja: "/frighten",
+            de: "/angstundschrecken",
+            fr: "/effrayer",
+        },
+        (62, 664) => LocalisedText {
+            en: "/handtoheart",
+            ja: "/handtoheart",
+            de: "/handaufdiebrust",
+            fr: "/mainsurlapoitrine",
         },
         (63, 29054) => LocalisedText {
             en: "Guard",
@@ -23500,6 +23626,60 @@ lazy_static::lazy_static! {
             de: "Aufzieh-Aidoneus",
             fr: "Aidoneus miniature",
         },
+        (65, 478) => LocalisedText {
+            en: "puffin",
+            ja: "パフィン",
+            de: "Papageientaucher",
+            fr: "macareux",
+        },
+        (65, 479) => LocalisedText {
+            en: "mossasaurus",
+            ja: "モサモサウルス",
+            de: "Mosasaurus",
+            fr: "mossasaure",
+        },
+        (65, 481) => LocalisedText {
+            en: "posher otter",
+            ja: "スチームウソウソ",
+            de: "Dampf-Otter",
+            fr: "loutre choute fringante",
+        },
+        (65, 482) => LocalisedText {
+            en: "Rubellite Weapon",
+            ja: "ルベライトウェポン",
+            de: "Rubellit-Waffe",
+            fr: "Arme Rubellite",
+        },
+        (65, 483) => LocalisedText {
+            en: "chimpanzee",
+            ja: "チンパンジー",
+            de: "Schimpanse",
+            fr: "chimpanzé",
+        },
+        (65, 484) => LocalisedText {
+            en: "exciting dynamite",
+            ja: "エキサイティング・ダイナマイト",
+            de: "aufgeregt[a] Dynamit",
+            fr: "dynamite exaltante",
+        },
+        (65, 485) => LocalisedText {
+            en: "mikra Lyssa",
+            ja: "ミクラ・リッサ",
+            de: "Lyssa Mikra",
+            fr: "mikra Lyssa",
+        },
+        (65, 488) => LocalisedText {
+            en: "wind-up Barbariccia",
+            ja: "マメット・バルバリシア",
+            de: "Aufzieh-Barbarizia",
+            fr: "Barbariccia miniature",
+        },
+        (65, 489) => LocalisedText {
+            en: "goggle-eyed dogu",
+            ja: "遮光器土偶",
+            de: "Shakoki-Dogu",
+            fr: "dogû globuleux",
+        },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
             ja: "コンボ：ロイヤルアソリティ",
@@ -26680,12 +26860,6 @@ lazy_static::lazy_static! {
             de: "Fête",
             fr: "feste",
         },
-        (17, 4035) => LocalisedText {
-            en: "Allagan tomestone of aphorism",
-            ja: "アラガントームストーン:経典",
-            de: "Allagische Steine des Aphorismus",
-            fr: "mémoquartz allagois aphoristiques",
-        },
         (17, 4036) => LocalisedText {
             en: "Allagan tomestone of astronomy",
             ja: "アラガントームストーン:天文",
@@ -26739,6 +26913,12 @@ lazy_static::lazy_static! {
             ja: "モーエンツール",
             de: "Mowen-Werkzeug",
             fr: "outil des merveilles",
+        },
+        (17, 4045) => LocalisedText {
+            en: "Allagan tomestone of comedy",
+            ja: "アラガントームストーン:神曲",
+            de: "Allagische Steine der Komödie",
+            fr: "mémoquartz allagois dantesques",
         },
         (24, 5000) => LocalisedText {
             en: "normal raid",
@@ -27435,6 +27615,24 @@ lazy_static::lazy_static! {
             ja: "東方絡繰御殿",
             de: "Mechanische Menagerie",
             fr: "Traquenard oriental",
+        },
+        (24, 5121) => LocalisedText {
+            en: "The Aetherfont",
+            ja: "ハーム島",
+            de: "Haam",
+            fr: "île de Haam",
+        },
+        (24, 5122) => LocalisedText {
+            en: "Anabaseios",
+            ja: "天獄編",
+            de: "Anabaseios",
+            fr: "Paradis du Pandæmonium",
+        },
+        (24, 5125) => LocalisedText {
+            en: "Containment Bay Z1T9 (Unreal)",
+            ja: "幻鬼神ズルワーン討滅戦",
+            de: "Traumprüfung - Zurvan",
+            fr: "Unité de contention Z1P9 (irréel)",
         },
     };
 }
