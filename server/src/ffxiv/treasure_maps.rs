@@ -129,5 +129,11 @@ lazy_static::lazy_static! {
             de: "Legendenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle III",
         },
+        21 => LocalisedText {
+            en: "Conceivably Special Treasure Map",
+            ja: "古ぼけた地図S4",
+            de: "Sagenleder-Schatzkarte",
+            fr: "Carte au trésor inhabituelle IV",
+        },
     };
 }
