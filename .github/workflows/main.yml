@@ -1,0 +1,36 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Nix
+        run: |
+          curl -L https://nixos.org/nix/install | sh -s
+          echo 'source $HOME/.nix-profile/etc/profile.d/nix.sh' >> $HOME/.bashrc
+        env:
+          SHELL: bash
+
+      - name: Install dependencies
+        run: sudo apt-get install -y curl tar xz-utils
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        working-directory: remote-party-finder/server
+        run: |
+          nix-shell --command 'cargo build --release --target x86_64-unknown-linux-musl'
+          strip -s target/x86_64-unknown-linux-musl/release/remote-party-finder
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Release
+          path: remote-party-finder/server/target/x86_64-unknown-linux-musl/release/remote-party-finder
