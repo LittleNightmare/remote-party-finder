@@ -39,6 +39,7 @@ impl Language {
             Self::Japanese => "ja",
             Self::German => "de",
             Self::French => "fr",
+            Self::ChineseSimplified => "chs",
         }
     }
 
@@ -48,6 +49,7 @@ impl Language {
             Self::Japanese => "日本語",
             Self::German => "deutsch",
             Self::French => "français",
+            Self::ChineseSimplified => "简体中文",
         }
     }
 
@@ -81,6 +83,7 @@ impl Language {
                 "ja" => return Self::Japanese,
                 "de" => return Self::German,
                 "fr" => return Self::French,
+                "chs" => return Self::ChineseSimplified,
                 _ => {}
             }
         }
@@ -95,6 +98,7 @@ pub struct LocalisedText {
     pub ja: &'static str,
     pub de: &'static str,
     pub fr: &'static str,
+    pub chs: &'static str,
 }
 
 impl LocalisedText {
@@ -104,6 +108,7 @@ impl LocalisedText {
             Language::Japanese => self.ja,
             Language::German => self.de,
             Language::French => self.fr,
+            Language::ChineseSimplified => self.chs,
         }
     }
 }
@@ -132,30 +137,35 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::Japanese => "モブハント",
             Language::German => "Hohe Jagd",
             Language::French => "Contrats de chasse",
+            Language::ChineseSimplified => "怪物狩猎",
         }),
         (DutyType::Other, DutyCategory::Duty) if duty == 0 => return Cow::from(match lang {
             Language::English => "None",
             Language::Japanese => "設定なし",
             Language::German => "Nicht festgelegt",
             Language::French => "Non spécifiée",
+            Language::ChineseSimplified => "无",
         }),
         (DutyType::Other, DutyCategory::DeepDungeons) if duty == 1 => return Cow::from(match lang {
             Language::English => "The Palace of the Dead",
             Language::Japanese => "死者の宮殿",
             Language::German => "Palast der Toten",
             Language::French => "Palais des morts",
+            Language::ChineseSimplified => "死者宫殿",
         }),
         (DutyType::Other, DutyCategory::DeepDungeons) if duty == 2 => return Cow::from(match lang {
             Language::English => "Heaven-on-High",
             Language::Japanese => "アメノミハシラ",
             Language::German => "Himmelssäule",
             Language::French => "Pilier des Cieux",
+            Language::ChineseSimplified => "天之御柱",
         }),
         (DutyType::Other, DutyCategory::DeepDungeons) if duty == 3 => return Cow::from(match lang {
             Language::English => "Eureka Orthos",
             Language::Japanese => "オルト・エウレカ",
             Language::German => "Eureka Orthos",
             Language::French => "Eurêka Orthos",
+            Language::ChineseSimplified => "欧尔特罗斯",
         }),
         (DutyType::Normal, _) => {
             if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
@@ -172,6 +182,7 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::Japanese => "クエストバトル",
             Language::German => "Auftragskampf",
             Language::French => "Batailles de quête",
+            Language::ChineseSimplified => "任务战斗",
         }),
         (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {
             return Cow::from(name.text(&lang));
@@ -200,6 +211,7 @@ mod old {
                     ja: "リットアティン強襲戦",
                     de: "Kap Westwind",
                     fr: "Le Cap Vendouest",
+                    chs: "里塔提恩强攻战"
                 },
                 high_end: false,
                 content_kind: ContentKind::Trials,
@@ -210,6 +222,7 @@ mod old {
                     ja: "皇都イシュガルド防衛戦",
                     de: "Der Schicksalsweg",
                     fr: "Le Siège de la sainte Cité d'Ishgard",
+                    chs: "皇都伊修加德保卫战"
                 },
                 high_end: false,
                 content_kind: ContentKind::Trials,
@@ -220,6 +233,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
                     de: "The Feast (4 gegen 4, Übungskampf)",
                     fr: "The Feast (4x4/entraînement)",
+                    chs: "群狼盛宴（4v4 训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -230,6 +244,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / ランクマッチ)",
                     de: "The Feast (4 gegen 4, gewertet)",
                     fr: "The Feast (4x4/classé)",
+                    chs: "群狼盛宴（4v4 段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -240,6 +255,7 @@ mod old {
                     ja: "ザ・フィースト (ウルヴズジェイル演習場：カスタムマッチ）",
                     de: "The Feast (Wolfshöhle: Schaukampf)",
                     fr: "The Feast (personnalisé/Festin des loups)",
+                    chs: "群狼盛宴（4v4 自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -250,6 +266,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
                     de: "The Feast (4 gegen 4, Übungskampf)",
                     fr: "The Feast (4x4/entraînement)",
+                    chs: "群狼盛宴（4v4 训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -260,6 +277,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / ランクマッチ)",
                     de: "The Feast (4 gegen 4, gewertet)",
                     fr: "The Feast (4x4/classé)",
+                    chs: "群狼盛宴（4v4 段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -270,6 +288,7 @@ mod old {
                     ja: "ザ・フィースト (ライケンウィード演習場：カスタムマッチ）",
                     de: "The Feast (Flechtenhain: Schaukampf)",
                     fr: "The Feast (personnalisé/Pré-de-lichen)",
+                    chs: "群狼盛宴（4v4 自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -280,6 +299,7 @@ mod old {
                     ja: "ザ・フィースト (チーム用ランクマッチ)",
                     de: "The Feast (Team, gewertet)",
                     fr: "The Feast (classé/équipe JcJ)",
+                    chs: "群狼盛宴（4v4 团队段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -290,6 +310,7 @@ mod old {
                     ja: "ザ・フィースト (ランクマッチ)",
                     de: "The Feast (gewertet)",
                     fr: "The Feast (classé)",
+                    chs: "群狼盛宴（段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -300,6 +321,7 @@ mod old {
                     ja: "ザ・フィースト (カジュアルマッチ)",
                     de: "The Feast (Übungskampf)",
                     fr: "The Feast (entraînement)",
+                    chs: "群狼盛宴（训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -310,6 +332,7 @@ mod old {
                     ja: "ザ・フィースト (クリスタルタワー演習場：カスタムマッチ）",
                     de: "The Feast (Kristallturm-Arena: Schaukampf)",
                     fr: "The Feast (personnalisé/Tour de Cristal)",
+                    chs: "群狼盛宴（自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -320,6 +343,7 @@ mod old {
                     ja: "ザ・フィースト (クリスタルタワー演習場：チーム用カスタムマッチ)",
                     de: "The Feast (Kristallturm-Arena: Team-Schaukampf) ",
                     fr: "The Feast (personnalisé/équipe JcJ/Tour de Cristal)",
+                    chs: "群狼盛宴（团队自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -330,6 +354,7 @@ mod old {
                     ja: "幻リヴァイアサン討滅戦",
                     de: "Traumprüfung - Leviathan",
                     fr: "Le Briseur de marées (irréel)",
+                    chs: "利维亚桑幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -340,6 +365,7 @@ mod old {
                     ja: "幻アルテマウェポン破壊作戦",
                     de: "Traumprüfung - Ultima",
                     fr: "Le fléau d'Ultima (irréel)",
+                    chs: "究极神兵幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -350,6 +376,7 @@ mod old {
                     ja: "幻魔神セフィロト討滅戦",
                     de: "Traumprüfung - Sephirot",
                     fr: "Unité de contention S1P7 (irréel)",
+                    chs: "萨菲洛特幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -363,6 +390,7 @@ mod old {
                     ja: "ザ・フィースト (カジュアルマッチ)",
                     de: "The Feast (Übungskampf)",
                     fr: "The Feast (entraînement)",
+                    chs: "群狼盛宴（训练赛）"
                 },
                 pvp: true,
             },
@@ -372,6 +400,7 @@ mod old {
                     ja: "ザ・フィースト (ランクマッチ)",
                     de: "The Feast (gewertet)",
                     fr: "The Feast (classé)",
+                    chs: "群狼盛宴（段位赛）"
                 },
                 pvp: true,
             },
@@ -381,6 +410,7 @@ mod old {
                     ja: "ザ・フィースト (チーム用ランクマッチ)",
                     de: "The Feast (Team, gewertet)",
                     fr: "The Feast (classé/équipe JcJ)",
+                    chs: "群狼盛宴（团队段位赛）"
                 },
                 pvp: true,
             },
