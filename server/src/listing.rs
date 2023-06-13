@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use bitflags::bitflags;
-use ffxiv_types::jobs::{ClassJob, Class, Job};
-use ffxiv_types::{Role, World};
+use ffxiv_types_cn::jobs::{ClassJob, Class, Job};
+use ffxiv_types_cn::{Role, World};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;

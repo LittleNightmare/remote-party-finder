@@ -6607,16 +6607,6 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
-        822 => DutyInfo {
-            name: LocalisedText {
-                en: "The Aetherfont",
-                ja: "星霊間欠 ハーム島",
-                de: "Ätherborn",
-                fr: "L'île de Haam",
-            },
-            high_end: false,
-            content_kind: ContentKind::Dungeons,
-        },
         830 => DutyInfo {
             name: LocalisedText {
                 en: "The Porta Decumana",
@@ -7188,116 +7178,6 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Dungeons,
-        },
-        897 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 1-10)",
-                ja: "オルト・エウレカ B1～B10",
-                de: "Eureka Orthos (Ebenen 1-10)",
-                fr: "Eurêka Orthos (sous-sols 1-10)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        898 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 11-20)",
-                ja: "オルト・エウレカ B11～B20",
-                de: "Eureka Orthos (Ebenen 11-20)",
-                fr: "Eurêka Orthos (sous-sols 11-20)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        899 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 21-30)",
-                ja: "オルト・エウレカ B21～B30",
-                de: "Eureka Orthos (Ebenen 21-30)",
-                fr: "Eurêka Orthos (sous-sols 21-30)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        900 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 31-40)",
-                ja: "オルト・エウレカ B31～B40",
-                de: "Eureka Orthos (Ebenen 31-40)",
-                fr: "Eurêka Orthos (sous-sols 31-40)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        901 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 41-50)",
-                ja: "オルト・エウレカ B41～B50",
-                de: "Eureka Orthos (Ebenen 41-50)",
-                fr: "Eurêka Orthos (sous-sols 41-50)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        902 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 51-60)",
-                ja: "オルト・エウレカ B51～B60",
-                de: "Eureka Orthos (Ebenen 51-60)",
-                fr: "Eurêka Orthos (sous-sols 51-60)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        903 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 61-70)",
-                ja: "オルト・エウレカ B61～B70",
-                de: "Eureka Orthos (Ebenen 61-70)",
-                fr: "Eurêka Orthos (sous-sols 61-70)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        904 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 71-80)",
-                ja: "オルト・エウレカ B71～B80",
-                de: "Eureka Orthos (Ebenen 71-80)",
-                fr: "Eurêka Orthos (sous-sols 71-80)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        905 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 81-90)",
-                ja: "オルト・エウレカ B81～B90",
-                de: "Eureka Orthos (Ebenen 81-90)",
-                fr: "Eurêka Orthos (sous-sols 81-90)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        906 => DutyInfo {
-            name: LocalisedText {
-                en: "Eureka Orthos (Floors 91-100)",
-                ja: "オルト・エウレカ B91～B100",
-                de: "Eureka Orthos (Ebenen 91-100)",
-                fr: "Eurêka Orthos (sous-sols 91-100)",
-            },
-            high_end: false,
-            content_kind: ContentKind::DeepDungeons,
-        },
-        907 => DutyInfo {
-            name: LocalisedText {
-                en: "Generational Bonding",
-                ja: "はつらつとした親子",
-                de: "Väterliche Liebe",
-                fr: "Tel gentilhomme, tel gentilhomme",
-            },
-            high_end: false,
-            content_kind: ContentKind::QuestBattles,
         },
         908 => DutyInfo {
             name: LocalisedText {

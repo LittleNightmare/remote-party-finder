@@ -8,6 +8,7 @@ lazy_static::lazy_static! {
             ja: "レベルを指定しない",
             de: "Jede Stufe",
             fr: "Tous niveaux",
+            chs: "所有等级",
         },
         1 => LocalisedText {
             en: "Leather Treasure Map",

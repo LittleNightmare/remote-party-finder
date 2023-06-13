@@ -80,6 +80,7 @@ namespace SourceGenerator {
 
             sb.Append("LocalisedText {\n");
 
+            var line = 0;
             foreach (var (language, key) in Languages) {
                 var row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
                 var name = row == null
@@ -99,6 +100,7 @@ namespace SourceGenerator {
                 }
 
                 sb.Append($"{key}: \"{name}\",\n");
+                line++;
             }
 
             for (var i = 0; i < indent; i++) {
@@ -106,7 +108,10 @@ namespace SourceGenerator {
             }
 
             sb.Append('}');
-
+            if (line != 5)
+            {
+                return null;
+            }
             return sb.ToString();
         }
 
@@ -200,7 +205,7 @@ namespace SourceGenerator {
 
         private string GenerateJobs() {
             var sb = DefaultHeader();
-            sb.Append("use ffxiv_types::jobs::{ClassJob, Class, Job, NonCombatJob};\n\n");
+            sb.Append("use ffxiv_types_cn::jobs::{ClassJob, Class, Job, NonCombatJob};\n\n");
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref JOBS: HashMap<u32, ClassJob> = maplit::hashmap! {\n");
 
@@ -366,7 +371,7 @@ namespace SourceGenerator {
             this.ChangeWorldForCN();
 
             var sb = DefaultHeader();
-            sb.Append("use ffxiv_types::World;\n\n");
+            sb.Append("use ffxiv_types_cn::World;\n\n");
             sb.Append("lazy_static::lazy_static! {\n");
             sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
@@ -539,6 +544,7 @@ namespace SourceGenerator {
             sb.Append("            ja: \"レベルを指定しない\",\n");
             sb.Append("            de: \"Jede Stufe\",\n");
             sb.Append("            fr: \"Tous niveaux\",\n");
+            sb.Append("            chs: \"所有等级\",\n");
             sb.Append("        },\n");
 
             var i = 1;
