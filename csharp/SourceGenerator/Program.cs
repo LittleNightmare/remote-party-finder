@@ -13,8 +13,21 @@ using Pidgin;
 namespace SourceGenerator {
     internal class Program {
         private static void Main(string[] args) {
+#if DEBUG
+            args = new[]
+            {
+               "",
+                @"F:\GitHub\remote-party-finder\server\src\ffxiv",
+            };
+            var cnGame = @"C:\Game\FFXIV\最终幻想XIV\game\sqpack";
+            var enGame = @"C:\Game\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack";
+#endif
             var data = new Dictionary<Language, GameData>(4);
             foreach (var lang in Languages.Keys) {
+#if DEBUG
+                // 从国际服和国服读取，保证数据完整，防止后端变量名不一致导致的问题（至少要以英文为准，生成一些变量名）
+                args[0] = lang == Language.ChineseSimplified ? cnGame : enGame;
+#endif
                 data[lang] = new GameData(args[0], new LuminaOptions {
                     PanicOnSheetChecksumMismatch = false,
                     DefaultExcelLanguage = lang,
@@ -53,6 +66,7 @@ namespace SourceGenerator {
             [Language.Japanese] = "ja",
             [Language.German] = "de",
             [Language.French] = "fr",
+            [Language.ChineseSimplified] = "chs",
         };
 
         private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : ExcelRow {
@@ -73,6 +87,10 @@ namespace SourceGenerator {
                     : nameFunc(row)?.TextValue().Replace("\"", "\\\"");
                 name ??= defName;
                 if (capitalise) {
+                    if (name.Length == 0)
+                    {
+                        continue;
+                    }
                     name = name[..1].ToUpperInvariant() + name[1..];
                 }
 
@@ -254,8 +272,99 @@ namespace SourceGenerator {
 
             return sb.ToString();
         }
+        /// <summary>
+        /// 为国服服务器临时修正isPublic & DataCenter数据.
+        /// </summary>
+        private void ChangeWorldForCN()
+        {
+            var chineseWorldDCGroups = new[] {
+                new
+                {
+                    Name = "陆行鸟",
+                    Id   = 101u,
+                    Worlds = new[]
+                    {
+                        new { Id = 1175u, Name = "晨曦王座" },
+                        new { Id = 1174u, Name = "沃仙曦染" },
+                        new { Id = 1173u, Name = "宇宙和音" },
+                        new { Id = 1167u, Name = "红玉海"   },
+                        new { Id = 1060u, Name = "萌芽池"   },
+                        new { Id = 1081u, Name = "神意之地" },
+                        new { Id = 1044u, Name = "幻影群岛" },
+                        new { Id = 1042u, Name = "拉诺西亚" },
+                    },
+                },
+                new
+                {
+                   Name = "莫古力",
+                   Id   = 102u,
+                   Worlds = new[]
+                   {
+                        new { Id = 1121u, Name = "拂晓之间" },
+                        new { Id = 1166u, Name = "龙巢神殿" },
+                        new { Id = 1113u, Name = "旅人栈桥" },
+                        new { Id = 1076u, Name = "白金幻象" },
+                        new { Id = 1176u, Name = "梦羽宝境" },
+                        new { Id = 1171u, Name = "神拳痕"   },
+                        new { Id = 1170u, Name = "潮风亭"   },
+                        new { Id = 1172u, Name = "白银乡"   },
+                   },
+                },
+                new
+                {
+                   Name = "猫小胖",
+                   Id   = 103u,
+                   Worlds = new[]
+                   {
+                        new { Id = 1179u, Name = "琥珀原"   },
+                        new { Id = 1178u, Name = "柔风海湾" },
+                        new { Id = 1177u, Name = "海猫茶屋" },
+                        new { Id = 1169u, Name = "延夏"    },
+                        new { Id = 1106u, Name = "静语庄园" },
+                        new { Id = 1045u, Name = "摩杜纳"   },
+                        new { Id = 1043u, Name = "紫水栈桥" },
+                   },
+                },
+                new
+                {
+                   Name = "豆豆柴",
+                   Id   = 201u,
+                   Worlds = new[]
+                   {
+                        new { Id = 1201u, Name = "红茶川"    },
+                        new { Id = 1186u, Name = "伊修加德"  },
+                        new { Id = 1180u, Name = "太阳海岸"  },
+                        new { Id = 1183u, Name = "银泪湖"    },
+                        new { Id = 1192u, Name = "水晶塔"    },
+                        new { Id = 1202u, Name = "萨雷安"    },
+                        new { Id = 1203u, Name = "加雷马"    },
+                        new { Id = 1200u, Name = "亚马乌罗提" },
+                   },
+                },
+            };
+            var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
+            var worldExcel = this.Data[Language.English].GetExcelSheet<World>();
+            foreach (var dc in chineseWorldDCGroups)
+            {
+                var dcToReplaced = dcExcel.GetRow(dc.Id);
+                dcToReplaced.Name = new SeString(dc.Name);
+                dcToReplaced.Region = 5;
+
+                foreach (var world in dc.Worlds)
+                {
+                    var worldToUpdated = worldExcel.GetRow(world.Id);
+                    worldToUpdated.IsPublic = true;
+                    worldToUpdated.UserType = 10;
+                    worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
+                }
+            }
+
+        }
+
 
         private string GenerateWorlds() {
+            this.ChangeWorldForCN();
+
             var sb = DefaultHeader();
             sb.Append("use ffxiv_types::World;\n\n");
             sb.Append("lazy_static::lazy_static! {\n");
