@@ -508,8 +508,8 @@ namespace SourceGenerator {
                             }
 
                             builder.Append("        },\n");
-
-                            if (lines != 4) {
+                            // 5 means we have all 5 languages
+                            if (lines != 5) {
                                 continue;
                             }
 

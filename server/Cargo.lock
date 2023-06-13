@@ -1334,9 +1334,9 @@ dependencies = [
 
 [[package]]
 name = "sestring"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c01b60d9135cd2deb5e2e407cdd6c09568b3ef739b94fd92bd67a3ac0a352376"
+checksum = "0f91d3f328933557acdf0fd744cd6b31b758d6638545e7418ccb7a7e38a7fe53"
 dependencies = [
  "byteorder",
  "serde",

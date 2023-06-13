@@ -30,6 +30,7 @@ pub enum Language {
     Japanese,
     German,
     French,
+    ChineseSimplified,
 }
 
 impl Language {
