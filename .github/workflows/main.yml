@@ -3,6 +3,8 @@ name: Build and Publish
   push:
     branches:
       - main
+    paths:
+      - 'server/**'
 jobs:
   build:
     runs-on: ubuntu-latest
