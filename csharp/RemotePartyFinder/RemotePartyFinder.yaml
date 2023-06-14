@@ -1,7 +1,7 @@
-author: ascclemens
+author: ascclemens, LittleNightmare
 name: Remote Party Finder Uploader
 description: |-
-  Uploads the PF listings you retrieve to the crowdsourced Remote
-  Party Finder website (https://xivpf.littlenightmare.top/lis/contribute/multiple).
-punchline: Crowdsourced PF website (upload PF listings to xivpf.littlenightmare.top)
+  将您检索到的队员招募信息上传到众包远程的
+  队伍招募网站 (https://xivpf.littlenightmare.top).
+punchline: 众包远程网站 (上传队员招募到 xivpf.littlenightmare.top)
 repo_url: https://github.com/LittleNightmare/remote-party-finder
