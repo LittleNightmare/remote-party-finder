@@ -14,10 +14,10 @@ using Newtonsoft.Json;
 namespace RemotePartyFinder {
     internal class Gatherer : IDisposable {
         #if DEBUG
-        private const string UploadUrl = "http://192.168.174.240:7878/contribute/multiple";
-        #elif RELEASE
-        private const string UploadUrl = "https://xivpf.com/contribute/multiple";
-        #endif
+        private const string UploadUrl = "http://127.0.0.1:12345/contribute/multiple";
+#elif RELEASE
+        private const string UploadUrl = "https://xivpf.littlenightmare.top/contribute/multiple";
+#endif
 
         private Plugin Plugin { get; }
 
