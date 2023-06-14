@@ -451,7 +451,7 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 }
 
 async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> Result<UpdateResult> {
-    if listing.created_world >= 1_000 || listing.home_world >= 1_000 || listing.current_world >= 1_000 {
+    if listing.created_world < 1_000 || listing.home_world < 1_000 || listing.current_world < 1_000 {
         anyhow::bail!("invalid listing");
     }
 
