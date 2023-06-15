@@ -382,6 +382,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            926 => DutyInfo {
+                name: LocalisedText {
+                    en: "Containment Bay P1T6 (Unreal)",
+                    ja: "幻女神ソフィア討滅戦",
+                    de: "",
+                    fr: "",
+                    chs: "索菲娅幻巧战"
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
