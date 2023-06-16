@@ -27,12 +27,33 @@ use warp::{
 use crate::{
     config::Config,
     ffxiv::Language,
-    listing::PartyFinderListing,
+    listing::{PartyFinderListing, self},
     listing_container::{ListingContainer, QueriedListing},
     stats::CachedStatistics,
     template::listings::ListingsTemplate,
     template::stats::StatsTemplate,
 };
+
+#[derive(serde::Serialize, serde::Deserialize)]
+struct SignedMessage {
+    message: String,
+    signature: String,
+}
+
+use ras::signature::{RsaPublicKey, RsaPss};
+
+fn verify_signature(message: &str, signature: &[u8], public_key: &[u8]) -> Result<(), Box<dyn std::error::Error>> {
+    // 从公钥字节数组创建 RsaPublicKey
+    let public_key = RsaPublicKey::from_pkcs1(public_key)?;
+
+    // 创建 RsaPss 验证器
+    let verifier = RsaPss::new(&public_key)?;
+
+    // 执行验证操作
+    verifier.verify(message.as_bytes(), signature)?;
+
+    Ok(())
+}
 
 mod stats;
 
