@@ -66,7 +66,7 @@ namespace SourceGenerator {
             [Language.Japanese] = "ja",
             [Language.German] = "de",
             [Language.French] = "fr",
-            [Language.ChineseSimplified] = "chs",
+            [Language.ChineseSimplified] = "zh",
         };
 
         private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : ExcelRow {
@@ -544,7 +544,7 @@ namespace SourceGenerator {
             sb.Append("            ja: \"レベルを指定しない\",\n");
             sb.Append("            de: \"Jede Stufe\",\n");
             sb.Append("            fr: \"Tous niveaux\",\n");
-            sb.Append("            chs: \"所有等级\",\n");
+            sb.Append("            zh: \"所有等级\",\n");
             sb.Append("        },\n");
 
             var i = 1;

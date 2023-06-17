@@ -40,7 +40,7 @@ impl Language {
             Self::Japanese => "ja",
             Self::German => "de",
             Self::French => "fr",
-            Self::ChineseSimplified => "chs",
+            Self::ChineseSimplified => "zh",
         }
     }
 
@@ -84,7 +84,7 @@ impl Language {
                 "ja" => return Self::Japanese,
                 "de" => return Self::German,
                 "fr" => return Self::French,
-                "chs" => return Self::ChineseSimplified,
+                "zh" => return Self::ChineseSimplified,
                 _ => {}
             }
         }
@@ -99,7 +99,7 @@ pub struct LocalisedText {
     pub ja: &'static str,
     pub de: &'static str,
     pub fr: &'static str,
-    pub chs: &'static str,
+    pub zh: &'static str,
 }
 
 impl LocalisedText {
@@ -109,7 +109,7 @@ impl LocalisedText {
             Language::Japanese => self.ja,
             Language::German => self.de,
             Language::French => self.fr,
-            Language::ChineseSimplified => self.chs,
+            Language::ChineseSimplified => self.zh,
         }
     }
 }
@@ -212,7 +212,7 @@ mod old {
                     ja: "リットアティン強襲戦",
                     de: "Kap Westwind",
                     fr: "Le Cap Vendouest",
-                    chs: "里塔提恩强攻战"
+                    zh: "里塔提恩强攻战"
                 },
                 high_end: false,
                 content_kind: ContentKind::Trials,
@@ -223,7 +223,7 @@ mod old {
                     ja: "皇都イシュガルド防衛戦",
                     de: "Der Schicksalsweg",
                     fr: "Le Siège de la sainte Cité d'Ishgard",
-                    chs: "皇都伊修加德保卫战"
+                    zh: "皇都伊修加德保卫战"
                 },
                 high_end: false,
                 content_kind: ContentKind::Trials,
@@ -234,7 +234,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
                     de: "The Feast (4 gegen 4, Übungskampf)",
                     fr: "The Feast (4x4/entraînement)",
-                    chs: "群狼盛宴（4v4 训练赛）"
+                    zh: "群狼盛宴（4v4 训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -245,7 +245,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / ランクマッチ)",
                     de: "The Feast (4 gegen 4, gewertet)",
                     fr: "The Feast (4x4/classé)",
-                    chs: "群狼盛宴（4v4 段位赛）"
+                    zh: "群狼盛宴（4v4 段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -256,7 +256,7 @@ mod old {
                     ja: "ザ・フィースト (ウルヴズジェイル演習場：カスタムマッチ）",
                     de: "The Feast (Wolfshöhle: Schaukampf)",
                     fr: "The Feast (personnalisé/Festin des loups)",
-                    chs: "群狼盛宴（4v4 自定义赛）"
+                    zh: "群狼盛宴（4v4 自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -267,7 +267,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / カジュアルマッチ)",
                     de: "The Feast (4 gegen 4, Übungskampf)",
                     fr: "The Feast (4x4/entraînement)",
-                    chs: "群狼盛宴（4v4 训练赛）"
+                    zh: "群狼盛宴（4v4 训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -278,7 +278,7 @@ mod old {
                     ja: "ザ・フィースト (4対4 / ランクマッチ)",
                     de: "The Feast (4 gegen 4, gewertet)",
                     fr: "The Feast (4x4/classé)",
-                    chs: "群狼盛宴（4v4 段位赛）"
+                    zh: "群狼盛宴（4v4 段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -289,7 +289,7 @@ mod old {
                     ja: "ザ・フィースト (ライケンウィード演習場：カスタムマッチ）",
                     de: "The Feast (Flechtenhain: Schaukampf)",
                     fr: "The Feast (personnalisé/Pré-de-lichen)",
-                    chs: "群狼盛宴（4v4 自定义赛）"
+                    zh: "群狼盛宴（4v4 自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -300,7 +300,7 @@ mod old {
                     ja: "ザ・フィースト (チーム用ランクマッチ)",
                     de: "The Feast (Team, gewertet)",
                     fr: "The Feast (classé/équipe JcJ)",
-                    chs: "群狼盛宴（4v4 团队段位赛）"
+                    zh: "群狼盛宴（4v4 团队段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -311,7 +311,7 @@ mod old {
                     ja: "ザ・フィースト (ランクマッチ)",
                     de: "The Feast (gewertet)",
                     fr: "The Feast (classé)",
-                    chs: "群狼盛宴（段位赛）"
+                    zh: "群狼盛宴（段位赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -322,7 +322,7 @@ mod old {
                     ja: "ザ・フィースト (カジュアルマッチ)",
                     de: "The Feast (Übungskampf)",
                     fr: "The Feast (entraînement)",
-                    chs: "群狼盛宴（训练赛）"
+                    zh: "群狼盛宴（训练赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -333,7 +333,7 @@ mod old {
                     ja: "ザ・フィースト (クリスタルタワー演習場：カスタムマッチ）",
                     de: "The Feast (Kristallturm-Arena: Schaukampf)",
                     fr: "The Feast (personnalisé/Tour de Cristal)",
-                    chs: "群狼盛宴（自定义赛）"
+                    zh: "群狼盛宴（自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -344,7 +344,7 @@ mod old {
                     ja: "ザ・フィースト (クリスタルタワー演習場：チーム用カスタムマッチ)",
                     de: "The Feast (Kristallturm-Arena: Team-Schaukampf) ",
                     fr: "The Feast (personnalisé/équipe JcJ/Tour de Cristal)",
-                    chs: "群狼盛宴（团队自定义赛）"
+                    zh: "群狼盛宴（团队自定义赛）"
                 },
                 high_end: false,
                 content_kind: ContentKind::PvP,
@@ -355,7 +355,7 @@ mod old {
                     ja: "幻リヴァイアサン討滅戦",
                     de: "Traumprüfung - Leviathan",
                     fr: "Le Briseur de marées (irréel)",
-                    chs: "利维亚桑幻巧战"
+                    zh: "利维亚桑幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -366,7 +366,7 @@ mod old {
                     ja: "幻アルテマウェポン破壊作戦",
                     de: "Traumprüfung - Ultima",
                     fr: "Le fléau d'Ultima (irréel)",
-                    chs: "究极神兵幻巧战"
+                    zh: "究极神兵幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -377,7 +377,7 @@ mod old {
                     ja: "幻魔神セフィロト討滅戦",
                     de: "Traumprüfung - Sephirot",
                     fr: "Unité de contention S1P7 (irréel)",
-                    chs: "萨菲洛特幻巧战"
+                    zh: "萨菲洛特幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -388,7 +388,7 @@ mod old {
                     ja: "幻女神ソフィア討滅戦",
                     de: "",
                     fr: "",
-                    chs: "索菲娅幻巧战"
+                    zh: "索菲娅幻巧战"
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,
@@ -402,7 +402,7 @@ mod old {
                     ja: "ザ・フィースト (カジュアルマッチ)",
                     de: "The Feast (Übungskampf)",
                     fr: "The Feast (entraînement)",
-                    chs: "群狼盛宴（训练赛）"
+                    zh: "群狼盛宴（训练赛）"
                 },
                 pvp: true,
             },
@@ -412,7 +412,7 @@ mod old {
                     ja: "ザ・フィースト (ランクマッチ)",
                     de: "The Feast (gewertet)",
                     fr: "The Feast (classé)",
-                    chs: "群狼盛宴（段位赛）"
+                    zh: "群狼盛宴（段位赛）"
                 },
                 pvp: true,
             },
@@ -422,7 +422,7 @@ mod old {
                     ja: "ザ・フィースト (チーム用ランクマッチ)",
                     de: "The Feast (Team, gewertet)",
                     fr: "The Feast (classé/équipe JcJ)",
-                    chs: "群狼盛宴（团队段位赛）"
+                    zh: "群狼盛宴（团队段位赛）"
                 },
                 pvp: true,
             },
