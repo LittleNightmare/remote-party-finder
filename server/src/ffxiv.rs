@@ -166,7 +166,7 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::Japanese => "オルト・エウレカ",
             Language::German => "Eureka Orthos",
             Language::French => "Eurêka Orthos",
-            Language::ChineseSimplified => "欧尔特罗斯",
+            Language::ChineseSimplified => "正统优雷卡",
         }),
         (DutyType::Normal, _) => {
             if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
