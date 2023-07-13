@@ -95,83 +95,62 @@ lazy_static::lazy_static! {
             zh: "陈旧的瞪羚革地图",
         },
         13 => LocalisedText {
-            en: "Diadochos Sword",
-            ja: "",
-            de: "",
-            fr: "",
-            zh: "",
-        },
-        14 => LocalisedText {
             en: "Seemingly Special Treasure Map",
             ja: "古ぼけた地図S1",
             de: "Exotenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle I",
             zh: "陈旧的特殊地图1",
         },
-        15 => LocalisedText {
+        14 => LocalisedText {
             en: "Gliderskin Treasure Map",
             ja: "古ぼけた地図G11",
             de: "Smilodonleder-Schatzkarte",
             fr: "Carte au trésor en peau de smilodon",
             zh: "陈旧的绿飘龙革地图",
         },
-        16 => LocalisedText {
+        15 => LocalisedText {
             en: "Zonureskin Treasure Map",
             ja: "古ぼけた地図G12",
             de: "Glaucusleder-Schatzkarte",
             fr: "Carte au trésor en peau de glaucus",
             zh: "陈旧的缠尾蛟革地图",
         },
-        17 => LocalisedText {
-            en: "Diadochos Sword",
-            ja: "",
-            de: "",
-            fr: "",
-            zh: "",
-        },
-        18 => LocalisedText {
+        16 => LocalisedText {
             en: "Ostensibly Special Treasure Map",
             ja: "古ぼけた地図S2",
             de: "Mythenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle II",
             zh: "陈旧的特殊地图2",
         },
-        19 => LocalisedText {
+        17 => LocalisedText {
             en: "Saigaskin Treasure Map",
             ja: "古ぼけた地図G13",
             de: "Gajaleder-Schatzkarte",
             fr: "Carte au trésor en peau de gaja",
             zh: "陈旧的赛加羚羊革地图",
         },
-        20 => LocalisedText {
+        18 => LocalisedText {
             en: "Kumbhiraskin Treasure Map",
             ja: "古ぼけた地図G14",
             de: "Kumbhilaleder-Schatzkarte",
             fr: "Carte au trésor en peau de kumbhira",
             zh: "陈旧的金毗罗鳄革地图",
         },
-        21 => LocalisedText {
-            en: "Diadochos Sword",
-            ja: "",
-            de: "",
-            fr: "",
-            zh: "",
-        },
-        22 => LocalisedText {
+        19 => LocalisedText {
             en: "Ophiotauroskin Treasure Map",
             ja: "古ぼけた地図G15",
             de: "Ophiotaurosleder-Schatzkarte",
             fr: "Carte au trésor en peau d'ophiotauros",
             zh: "陈旧的蛇牛革地图",
         },
-        23 => LocalisedText {
+        20 => LocalisedText {
             en: "Potentially Special Treasure Map",
             ja: "古ぼけた地図S3",
             de: "Legendenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle III",
             zh: "陈旧的特殊地图3",
         },
-        24 => LocalisedText {
+        21 => LocalisedText {
             en: "Conceivably Special Treasure Map",
             ja: "古ぼけた地図S4",
             de: "Sagenleder-Schatzkarte",

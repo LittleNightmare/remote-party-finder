@@ -7044,7 +7044,7 @@ lazy_static::lazy_static! {
                 fr: "Le Purgatoire du Pandæmonium - Cages (sadique)",
                 zh: "零式万魔殿 炼净之狱1",
             },
-            high_end: false,
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         874 => DutyInfo {
@@ -7077,7 +7077,7 @@ lazy_static::lazy_static! {
                 fr: "Le Purgatoire du Pandæmonium - Racines (sadique)",
                 zh: "零式万魔殿 炼净之狱3",
             },
-            high_end: false,
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         878 => DutyInfo {
@@ -7121,7 +7121,7 @@ lazy_static::lazy_static! {
                 fr: "Le Purgatoire du Pandæmonium - Croisements (sadique)",
                 zh: "零式万魔殿 炼净之狱2",
             },
-            high_end: false,
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         883 => DutyInfo {
@@ -7143,7 +7143,7 @@ lazy_static::lazy_static! {
                 fr: "Le Purgatoire du Pandæmonium - Hérédité (sadique)",
                 zh: "零式万魔殿 炼净之狱4",
             },
-            high_end: false,
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         885 => DutyInfo {
@@ -7178,6 +7178,127 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Dungeons,
+        },
+        897 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 1-10)",
+                ja: "オルト・エウレカ B1～B10",
+                de: "Eureka Orthos (Ebenen 1-10)",
+                fr: "Eurêka Orthos (sous-sols 1-10)",
+                zh: "正统优雷卡 地下1～10层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        898 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 11-20)",
+                ja: "オルト・エウレカ B11～B20",
+                de: "Eureka Orthos (Ebenen 11-20)",
+                fr: "Eurêka Orthos (sous-sols 11-20)",
+                zh: "正统优雷卡 地下11～20层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        899 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 21-30)",
+                ja: "オルト・エウレカ B21～B30",
+                de: "Eureka Orthos (Ebenen 21-30)",
+                fr: "Eurêka Orthos (sous-sols 21-30)",
+                zh: "正统优雷卡 地下21～30层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        900 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 31-40)",
+                ja: "オルト・エウレカ B31～B40",
+                de: "Eureka Orthos (Ebenen 31-40)",
+                fr: "Eurêka Orthos (sous-sols 31-40)",
+                zh: "正统优雷卡 地下31～40层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        901 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 41-50)",
+                ja: "オルト・エウレカ B41～B50",
+                de: "Eureka Orthos (Ebenen 41-50)",
+                fr: "Eurêka Orthos (sous-sols 41-50)",
+                zh: "正统优雷卡 地下41～50层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        902 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 51-60)",
+                ja: "オルト・エウレカ B51～B60",
+                de: "Eureka Orthos (Ebenen 51-60)",
+                fr: "Eurêka Orthos (sous-sols 51-60)",
+                zh: "正统优雷卡 地下51～60层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        903 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 61-70)",
+                ja: "オルト・エウレカ B61～B70",
+                de: "Eureka Orthos (Ebenen 61-70)",
+                fr: "Eurêka Orthos (sous-sols 61-70)",
+                zh: "正统优雷卡 地下61～70层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        904 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 71-80)",
+                ja: "オルト・エウレカ B71～B80",
+                de: "Eureka Orthos (Ebenen 71-80)",
+                fr: "Eurêka Orthos (sous-sols 71-80)",
+                zh: "正统优雷卡 地下71～80层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        905 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 81-90)",
+                ja: "オルト・エウレカ B81～B90",
+                de: "Eureka Orthos (Ebenen 81-90)",
+                fr: "Eurêka Orthos (sous-sols 81-90)",
+                zh: "正统优雷卡 地下81～90层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        906 => DutyInfo {
+            name: LocalisedText {
+                en: "Eureka Orthos (Floors 91-100)",
+                ja: "オルト・エウレカ B91～B100",
+                de: "Eureka Orthos (Ebenen 91-100)",
+                fr: "Eurêka Orthos (sous-sols 91-100)",
+                zh: "正统优雷卡 地下91～100层",
+            },
+            high_end: false,
+            content_kind: ContentKind::DeepDungeons,
+        },
+        907 => DutyInfo {
+            name: LocalisedText {
+                en: "Generational Bonding",
+                ja: "はつらつとした親子",
+                de: "Väterliche Liebe",
+                fr: "Tel gentilhomme, tel gentilhomme",
+                zh: "充满活力的父子",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
         908 => DutyInfo {
             name: LocalisedText {
@@ -7363,7 +7484,7 @@ lazy_static::lazy_static! {
                 fr: "Le Mont du Supplice (extrême)",
                 zh: "卢比坎特歼殛战",
             },
-            high_end: false,
+            high_end: true,
             content_kind: ContentKind::Trials,
         },
         927 => DutyInfo {

@@ -182,9 +182,20 @@ namespace SourceGenerator {
                 if (name == null) {
                     continue;
                 }
-
                 var highEnd = cfc.HighEndDuty ? "true" : "false";
                 var contentType = cfc.ContentType.Value;
+                // Chinese has different status
+                try
+                {
+                    var cn = Data[Language.ChineseSimplified].GetExcelSheet<ContentFinderCondition>()!
+                        .GetRow(cfc.RowId);
+                    highEnd = cn.HighEndDuty ? "true" : "false";
+                }
+                catch (Exception e)
+                {
+                    // Console.WriteLine(e);
+                }
+
                 var contentKind = contentType?.Name?.TextValue().Replace(" ", "").Replace("&", "");
                 if (string.IsNullOrEmpty(contentKind)) {
                     contentKind = $"Other({contentType?.RowId ?? 0})";
