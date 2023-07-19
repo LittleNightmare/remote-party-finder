@@ -6996,6 +6996,46 @@ lazy_static::lazy_static! {
             high_end: true,
             content_kind: ContentKind::Raids,
         },
+        945 => DutyInfo {
+            name: LocalisedText {
+                en: "Mount Rokkon",
+                ja: "ヴァリアントダンジョン 六根山",
+                de: "Der Rokkon",
+                fr: "Le mont Rokkon - Donjon à embranchements",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
+        946 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Mount Rokkon",
+                ja: "アナザーダンジョン 異聞六根山",
+                de: "Der kuriose Rokkon",
+                fr: "Le mont Rokkon annexe - Donjon alternatif",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
+        947 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Mount Rokkon (Savage)",
+                ja: "アナザーダンジョン 異聞六根山 零式",
+                de: "Der kuriose Rokkon (episch)",
+                fr: "Le mont Rokkon annexe - Donjon alternatif (sadique)",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
+        948 => DutyInfo {
+            name: LocalisedText {
+                en: "A Golden Opportunity",
+                ja: "黄金闘士「ゴールドル」",
+                de: "Goldor der Güldene",
+                fr: "Goldor, le mage doré",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(27),
+        },
         949 => DutyInfo {
             name: LocalisedText {
                 en: "The Voidcast Dais",

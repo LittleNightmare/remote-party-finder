@@ -4731,6 +4731,12 @@ lazy_static::lazy_static! {
             de: "Rubicante",
             fr: "Rubicante",
         },
+        (23, 1960) => LocalisedText {
+            en: "Golbez",
+            ja: "ゴルベーザ",
+            de: "Golbez",
+            fr: "Golbez",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -7394,6 +7400,18 @@ lazy_static::lazy_static! {
             ja: "メガロアンビストマ",
             de: "Megalo-Ambystoma",
             fr: "mégalo-ambystoma",
+        },
+        (49, 321) => LocalisedText {
+            en: "burabura chochin",
+            ja: "ブラブラ",
+            de: "Schaukelnder Laternengeist",
+            fr: "Burabura",
+        },
+        (49, 322) => LocalisedText {
+            en: "Shishioji",
+            ja: "獅子王子",
+            de: "Shishioji",
+            fr: "Shishiôji",
         },
         (49, 324) => LocalisedText {
             en: "magicked children's bed",
@@ -10074,7 +10092,7 @@ lazy_static::lazy_static! {
         (51, 4297) => LocalisedText {
             en: "The Aetherfont",
             ja: "ハーム島",
-            de: "Haam",
+            de: "Ätherborn",
             fr: "Île de Haam",
         },
         (51, 4307) => LocalisedText {
@@ -10082,6 +10100,18 @@ lazy_static::lazy_static! {
             ja: "十四座の間",
             de: "Halle der Vierzehn Sitze",
             fr: "Prétoire des Quatorze",
+        },
+        (51, 4308) => LocalisedText {
+            en: "Mount Rokkon",
+            ja: "六根山",
+            de: "Rokkon",
+            fr: "Mont Rokkon",
+        },
+        (51, 4338) => LocalisedText {
+            en: "Another Mount Rokkon",
+            ja: "異聞六根山",
+            de: "Kurioser Rokkon",
+            fr: "Mont Rokkon annexe",
         },
         (51, 4358) => LocalisedText {
             en: "The Aetherial Slough",
@@ -19149,6 +19179,12 @@ lazy_static::lazy_static! {
             de: "/handaufdiebrust",
             fr: "/mainsurlapoitrine",
         },
+        (62, 671) => LocalisedText {
+            en: "/reference",
+            ja: "/reference",
+            de: "/literaturvergleich",
+            fr: "/seréférer",
+        },
         (63, 29054) => LocalisedText {
             en: "Guard",
             ja: "防御",
@@ -23638,6 +23674,12 @@ lazy_static::lazy_static! {
             de: "Mosasaurus",
             fr: "mossasaure",
         },
+        (65, 480) => LocalisedText {
+            en: "okuri chochin",
+            ja: "オクリチョウチン",
+            de: "klein[a] Laternengeist",
+            fr: "chôchin okuri",
+        },
         (65, 481) => LocalisedText {
             en: "posher otter",
             ja: "スチームウソウソ",
@@ -23668,6 +23710,12 @@ lazy_static::lazy_static! {
             de: "Lyssa Mikra",
             fr: "mikra Lyssa",
         },
+        (65, 486) => LocalisedText {
+            en: "Shiromaru",
+            ja: "忍犬シロマル",
+            de: "Shiromaru",
+            fr: "Shiromaru",
+        },
         (65, 488) => LocalisedText {
             en: "wind-up Barbariccia",
             ja: "マメット・バルバリシア",
@@ -23679,6 +23727,12 @@ lazy_static::lazy_static! {
             ja: "遮光器土偶",
             de: "Shakoki-Dogu",
             fr: "dogû globuleux",
+        },
+        (65, 490) => LocalisedText {
+            en: "Kuromaru",
+            ja: "忍犬クロマル",
+            de: "Kuromaru",
+            fr: "Kuromaru",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -27619,7 +27673,7 @@ lazy_static::lazy_static! {
         (24, 5121) => LocalisedText {
             en: "The Aetherfont",
             ja: "ハーム島",
-            de: "Haam",
+            de: "Ätherborn",
             fr: "île de Haam",
         },
         (24, 5122) => LocalisedText {
@@ -27628,11 +27682,41 @@ lazy_static::lazy_static! {
             de: "Anabaseios",
             fr: "Paradis du Pandæmonium",
         },
+        (24, 5123) => LocalisedText {
+            en: "The Voidcast Dais",
+            ja: "ゴルベーザ討滅戦",
+            de: "Prophetie - Golbez",
+            fr: "Chaire de l'Exilée",
+        },
+        (24, 5124) => LocalisedText {
+            en: "The Voidcast Dais (Extreme)",
+            ja: "極ゴルベーザ討滅戦",
+            de: "Eschatos - Golbez",
+            fr: "Chaire de l'Exilée (extrême)",
+        },
         (24, 5125) => LocalisedText {
             en: "Containment Bay Z1T9 (Unreal)",
             ja: "幻鬼神ズルワーン討滅戦",
             de: "Traumprüfung - Zurvan",
             fr: "Unité de contention Z1P9 (irréel)",
+        },
+        (24, 5126) => LocalisedText {
+            en: "Mount Rokkon",
+            ja: "六根山",
+            de: "Der Rokkon",
+            fr: "Mont Rokkon",
+        },
+        (24, 5127) => LocalisedText {
+            en: "Another Mount Rokkon",
+            ja: "異聞六根山",
+            de: "Der kuriose Rokkon",
+            fr: "Mont Rokkon annexe",
+        },
+        (24, 5128) => LocalisedText {
+            en: "Another Mount Rokkon (Savage)",
+            ja: "異聞六根山 零式",
+            de: "Der Kuriose Rokkon (episch)",
+            fr: "Mont Rokkon annexe (sadique)",
         },
     };
 }

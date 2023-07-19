@@ -5502,8 +5502,14 @@ lazy_static::lazy_static! {
         1126 => LocalisedText {
             en: "The Aetherfont",
             ja: "ハーム島",
-            de: "Haam",
+            de: "Ätherborn",
             fr: "Île de Haam",
+        },
+        1137 => LocalisedText {
+            en: "Mount Rokkon",
+            ja: "六根山",
+            de: "Rokkon",
+            fr: "Mont Rokkon",
         },
         1140 => LocalisedText {
             en: "The Voidcast Dais",
@@ -5594,6 +5600,18 @@ lazy_static::lazy_static! {
             ja: "神の座",
             de: "Göttlicher Thron",
             fr: "Trône divin",
+        },
+        1155 => LocalisedText {
+            en: "Another Mount Rokkon",
+            ja: "異聞六根山",
+            de: "Kurioser Rokkon",
+            fr: "Mont Rokkon annexe",
+        },
+        1156 => LocalisedText {
+            en: "Another Mount Rokkon",
+            ja: "異聞六根山",
+            de: "Kurioser Rokkon",
+            fr: "Mont Rokkon annexe",
         },
         1157 => LocalisedText {
             en: "Containment Bay Z1T9",
