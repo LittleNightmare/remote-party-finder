@@ -12,7 +12,7 @@ askama_warp = "0.12"
 base64 = "0.13"
 bitflags = "1"
 chrono = { version = "0.4", features = ["serde"] }
-chrono-humanize = "0.2"
+chrono-humanize = { git = "https://gitlab.com/71e6fd52/chrono-humanize-rs.git" }
 ffxiv_types_cn = "1.8.1"
 lazy_static = "1"
 maplit = "1"
