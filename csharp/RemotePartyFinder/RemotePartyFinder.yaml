@@ -1,7 +1,7 @@
-author: ascclemens
+author: Anna
 name: Remote Party Finder Uploader
 description: |-
   Uploads the PF listings you retrieve to the crowdsourced Remote
   Party Finder website (https://xivpf.com/).
 punchline: Crowdsourced PF website (upload PF listings to xivpf.com)
-repo_url: https://git.annaclemens.io/ascclemens/remote-party-finder
+repo_url: https://git.anna.lgbt/anna/remote-party-finder
