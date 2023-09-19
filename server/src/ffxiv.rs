@@ -386,8 +386,8 @@ mod old {
                 name: LocalisedText {
                     en: "Containment Bay P1T6 (Unreal)",
                     ja: "幻女神ソフィア討滅戦",
-                    de: "",
-                    fr: "",
+                    de: "Traumprüfung - Sophia",
+                    fr: "Unité de contention P1P6 (irréel)",
                     zh: "索菲娅幻巧战"
                 },
                 high_end: true,

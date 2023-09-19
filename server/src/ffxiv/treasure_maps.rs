@@ -155,7 +155,7 @@ lazy_static::lazy_static! {
             ja: "古ぼけた地図S4",
             de: "Sagenleder-Schatzkarte",
             fr: "Carte au trésor inhabituelle IV",
-            zh: "Conceivably Special Treasure Map",
+            zh: "陈旧的特殊地图4",
         },
     };
 }

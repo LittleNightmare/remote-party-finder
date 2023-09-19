@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Version>1.0.10</Version>
@@ -41,7 +41,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.10"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.11" />
     </ItemGroup>
 
 </Project>
