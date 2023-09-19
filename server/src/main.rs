@@ -41,7 +41,7 @@ async fn main() {
     if let Err(e) = self::web::start(Arc::new(config)).await {
         eprintln!("error: {}", e);
         eprintln!("  {:?}", e);
-        eprintln!("{}", e.backtrace());
+        // eprintln!("{}", e.backtrace());
     }
 }
 
