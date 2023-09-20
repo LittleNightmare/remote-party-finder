@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace RemotePartyFinder {
     internal class Gatherer : IDisposable {
-        #if DEBUG
+#if DEBUG
         private const string UploadUrl = "http://127.0.0.1:12345/contribute/multiple";
 #elif RELEASE
         private const string UploadUrl = "https://xivpf.littlenightmare.top/contribute/multiple";
