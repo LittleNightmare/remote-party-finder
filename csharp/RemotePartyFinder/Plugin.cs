@@ -1,26 +1,26 @@
-﻿using Dalamud.Game;
-using Dalamud.Game.Gui.PartyFinder;
-using Dalamud.IoC;
+﻿using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 
-namespace RemotePartyFinder {
-    public class Plugin : IDalamudPlugin {
-        public string Name => "Remote Party Finder";
+namespace RemotePartyFinder;
 
-        [PluginService]
-        internal Framework Framework { get; private init; }
+public class Plugin : IDalamudPlugin {
+    [PluginService]
+    internal static IPluginLog Log { get; private set; }
 
-        [PluginService]
-        internal PartyFinderGui PartyFinderGui { get; private init; }
+    [PluginService]
+    internal IFramework Framework { get; private init; }
 
-        private Gatherer Gatherer { get; }
+    [PluginService]
+    internal IPartyFinderGui PartyFinderGui { get; private init; }
 
-        public Plugin() {
-            this.Gatherer = new Gatherer(this);
-        }
+    private Gatherer Gatherer { get; }
 
-        public void Dispose() {
-            this.Gatherer.Dispose();
-        }
+    public Plugin() {
+        this.Gatherer = new Gatherer(this);
+    }
+
+    public void Dispose() {
+        this.Gatherer.Dispose();
     }
 }
