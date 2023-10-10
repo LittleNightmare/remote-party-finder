@@ -2082,7 +2082,7 @@ lazy_static::lazy_static! {
         (11, 1044) => LocalisedText {
             en: "last month",
             ja: "先月",
-            de: "Letzen Monat",
+            de: "Letzten Monat",
             fr: "Le mois dernier",
         },
         (11, 1045) => LocalisedText {
@@ -7120,7 +7120,7 @@ lazy_static::lazy_static! {
             fr: "Baron ail insulaire",
         },
         (49, 259) => LocalisedText {
-            en: "island Tomato King ",
+            en: "island Tomato King",
             ja: "アイル・キングトマト",
             de: "König Paradiestomate",
             fr: "Roi tomate insulaire",
@@ -7395,11 +7395,23 @@ lazy_static::lazy_static! {
             de: "Chrysomallos",
             fr: "Chrysomallos",
         },
+        (49, 318) => LocalisedText {
+            en: "Garlond GL-IS",
+            ja: "ガーロンドGL-IS",
+            de: "Garlond GL-IS",
+            fr: "Garlond GL-IS",
+        },
         (49, 319) => LocalisedText {
             en: "megaloambystoma",
             ja: "メガロアンビストマ",
             de: "Megalo-Ambystoma",
             fr: "mégalo-ambystoma",
+        },
+        (49, 320) => LocalisedText {
+            en: "Rising Phoenix",
+            ja: "リボーン・フェニックス",
+            de: "Phönix aus der Asche",
+            fr: "phénix de la Renaissance",
         },
         (49, 321) => LocalisedText {
             en: "burabura chochin",
@@ -7413,6 +7425,12 @@ lazy_static::lazy_static! {
             de: "Shishioji",
             fr: "Shishiôji",
         },
+        (49, 323) => LocalisedText {
+            en: "shadow wolf",
+            ja: "影の狼",
+            de: "Schattenwolf",
+            fr: "loup de l'ombre",
+        },
         (49, 324) => LocalisedText {
             en: "magicked children's bed",
             ja: "マジックキッズベッド",
@@ -7424,6 +7442,42 @@ lazy_static::lazy_static! {
             ja: "リンクス・オブ・ダークネス",
             de: "Dunkelheits-Luchs",
             fr: "lynx de l'obscurité éternelle",
+        },
+        (49, 328) => LocalisedText {
+            en: "apocryphal Bahamut",
+            ja: "バハムート・アポクリファ",
+            de: "Apokryph-Bahamut",
+            fr: "Bahamut apocryphe",
+        },
+        (49, 332) => LocalisedText {
+            en: "lynx of abyssal grief",
+            ja: "リンクス・オブ・アビス",
+            de: "Mondtiefen-Luchs",
+            fr: "lynx des abysses",
+        },
+        (49, 333) => LocalisedText {
+            en: "sabotender de la luna",
+            ja: "サボテンダー・デル・ルナ",
+            de: "Kaktor del Luna",
+            fr: "pampa de la luna",
+        },
+        (49, 335) => LocalisedText {
+            en: "Garlond GL-IIT",
+            ja: "ガーロンドGL-IIT",
+            de: "Garlond GL-IIT",
+            fr: "Garlond GL-IIT",
+        },
+        (49, 339) => LocalisedText {
+            en: "island Peerifool",
+            ja: "アイル・ピーリフール",
+            de: "Paradies-Peeriefool",
+            fr: "peeriefool insulaire",
+        },
+        (49, 340) => LocalisedText {
+            en: "island adenium",
+            ja: "アイル・アデニウム",
+            de: "Paradies-Wüstenrose",
+            fr: "adenium insulaire",
         },
         (50, 1) => LocalisedText {
             en: "gladiator",
@@ -10130,6 +10184,24 @@ lazy_static::lazy_static! {
             ja: "神の座",
             de: "Göttlicher Thron",
             fr: "Trône divin",
+        },
+        (51, 4431) => LocalisedText {
+            en: "The Lunar Subterrane",
+            ja: "月の地下渓谷",
+            de: "Monduntergrund",
+            fr: "Souterrain lunaire",
+        },
+        (51, 4441) => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "赤き月の底",
+            de: "Tiefen des roten Mondes",
+            fr: "Cœur de la lune rouge",
+        },
+        (51, 4443) => LocalisedText {
+            en: "Thaleia",
+            ja: "華めく神域 タレイア",
+            de: "Thaleia",
+            fr: "Domaine divin - Thalie",
         },
         (54, 1) => LocalisedText {
             en: "Halone, the Fury",
@@ -19149,6 +19221,12 @@ lazy_static::lazy_static! {
             de: "/oleoleoleole",
             fr: "/apprécierlespectacle",
         },
+        (62, 650) => LocalisedText {
+            en: "/magictrick",
+            ja: "/magictrick",
+            de: "/zaubertrick",
+            fr: "/tourdemagie",
+        },
         (62, 651) => LocalisedText {
             en: "/littleladiesdance",
             ja: "/littleladiesdance",
@@ -19173,17 +19251,47 @@ lazy_static::lazy_static! {
             de: "/angstundschrecken",
             fr: "/effrayer",
         },
+        (62, 658) => LocalisedText {
+            en: "/adventoflight",
+            ja: "/adventoflight",
+            de: "/heldenhafterauftritt",
+            fr: "/envolhéroïque",
+        },
         (62, 664) => LocalisedText {
             en: "/handtoheart",
             ja: "/handtoheart",
             de: "/handaufdiebrust",
             fr: "/mainsurlapoitrine",
         },
+        (62, 665) => LocalisedText {
+            en: "/cheeronbright",
+            ja: "/cheeronbright",
+            de: "/anfeuernweiß",
+            fr: "/encouragerblanc",
+        },
+        (62, 666) => LocalisedText {
+            en: "/cheerwaveviolet",
+            ja: "/cheerwaveviolet",
+            de: "/anfeuernlila",
+            fr: "/encouragerviolet",
+        },
+        (62, 667) => LocalisedText {
+            en: "/cheerjumpgreen",
+            ja: "/cheerjumpgreen",
+            de: "/anfeuerngrün",
+            fr: "/encouragervert",
+        },
         (62, 671) => LocalisedText {
             en: "/reference",
             ja: "/reference",
             de: "/literaturvergleich",
             fr: "/seréférer",
+        },
+        (62, 674) => LocalisedText {
+            en: "/slump",
+            ja: "/slump",
+            de: "/kopfhängen",
+            fr: "/êtreaccablé",
         },
         (63, 29054) => LocalisedText {
             en: "Guard",
@@ -20325,18 +20433,6 @@ lazy_static::lazy_static! {
             de: "Infernalischer Schlitzer",
             fr: "Tranchage infernal",
         },
-        (63, 29541) => LocalisedText {
-            en: "Gibbet",
-            ja: "ジビトゥ",
-            de: "Richtpfahl",
-            fr: "Gibet",
-        },
-        (63, 29542) => LocalisedText {
-            en: "Gallows",
-            ja: "ギャロウズ",
-            de: "Galgen",
-            fr: "Potence",
-        },
         (63, 29543) => LocalisedText {
             en: "Void Reaping",
             ja: "ヴォイドリーパー",
@@ -20745,6 +20841,12 @@ lazy_static::lazy_static! {
             ja: "オシュオンの矢",
             de: "Pfeil",
             fr: "La Flèche",
+        },
+        (63, 34786) => LocalisedText {
+            en: "Guillotine",
+            ja: "ギロティン",
+            de: "Guillotine",
+            fr: "Guillotine",
         },
         (64, 1) => LocalisedText {
             en: "Emerald Carbuncle",
@@ -21451,7 +21553,7 @@ lazy_static::lazy_static! {
         (65, 102) => LocalisedText {
             en: "naughty nanka",
             ja: "タイニーナンカ",
-            de: "Ninki-Nanka-Puppe",
+            de: "Ninki Nanka-Puppe",
             fr: "nanka narquois",
         },
         (65, 103) => LocalisedText {
@@ -22651,7 +22753,7 @@ lazy_static::lazy_static! {
         (65, 306) => LocalisedText {
             en: "wind-up G'raha Tia",
             ja: "マメット・グ・ラハ",
-            de: "G'raha-Tia-Puppe",
+            de: "G'raha Tia-Puppe",
             fr: "G'raha Tia miniature",
         },
         (65, 307) => LocalisedText {
@@ -22771,7 +22873,7 @@ lazy_static::lazy_static! {
         (65, 326) => LocalisedText {
             en: "wind-up Nu Mou",
             ja: "マメット・ン・モゥ",
-            de: "Nu-Mou-Stofftier",
+            de: "Nu Mou-Stofftier",
             fr: "Nu Mou miniature",
         },
         (65, 327) => LocalisedText {
@@ -23536,6 +23638,12 @@ lazy_static::lazy_static! {
             de: "Blaufußtölpel",
             fr: "fou à pattes bleues",
         },
+        (65, 454) => LocalisedText {
+            en: "wind-up PuPu",
+            ja: "マメット・コヨコヨ",
+            de: "Aufzieh-Koyo-Koyo",
+            fr: "Koyo K miniature",
+        },
         (65, 455) => LocalisedText {
             en: "clockwork Solus",
             ja: "クロックワーク・ソル",
@@ -23656,6 +23764,12 @@ lazy_static::lazy_static! {
             de: "Modelleisenbahn",
             fr: "train petit mais costaud",
         },
+        (65, 476) => LocalisedText {
+            en: "wind-up Godbert",
+            ja: "マメット・ゴッドベルト",
+            de: "Aufzieh-Godbert",
+            fr: "Godbert miniature",
+        },
         (65, 477) => LocalisedText {
             en: "wind-up Aidoneus",
             ja: "マメット・アイドネウス",
@@ -23716,6 +23830,12 @@ lazy_static::lazy_static! {
             de: "Shiromaru",
             fr: "Shiromaru",
         },
+        (65, 487) => LocalisedText {
+            en: "wind-up Athena",
+            ja: "マメット・アテナ",
+            de: "Aufzieh-Athena",
+            fr: "Athéna miniature",
+        },
         (65, 488) => LocalisedText {
             en: "wind-up Barbariccia",
             ja: "マメット・バルバリシア",
@@ -23733,6 +23853,36 @@ lazy_static::lazy_static! {
             ja: "忍犬クロマル",
             de: "Kuromaru",
             fr: "Kuromaru",
+        },
+        (65, 493) => LocalisedText {
+            en: "Tourmaline Weapon",
+            ja: "トルマリンウェポン",
+            de: "Turmalin-Waffe",
+            fr: "Arme Tourmaline",
+        },
+        (65, 494) => LocalisedText {
+            en: "wind-up Oschon",
+            ja: "マメット・オシュオン",
+            de: "Aufzieh-Oschon",
+            fr: "Oschon miniature",
+        },
+        (65, 495) => LocalisedText {
+            en: "Kydonia Strolls",
+            ja: "シドニア・ストロールズ",
+            de: "Kydonias Ausgang",
+            fr: "rocher de Cydonia",
+        },
+        (65, 496) => LocalisedText {
+            en: "vicarious vacationer",
+            ja: "おやすみくん",
+            de: "Badesion",
+            fr: "Barnabaigneur",
+        },
+        (65, 497) => LocalisedText {
+            en: "wind-up Golbez",
+            ja: "マメット・ゴルベーザ",
+            de: "Aufzieh-Golbez",
+            fr: "Golbez miniature",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -24049,7 +24199,7 @@ lazy_static::lazy_static! {
         (68, 13000) => LocalisedText {
             en: "Reflect L",
             ja: "ロゴス・リフレク",
-            de: "Logos-Reflektion",
+            de: "Logos-Reflexion",
             fr: "Évocation Logos : Miroir",
         },
         (68, 13001) => LocalisedText {
@@ -24754,6 +24904,126 @@ lazy_static::lazy_static! {
             de: "Monddämmerung",
             fr: "Lis araignée",
         },
+        (69, 34563) => LocalisedText {
+            en: "Goblin Punch",
+            ja: "ゴブリンパンチ",
+            de: "Goblingruß",
+            fr: "Coup de poing gobelin",
+        },
+        (69, 34564) => LocalisedText {
+            en: "Right Round",
+            ja: "大回転",
+            de: "Rotation",
+            fr: "Grande culbute",
+        },
+        (69, 34565) => LocalisedText {
+            en: "Schiltron",
+            ja: "スキルトロン",
+            de: "Skiltron",
+            fr: "Sheltron",
+        },
+        (69, 34566) => LocalisedText {
+            en: "Rehydration",
+            ja: "補水",
+            de: "Immense Infusion",
+            fr: "Réhydratation",
+        },
+        (69, 34567) => LocalisedText {
+            en: "Breath of Magic",
+            ja: "マジカルブレス",
+            de: "Zauberatem",
+            fr: "Souffle magique",
+        },
+        (69, 34568) => LocalisedText {
+            en: "Wild Rage",
+            ja: "獣魂の怒り",
+            de: "Bestialischer Zorn",
+            fr: "Colère bestiale",
+        },
+        (69, 34569) => LocalisedText {
+            en: "Peat Pelt",
+            ja: "泥団子遊び",
+            de: "Mjam Mjam Matschkuchen",
+            fr: "Lancer de boue",
+        },
+        (69, 34570) => LocalisedText {
+            en: "Deep Clean",
+            ja: "大掃除",
+            de: "Großes Reinemachen",
+            fr: "Grand nettoyage",
+        },
+        (69, 34571) => LocalisedText {
+            en: "Ruby Dynamics",
+            ja: "ルビーダイナモ",
+            de: "Rubin-Dynamo",
+            fr: "Générateur rubis",
+        },
+        (69, 34572) => LocalisedText {
+            en: "Divination Rune",
+            ja: "魔のルーン",
+            de: "Prophezeiungsrune",
+            fr: "Rune de malice",
+        },
+        (69, 34573) => LocalisedText {
+            en: "Dimensional Shift",
+            ja: "ディメンションシフト",
+            de: "Dimensionsverschiebung",
+            fr: "Translation dimensionnelle",
+        },
+        (69, 34574) => LocalisedText {
+            en: "Conviction Marcato",
+            ja: "コンヴィクション・マルカート",
+            de: "Mette marcato",
+            fr: "Conviction - marcato",
+        },
+        (69, 34575) => LocalisedText {
+            en: "Force Field",
+            ja: "フォースフィールド",
+            de: "Kraftfeld",
+            fr: "Champ de force",
+        },
+        (69, 34576) => LocalisedText {
+            en: "Winged Reprobation",
+            ja: "断罪の飛翔",
+            de: "Schwinge des Urteils",
+            fr: "Réprobation ailée",
+        },
+        (69, 34577) => LocalisedText {
+            en: "Laser Eye",
+            ja: "メーザーアイ",
+            de: "Laserauge",
+            fr: "Faisceau maser",
+        },
+        (69, 34578) => LocalisedText {
+            en: "Candy Cane",
+            ja: "キャンディケーン",
+            de: "Zuckerstange",
+            fr: "Canne en sucre d'orge",
+        },
+        (69, 34579) => LocalisedText {
+            en: "Mortal Flame",
+            ja: "必滅の炎",
+            de: "Ewige Flammen",
+            fr: "Flamme mortelle",
+        },
+        (69, 34580) => LocalisedText {
+            en: "Sea Shanty",
+            ja: "グルグルザパーン",
+            de: "Pitsche, patsche",
+            fr: "Explosion tournicoton",
+        },
+        (69, 34581) => LocalisedText {
+            en: "Apokalypsis",
+            ja: "アポカリュプシス",
+            de: "Apokalypsis",
+            fr: "Apokalypsis",
+        },
+        (69, 34582) => LocalisedText {
+            en: "Being Mortal",
+            ja: "死すべき定め",
+            de: "Sterblichkeit",
+            fr: "Deuil des vivants",
+        },
         (70, 20701) => LocalisedText {
             en: "Lost Paralyze III",
             ja: "ロスト・パライガ",
@@ -24817,7 +25087,7 @@ lazy_static::lazy_static! {
         (70, 20711) => LocalisedText {
             en: "Lost Reflect",
             ja: "ロスト・リフレク",
-            de: "Verschollene Reflektion",
+            de: "Verschollene Reflexion",
             fr: "Miroir oublié",
         },
         (70, 20712) => LocalisedText {
@@ -27658,12 +27928,6 @@ lazy_static::lazy_static! {
             de: "Eschatos - Rubicante",
             fr: "Mont du Supplice (extrême)",
         },
-        (24, 5119) => LocalisedText {
-            en: "Containment Bay P1T6 (Unreal)",
-            ja: "幻女神ソフィア討滅戦",
-            de: "Traumprüfung - Sophia",
-            fr: "Unité de contention P1P6 (irréel)",
-        },
         (24, 5120) => LocalisedText {
             en: "The Clockwork Castletown",
             ja: "東方絡繰御殿",
@@ -27694,12 +27958,6 @@ lazy_static::lazy_static! {
             de: "Eschatos - Golbez",
             fr: "Chaire de l'Exilée (extrême)",
         },
-        (24, 5125) => LocalisedText {
-            en: "Containment Bay Z1T9 (Unreal)",
-            ja: "幻鬼神ズルワーン討滅戦",
-            de: "Traumprüfung - Zurvan",
-            fr: "Unité de contention Z1P9 (irréel)",
-        },
         (24, 5126) => LocalisedText {
             en: "Mount Rokkon",
             ja: "六根山",
@@ -27717,6 +27975,24 @@ lazy_static::lazy_static! {
             ja: "異聞六根山 零式",
             de: "Der Kuriose Rokkon (episch)",
             fr: "Mont Rokkon annexe (sadique)",
+        },
+        (24, 5129) => LocalisedText {
+            en: "The Lunar Subterrane",
+            ja: "月の地下渓谷",
+            de: "Monduntergrund",
+            fr: "Souterrain lunaire",
+        },
+        (24, 5130) => LocalisedText {
+            en: "Thaleia",
+            ja: "華めく神域 タレイア",
+            de: "Thaleia",
+            fr: "Domaine divin - Thalie",
+        },
+        (24, 5134) => LocalisedText {
+            en: "The Singularity Reactor (Unreal)",
+            ja: "幻ナイツ・オブ・ラウンド討滅戦",
+            de: "Traumprüfung - Singularitäts-Reaktor",
+            fr: "Réacteur de singularité (irréel)",
         },
     };
 }

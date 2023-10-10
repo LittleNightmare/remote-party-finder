@@ -5613,12 +5613,6 @@ lazy_static::lazy_static! {
             de: "Kurioser Rokkon",
             fr: "Mont Rokkon annexe",
         },
-        1157 => LocalisedText {
-            en: "Containment Bay Z1T9",
-            ja: "コンテイメントベイZ1T9",
-            de: "Arretur Z1T9",
-            fr: "Unité de contention Z1P9",
-        },
         1158 => LocalisedText {
             en: "The Dæmons' Nest",
             ja: "万魔の産屋",
@@ -5654,6 +5648,72 @@ lazy_static::lazy_static! {
             ja: "エンデバー号",
             de: "Die Endeavor",
             fr: "L'Ambition",
+        },
+        1164 => LocalisedText {
+            en: "The Lunar Subterrane",
+            ja: "月の地下渓谷",
+            de: "Monduntergrund",
+            fr: "Souterrain lunaire",
+        },
+        1168 => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "赤き月の底",
+            de: "Tiefen des roten Mondes",
+            fr: "Cœur de la lune rouge",
+        },
+        1169 => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "赤き月の底",
+            de: "Tiefen des roten Mondes",
+            fr: "Cœur de la lune rouge",
+        },
+        1172 => LocalisedText {
+            en: "The Drowned City of Skalla",
+            ja: "スカラ",
+            de: "Die versunkene Stadt Skalla",
+            fr: "Cité engloutie de Skalla",
+        },
+        1173 => LocalisedText {
+            en: "The Burn",
+            ja: "ザ・バーン",
+            de: "Kargland",
+            fr: "L'Escarre",
+        },
+        1174 => LocalisedText {
+            en: "The Ghimlyt Dark",
+            ja: "ギムリトダーク",
+            de: "Ghimlyt-Finsternis",
+            fr: "Les Ténèbres de Ghimlyt",
+        },
+        1175 => LocalisedText {
+            en: "Singularity Reactor",
+            ja: "シンギュラリティ・リアクター",
+            de: "Singularitäts-Reaktor",
+            fr: "Réacteur de singularité",
+        },
+        1178 => LocalisedText {
+            en: "Thaleia",
+            ja: "華めく神域 タレイア",
+            de: "Thaleia",
+            fr: "Domaine divin - Thalie",
+        },
+        1181 => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "赤き月の底",
+            de: "Tiefen des roten Mondes",
+            fr: "Cœur de la lune rouge",
+        },
+        1182 => LocalisedText {
+            en: "Thaleia",
+            ja: "華めく神域 タレイア",
+            de: "Thaleia",
+            fr: "Domaine divin - Thalie",
+        },
+        1184 => LocalisedText {
+            en: "The Lunar Subterrane",
+            ja: "月の地下渓谷",
+            de: "Monduntergrund",
+            fr: "Souterrain lunaire",
         },
     };
 }

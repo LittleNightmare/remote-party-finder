@@ -6026,6 +6026,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
+        823 => DutyInfo {
+            name: LocalisedText {
+                en: "The Lunar Subterrane",
+                ja: "深淵潜行 月の地下渓谷",
+                de: "Monduntergrund",
+                fr: "Le Souterrain lunaire",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
         830 => DutyInfo {
             name: LocalisedText {
                 en: "The Porta Decumana",
@@ -6811,7 +6821,7 @@ lazy_static::lazy_static! {
                 en: "Crystalline Conflict (Custom Match - The Clockwork Castletown)",
                 ja: "クリスタルコンフリクト(東方絡繰御殿：カスタムマッチ)",
                 de: "Crystalline Conflict: Die Mechanische Menagerie (Schaukampf)",
-                fr: "Crystalline Conflict (partie personnalisée - Le Traquenard oriental)",
+                fr: "Crys. Conflict (partie perso. - Le Traquenard oriental)",
             },
             high_end: false,
             content_kind: ContentKind::PvP,
@@ -7053,17 +7063,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Golbez",
                 fr: "La Chaire de l'Exilée (extrême)",
             },
-            high_end: true,
-            content_kind: ContentKind::Trials,
-        },
-        951 => DutyInfo {
-            name: LocalisedText {
-                en: "Containment Bay Z1T9 (Unreal)",
-                ja: "幻鬼神ズルワーン討滅戦",
-                de: "Traumprüfung - Zurvan",
-                fr: "Unité de contention Z1P9 (irréel)",
-            },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         952 => DutyInfo {
@@ -7125,6 +7125,46 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::DisciplesoftheLand,
+        },
+        962 => DutyInfo {
+            name: LocalisedText {
+                en: "Thaleia",
+                ja: "華めく神域 タレイア",
+                de: "Thaleia",
+                fr: "Domaine divin - Thalie",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        963 => DutyInfo {
+            name: LocalisedText {
+                en: "The Singularity Reactor (Unreal)",
+                ja: "幻ナイツ・オブ・ラウンド討滅戦",
+                de: "Traumprüfung - Singularitäts-Reaktor",
+                fr: "Le Réacteur de singularité (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        964 => DutyInfo {
+            name: LocalisedText {
+                en: "The Abyssal Fracture",
+                ja: "ゼロムス討滅戦",
+                de: "Prophetie - Zeromus",
+                fr: "La Fracture abyssale",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        965 => DutyInfo {
+            name: LocalisedText {
+                en: "The Abyssal Fracture (Extreme)",
+                ja: "極ゼロムス討滅戦",
+                de: "Eschatos - Zeromus",
+                fr: "La Fracture abyssale (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
         },
     };
 }
