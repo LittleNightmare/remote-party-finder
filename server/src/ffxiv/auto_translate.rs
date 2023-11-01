@@ -7457,15 +7457,27 @@ lazy_static::lazy_static! {
         },
         (49, 333) => LocalisedText {
             en: "sabotender de la luna",
-            ja: "サボテンダー・デル・ルナ",
-            de: "Kaktor del Luna",
+            ja: "サボテンダー・デラ・ルナ",
+            de: "Kaktor de la Luna",
             fr: "pampa de la luna",
+        },
+        (49, 334) => LocalisedText {
+            en: "spectral Statice",
+            ja: "スターチス・ミラージュ",
+            de: "Spektrale Statice",
+            fr: "Statice illusoire",
         },
         (49, 335) => LocalisedText {
             en: "Garlond GL-IIT",
             ja: "ガーロンドGL-IIT",
             de: "Garlond GL-IIT",
             fr: "Garlond GL-IIT",
+        },
+        (49, 338) => LocalisedText {
+            en: "quaqua",
+            ja: "クアクア",
+            de: "Quaqua",
+            fr: "quaqua",
         },
         (49, 339) => LocalisedText {
             en: "island Peerifool",
@@ -10011,6 +10023,12 @@ lazy_static::lazy_static! {
             de: "Die Mechanische Menagerie",
             fr: "Le Traquenard oriental",
         },
+        (51, 4094) => LocalisedText {
+            en: "The Red Sands",
+            ja: "レッド・サンズ",
+            de: "Die Roten Sande",
+            fr: "Les Sables sanglants",
+        },
         (51, 4098) => LocalisedText {
             en: "Medias Res",
             ja: "詩想空間",
@@ -10184,6 +10202,18 @@ lazy_static::lazy_static! {
             ja: "神の座",
             de: "Göttlicher Thron",
             fr: "Trône divin",
+        },
+        (51, 4383) => LocalisedText {
+            en: "Aloalo Island",
+            ja: "アロアロ島",
+            de: "Aloalo",
+            fr: "Île d'Aloalo",
+        },
+        (51, 4416) => LocalisedText {
+            en: "Another Aloalo Island",
+            ja: "異聞アロアロ島",
+            de: "Kurioses Aloalo",
+            fr: "Île d'Aloalo annexe",
         },
         (51, 4431) => LocalisedText {
             en: "The Lunar Subterrane",
@@ -19293,6 +19323,12 @@ lazy_static::lazy_static! {
             de: "/kopfhängen",
             fr: "/êtreaccablé",
         },
+        (62, 676) => LocalisedText {
+            en: "/humbletriumph",
+            ja: "/humbletriumph",
+            de: "/kleinerstolz",
+            fr: "/posedufanfaron",
+        },
         (63, 29054) => LocalisedText {
             en: "Guard",
             ja: "防御",
@@ -23854,6 +23890,12 @@ lazy_static::lazy_static! {
             de: "Kuromaru",
             fr: "Kuromaru",
         },
+        (65, 491) => LocalisedText {
+            en: "uolosapa",
+            ja: "オーロサパ",
+            de: "Uolosapa",
+            fr: "uolosapa",
+        },
         (65, 493) => LocalisedText {
             en: "Tourmaline Weapon",
             ja: "トルマリンウェポン",
@@ -23883,6 +23925,12 @@ lazy_static::lazy_static! {
             ja: "マメット・ゴルベーザ",
             de: "Aufzieh-Golbez",
             fr: "Golbez miniature",
+        },
+        (65, 506) => LocalisedText {
+            en: "repulu",
+            ja: "レプル",
+            de: "Repulu",
+            fr: "repulu",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -27988,11 +28036,35 @@ lazy_static::lazy_static! {
             de: "Thaleia",
             fr: "Domaine divin - Thalie",
         },
+        (24, 5131) => LocalisedText {
+            en: "Aloalo Island",
+            ja: "アロアロ島",
+            de: "Aloalo",
+            fr: "Île d'Aloalo",
+        },
+        (24, 5132) => LocalisedText {
+            en: "Another Aloalo Island",
+            ja: "異聞アロアロ島",
+            de: "Kurioses Aloalo",
+            fr: "Île d'Aloalo annexe",
+        },
+        (24, 5133) => LocalisedText {
+            en: "Another Aloalo Island (Savage)",
+            ja: "異聞アロアロ島 零式",
+            de: "Kurioses Aloalo (episch)",
+            fr: "Île d'Aloalo annexe (sadique)",
+        },
         (24, 5134) => LocalisedText {
             en: "The Singularity Reactor (Unreal)",
             ja: "幻ナイツ・オブ・ラウンド討滅戦",
             de: "Traumprüfung - Singularitäts-Reaktor",
             fr: "Réacteur de singularité (irréel)",
+        },
+        (24, 5138) => LocalisedText {
+            en: "The Red Sands",
+            ja: "レッド・サンズ",
+            de: "Die Roten Sande",
+            fr: "Sables sanglants",
         },
     };
 }

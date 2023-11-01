@@ -5511,6 +5511,18 @@ lazy_static::lazy_static! {
             de: "Rokkon",
             fr: "Mont Rokkon",
         },
+        1138 => LocalisedText {
+            en: "The Red Sands",
+            ja: "レッド・サンズ",
+            de: "Die Roten Sande",
+            fr: "Les Sables sanglants",
+        },
+        1139 => LocalisedText {
+            en: "The Red Sands",
+            ja: "レッド・サンズ",
+            de: "Die Roten Sande",
+            fr: "Les Sables sanglants",
+        },
         1140 => LocalisedText {
             en: "The Voidcast Dais",
             ja: "立方魔法陣",
@@ -5655,6 +5667,12 @@ lazy_static::lazy_static! {
             de: "Monduntergrund",
             fr: "Souterrain lunaire",
         },
+        1165 => LocalisedText {
+            en: "Blunderville",
+            ja: "ブランダーヴィル",
+            de: "Stolperville",
+            fr: "Blunderville",
+        },
         1168 => LocalisedText {
             en: "The Abyssal Fracture",
             ja: "赤き月の底",
@@ -5691,11 +5709,29 @@ lazy_static::lazy_static! {
             de: "Singularitäts-Reaktor",
             fr: "Réacteur de singularité",
         },
+        1176 => LocalisedText {
+            en: "Aloalo Island",
+            ja: "アロアロ島",
+            de: "Aloalo",
+            fr: "Île d'Aloalo",
+        },
         1178 => LocalisedText {
             en: "Thaleia",
             ja: "華めく神域 タレイア",
             de: "Thaleia",
             fr: "Domaine divin - Thalie",
+        },
+        1179 => LocalisedText {
+            en: "Another Aloalo Island",
+            ja: "異聞アロアロ島",
+            de: "Kurioses Aloalo",
+            fr: "Île d'Aloalo annexe",
+        },
+        1180 => LocalisedText {
+            en: "Another Aloalo Island",
+            ja: "異聞アロアロ島",
+            de: "Kurioses Aloalo",
+            fr: "Île d'Aloalo annexe",
         },
         1181 => LocalisedText {
             en: "The Abyssal Fracture",
@@ -5714,6 +5750,12 @@ lazy_static::lazy_static! {
             ja: "月の地下渓谷",
             de: "Monduntergrund",
             fr: "Souterrain lunaire",
+        },
+        1197 => LocalisedText {
+            en: "Blunderville Square",
+            ja: "ブランダーヴィルスクウェア",
+            de: "Stolperville-Platz",
+            fr: "Square du Blunderville",
         },
     };
 }
