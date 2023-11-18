@@ -162,6 +162,7 @@ impl PartyFinderListing {
             (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
             (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
             (DutyType::Normal, _, DutyCategory::AdventuringForays) => PartyFinderCategory::AdventuringForays,
+            (DutyType::Normal, _, DutyCategory::VariantAndCritereonDungeonFinger) => PartyFinderCategory::VariantAndCritereonDungeonFinder,
             (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Guildhests, .. }), _) => PartyFinderCategory::Guildhests,
@@ -235,6 +236,7 @@ pub enum DutyCategory {
     GatheringForays = 1 << 4,
     DeepDungeons = 1 << 5,
     AdventuringForays = 1 << 6,
+    VariantAndCritereonDungeonFinger = 1 << 7,
 }
 
 impl DutyCategory {
@@ -510,11 +512,12 @@ pub enum PartyFinderCategory {
     GatheringForays,
     DeepDungeons,
     AdventuringForays,
+    VariantAndCritereonDungeonFinder,
     None,
 }
 
 impl PartyFinderCategory {
-    pub const ALL: [Self; 15] = [
+    pub const ALL: [Self; 16] = [
         Self::DutyRoulette,
         Self::Dungeons,
         Self::Guildhests,
@@ -529,6 +532,7 @@ impl PartyFinderCategory {
         Self::GatheringForays,
         Self::DeepDungeons,
         Self::AdventuringForays,
+        Self::VariantAndCritereonDungeonFinder,
         Self::None,
     ];
 
@@ -548,6 +552,7 @@ impl PartyFinderCategory {
             Self::GatheringForays => "GatheringForays",
             Self::DeepDungeons => "DeepDungeons",
             Self::AdventuringForays => "AdventuringForays",
+            Self::VariantAndCritereonDungeonFinder => "V&C Dungeon Finder",
             Self::None => "None",
         }
     }
@@ -637,6 +642,12 @@ impl PartyFinderCategory {
                 ja: "特殊フィールド探索",
                 de: "Feldexkursion",
                 fr: "Missions d'exploration",
+            },
+            Self::VariantAndCritereonDungeonFinder => LocalisedText {
+                en: "V&C Dungeon Finder",
+                ja: "特殊ダンジョン探索",
+                de: "Gewölbesuche",
+                fr: "Donjons spéciaux",
             },
             Self::None => LocalisedText {
                 en: "None",
