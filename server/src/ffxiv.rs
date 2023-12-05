@@ -393,6 +393,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            951 => DutyInfo {
+                name: LocalisedText {
+                    en: "Containment Bay Z1T9 (Unreal)",
+                    ja: "幻鬼神ズルワーン討滅戦",
+                    de: "Traumprüfung - Zurvan",
+                    fr: "Unité de contention Z1P9 (irréel)",
+                    zh: "祖尔宛幻巧战",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
