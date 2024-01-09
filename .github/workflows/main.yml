@@ -1,4 +1,5 @@
 name: Build and Publish
+
 'on':
   workflow_dispatch:
   push:
@@ -6,30 +7,50 @@ name: Build and Publish
       - main
     paths:
       - 'server/**'
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Install Nix
-        uses: cachix/install-nix-action@v23
+
+      - name: Cache cargo registry
+        uses: actions/cache@v2
         with:
-          nix_path: 'nixpkgs=channel:nixos-unstable'
-      - name: Install dependencies
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install Rust nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      
+      - name: Install musl-tools (musl-gcc)
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - name: Add target x86_64-unknown-linux-musl
+        run: rustup target add x86_64-unknown-linux-musl
+
+      - name: Build
         run: |
-          sudo apt-get install -y curl tar xz-utils
-      - name: Build and Package
-        run: >
           cd ./server
+          cargo build --release --target x86_64-unknown-linux-musl
 
-          nix-shell --command 'cargo build --release --target
-          x86_64-unknown-linux-musl'
+      - name: Strip binary
+        run: |
+          cd ./server
+          strip target/x86_64-unknown-linux-musl/release/remote-party-finder
 
-          strip -s target/x86_64-unknown-linux-musl/release/remote-party-finder
       - name: Publish Artifact
         uses: actions/upload-artifact@v3
         with:
           name: Remote Party Finder
-          path: >-
-            ./server/target/x86_64-unknown-linux-musl/release/remote-party-finder
+          path: server/target/x86_64-unknown-linux-musl/release/remote-party-finder
+
