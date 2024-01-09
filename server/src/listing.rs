@@ -657,6 +657,13 @@ impl PartyFinderCategory {
                 fr: "Missions d'exploration",
                 zh: "特殊场景探索",
             },
+            Self::VariantAndCriterionDungeonFinder => LocalisedText {
+                en: "V&C Dungeon Finder",
+                ja: "特殊ダンジョン探索",
+                de: "Gewölbesuche",
+                fr: "Donjons spéciaux",
+                zh: "特殊迷宫探索",
+            },
             Self::None => LocalisedText {
                 en: "None",
                 ja: "設定なし",
