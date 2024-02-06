@@ -147,6 +147,8 @@ fn assets() -> BoxedFilter<(impl Reply, )> {
             icons()
                 .or(minireset())
                 .or(common_css())
+                .or(ffxiv_loadestone_ssf_ttf())
+                .or(ffxiv_loadestone_ssf_woff())
                 .or(listings_css())
                 .or(listings_js())
                 .or(stats_css())
@@ -177,6 +179,20 @@ fn common_css() -> BoxedFilter<(impl Reply, )> {
     warp::path("common.css")
         .and(warp::path::end())
         .and(warp::fs::file("./assets/common.css"))
+        .boxed()
+}
+
+fn ffxiv_loadestone_ssf_ttf() -> BoxedFilter<(impl Reply, )> {
+    warp::path("FFXIV_Lodestone_SSF.ttf")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/FFXIV_Lodestone_SSF.ttf"))
+        .boxed()
+}
+
+fn ffxiv_loadestone_ssf_woff() -> BoxedFilter<(impl Reply, )> {
+    warp::path("FFXIV_Lodestone_SSF.woff")
+        .and(warp::path::end())
+        .and(warp::fs::file("./assets/FFXIV_Lodestone_SSF.woff"))
         .boxed()
 }
 

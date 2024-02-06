@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'FFXIV';
+    src: url('FFXIV_Lodestone_SSF.ttf') format('truetype'), url('FFXIV_Lodestone_SSF.woff') format('woff');
+    unicode-range: U+E020-E0DB;
+}
+
 :root {
     --background: #2C2F34;
     --text: #A0A0A0;
@@ -32,9 +38,9 @@ body {
 
     margin: 0;
 
-    font-family: sans-serif;
-  /*     background-color: var(--background); */
-  /*     color: var(--text); */
+    font-family: FFXIV, sans-serif;
+    /*     background-color: var(--background); */
+    /*     color: var(--text); */
 }
 
 .js body {
@@ -50,6 +56,6 @@ details {
     margin-top: .5em;
 }
 
-details > summary {
+details>summary {
     cursor: pointer;
 }
