@@ -4737,6 +4737,12 @@ lazy_static::lazy_static! {
             de: "Golbez",
             fr: "Golbez",
         },
+        (23, 1961) => LocalisedText {
+            en: "Zeromus",
+            ja: "ゼロムス",
+            de: "Zeromus",
+            fr: "Zeromus",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -7256,6 +7262,12 @@ lazy_static::lazy_static! {
             ja: "トロル",
             de: "Troll",
             fr: "troll",
+        },
+        (49, 290) => LocalisedText {
+            en: "UFO",
+            ja: "UFO？",
+            de: "Fliegende Untertasse",
+            fr: "O.V.N.I.",
         },
         (49, 291) => LocalisedText {
             en: "vinegaroon",
@@ -19311,6 +19323,12 @@ lazy_static::lazy_static! {
             de: "/anfeuerngrün",
             fr: "/encouragervert",
         },
+        (62, 670) => LocalisedText {
+            en: "/lophop",
+            ja: "/lophop",
+            de: "/loporrittanz",
+            fr: "/dansedesloporrites",
+        },
         (62, 671) => LocalisedText {
             en: "/reference",
             ja: "/reference",
@@ -28059,6 +28077,24 @@ lazy_static::lazy_static! {
             ja: "幻ナイツ・オブ・ラウンド討滅戦",
             de: "Traumprüfung - Singularitäts-Reaktor",
             fr: "Réacteur de singularité (irréel)",
+        },
+        (24, 5135) => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アスラ討滅戦",
+            de: "Prophetie - Asura",
+            fr: "Temple doré d'Araya",
+        },
+        (24, 5136) => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "ゼロムス討滅戦",
+            de: "Prophetie - Zeromus",
+            fr: "Fracture abyssale",
+        },
+        (24, 5137) => LocalisedText {
+            en: "The Abyssal Fracture (Extreme)",
+            ja: "極ゼロムス討滅戦",
+            de: "Eschatos - Zeromus",
+            fr: "Fracture abyssale (extrême)",
         },
         (24, 5138) => LocalisedText {
             en: "The Red Sands",

@@ -5505,6 +5505,12 @@ lazy_static::lazy_static! {
             de: "Ätherborn",
             fr: "Île de Haam",
         },
+        1136 => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アラヤの宝塔",
+            de: "Arayas Palast",
+            fr: "Temple d'Araya",
+        },
         1137 => LocalisedText {
             en: "Mount Rokkon",
             ja: "六根山",
@@ -5715,6 +5721,12 @@ lazy_static::lazy_static! {
             de: "Aloalo",
             fr: "Île d'Aloalo",
         },
+        1177 => LocalisedText {
+            en: "The Aetherfont",
+            ja: "ハーム島",
+            de: "Ätherborn",
+            fr: "Île de Haam",
+        },
         1178 => LocalisedText {
             en: "Thaleia",
             ja: "華めく神域 タレイア",
@@ -5744,6 +5756,12 @@ lazy_static::lazy_static! {
             ja: "華めく神域 タレイア",
             de: "Thaleia",
             fr: "Domaine divin - Thalie",
+        },
+        1183 => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アラヤの宝塔",
+            de: "Arayas Palast",
+            fr: "Temple d'Araya",
         },
         1184 => LocalisedText {
             en: "The Lunar Subterrane",
