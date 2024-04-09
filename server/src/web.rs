@@ -329,17 +329,17 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 containers.sort_by_key(|container| container.updated_minute);
                 containers.reverse();
 
-                Ok(ListingsTemplate {
+                ListingsTemplate {
                     containers,
                     lang,
-                })
+                }
             }
             Err(e) => {
                 eprintln!("{:#?}", e);
-                Ok(ListingsTemplate {
+                ListingsTemplate {
                     containers: Default::default(),
                     lang,
-                })
+                }
             }
         })
     }
