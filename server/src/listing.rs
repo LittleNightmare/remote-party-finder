@@ -113,6 +113,10 @@ impl PartyFinderListing {
             flags.push("[Duty Complete]");
         }
 
+        if self.conditions.contains(ConditionFlags::DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED) {
+            flags.push("[Duty Complete (Weekly Reward Unclaimed)]")
+        }
+
         if self.conditions.contains(ConditionFlags::DUTY_INCOMPLETE) {
             flags.push("[Duty Incomplete]");
         }
@@ -300,6 +304,7 @@ bitflags! {
         const NONE = 1 << 0;
         const DUTY_COMPLETE = 1 << 1;
         const DUTY_INCOMPLETE = 1 << 2;
+        const DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED = 1 << 3;
     }
 }
 
