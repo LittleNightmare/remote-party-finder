@@ -4306,7 +4306,7 @@ lazy_static::lazy_static! {
             ja: "青燐機関車",
             de: "Erdseim-Zug",
             fr: "locomotive à céruleum",
-            zh: "青磷引擎车",
+            zh: "青磷机车",
         },
         (18, 1497) => LocalisedText {
             en: "gobtank",
@@ -8697,12 +8697,26 @@ lazy_static::lazy_static! {
             fr: "pampa de la luna",
             zh: "月光仙人刺",
         },
+        (49, 334) => LocalisedText {
+            en: "spectral Statice",
+            ja: "スターチス・ミラージュ",
+            de: "Spektrale Statice",
+            fr: "Statice illusoire",
+            zh: "斯塔缇丝幻影",
+        },
         (49, 335) => LocalisedText {
             en: "Garlond GL-IIT",
             ja: "ガーロンドGL-IIT",
             de: "Garlond GL-IIT",
             fr: "Garlond GL-IIT",
             zh: "加隆德GL-IIT",
+        },
+        (49, 338) => LocalisedText {
+            en: "quaqua",
+            ja: "クアクア",
+            de: "Quaqua",
+            fr: "quaqua",
+            zh: "库阿库阿",
         },
         (49, 339) => LocalisedText {
             en: "island Peerifool",
@@ -11672,6 +11686,13 @@ lazy_static::lazy_static! {
             fr: "Le Traquenard oriental",
             zh: "机关大殿",
         },
+        (51, 4094) => LocalisedText {
+            en: "The Red Sands",
+            ja: "レッド・サンズ",
+            de: "Die Roten Sande",
+            fr: "Les Sables sanglants",
+            zh: "赤土红沙",
+        },
         (51, 4098) => LocalisedText {
             en: "Medias Res",
             ja: "詩想空間",
@@ -11874,6 +11895,20 @@ lazy_static::lazy_static! {
             de: "Göttlicher Thron",
             fr: "Trône divin",
             zh: "施恩神座",
+        },
+        (51, 4383) => LocalisedText {
+            en: "Aloalo Island",
+            ja: "アロアロ島",
+            de: "Aloalo",
+            fr: "Île d'Aloalo",
+            zh: "阿罗阿罗岛",
+        },
+        (51, 4416) => LocalisedText {
+            en: "Another Aloalo Island",
+            ja: "異聞アロアロ島",
+            de: "Kurioses Aloalo",
+            fr: "Île d'Aloalo annexe",
+            zh: "异闻阿罗阿罗岛",
         },
         (51, 4431) => LocalisedText {
             en: "The Lunar Subterrane",
@@ -22487,6 +22522,13 @@ lazy_static::lazy_static! {
             fr: "/êtreaccablé",
             zh: "/垂头丧气",
         },
+        (62, 676) => LocalisedText {
+            en: "/humbletriumph",
+            ja: "/humbletriumph",
+            de: "/kleinerstolz",
+            fr: "/posedufanfaron",
+            zh: "/得意洋洋",
+        },
         (63, 29054) => LocalisedText {
             en: "Guard",
             ja: "防御",
@@ -27808,6 +27850,13 @@ lazy_static::lazy_static! {
             fr: "Kuromaru",
             zh: "忍犬黑丸",
         },
+        (65, 491) => LocalisedText {
+            en: "uolosapa",
+            ja: "オーロサパ",
+            de: "Uolosapa",
+            fr: "uolosapa",
+            zh: "乌洛萨帕",
+        },
         (65, 493) => LocalisedText {
             en: "Tourmaline Weapon",
             ja: "トルマリンウェポン",
@@ -27842,6 +27891,13 @@ lazy_static::lazy_static! {
             de: "Aufzieh-Golbez",
             fr: "Golbez miniature",
             zh: "迷你高贝扎",
+        },
+        (65, 506) => LocalisedText {
+            en: "repulu",
+            ja: "レプル",
+            de: "Repulu",
+            fr: "repulu",
+            zh: "雷普鲁",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -32636,21 +32692,21 @@ lazy_static::lazy_static! {
             ja: "アロアロ島",
             de: "Aloalo",
             fr: "Île d'Aloalo",
-            zh: "Aloalo Island",
+            zh: "阿罗阿罗岛",
         },
         (24, 5132) => LocalisedText {
             en: "Another Aloalo Island",
             ja: "異聞アロアロ島",
             de: "Kurioses Aloalo",
             fr: "Île d'Aloalo annexe",
-            zh: "Another Aloalo Island",
+            zh: "异闻阿罗阿罗岛",
         },
         (24, 5133) => LocalisedText {
             en: "Another Aloalo Island (Savage)",
             ja: "異聞アロアロ島 零式",
             de: "Kurioses Aloalo (episch)",
             fr: "Île d'Aloalo annexe (sadique)",
-            zh: "Another Aloalo Island (Savage)",
+            zh: "零式异闻阿罗阿罗岛",
         },
         (24, 5134) => LocalisedText {
             en: "The Singularity Reactor (Unreal)",
@@ -32664,7 +32720,7 @@ lazy_static::lazy_static! {
             ja: "レッド・サンズ",
             de: "Die Roten Sande",
             fr: "Sables sanglants",
-            zh: "The Red Sands",
+            zh: "赤土红沙",
         },
     };
 }

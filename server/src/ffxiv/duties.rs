@@ -7817,6 +7817,28 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::DisciplesoftheLand,
         },
+        958 => DutyInfo {
+            name: LocalisedText {
+                en: "Blunderville",
+                ja: "ブランダーヴィル",
+                de: "Stolperville",
+                fr: "Blunderville",
+                zh: "金碟巨豆中心",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
+        },
+        961 => DutyInfo {
+            name: LocalisedText {
+                en: "Aloalo Island",
+                ja: "ヴァリアントダンジョン アロアロ島",
+                de: "Aloalo",
+                fr: "L'île d'Aloalo - Donjon à embranchements",
+                zh: "多变迷宫 阿罗阿罗岛",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
         962 => DutyInfo {
             name: LocalisedText {
                 en: "Thaleia",
@@ -7860,6 +7882,160 @@ lazy_static::lazy_static! {
             },
             high_end: true,
             content_kind: ContentKind::Trials,
+        },
+        967 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        968 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        969 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        970 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        971 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        972 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        973 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        974 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        975 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        976 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        977 => DutyInfo {
+            name: LocalisedText {
+                en: "The Red Sands",
+                ja: "レッド・サンズ",
+                de: "Die Roten Sande",
+                fr: "Les Sables sanglants",
+                zh: "赤土红沙",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        978 => DutyInfo {
+            name: LocalisedText {
+                en: "Crystalline Conflict (Custom Match - The Red Sands)",
+                ja: "クリスタルコンフリクト(レッド・サンズ：カスタムマッチ)",
+                de: "Crystalline Conflict: Die Roten Sande (Schaukampf)",
+                fr: "Crystalline Conflict (partie personnalisée - Les Sables sanglants)",
+                zh: "水晶冲突（赤土红沙：自定赛）",
+            },
+            high_end: false,
+            content_kind: ContentKind::PvP,
+        },
+        979 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Aloalo Island",
+                ja: "アナザーダンジョン 異聞アロアロ島",
+                de: "Kurioses Aloalo",
+                fr: "L'île d'Aloalo annexe - Donjon alternatif",
+                zh: "异闻迷宫 异闻阿罗阿罗岛",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
+        980 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Aloalo Island (Savage)",
+                ja: "アナザーダンジョン 異聞アロアロ島 零式",
+                de: "Kurioses Aloalo (episch)",
+                fr: "L'île d'Aloalo annexe - Donjon alternatif (sadique)",
+                zh: "异闻迷宫 零式异闻阿罗阿罗岛",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
         },
     };
 }

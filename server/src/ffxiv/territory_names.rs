@@ -6434,14 +6434,14 @@ lazy_static::lazy_static! {
             ja: "レッド・サンズ",
             de: "Die Roten Sande",
             fr: "Les Sables sanglants",
-            zh: "",
+            zh: "赤土红沙",
         },
         1139 => LocalisedText {
             en: "The Red Sands",
             ja: "レッド・サンズ",
             de: "Die Roten Sande",
             fr: "Les Sables sanglants",
-            zh: "",
+            zh: "赤土红沙",
         },
         1140 => LocalisedText {
             en: "The Voidcast Dais",
@@ -6616,7 +6616,7 @@ lazy_static::lazy_static! {
             ja: "ブランダーヴィル",
             de: "Stolperville",
             fr: "Blunderville",
-            zh: "",
+            zh: "金碟巨豆中心",
         },
         1168 => LocalisedText {
             en: "The Abyssal Fracture",
@@ -6665,7 +6665,7 @@ lazy_static::lazy_static! {
             ja: "アロアロ島",
             de: "Aloalo",
             fr: "Île d'Aloalo",
-            zh: "",
+            zh: "阿罗阿罗岛",
         },
         1178 => LocalisedText {
             en: "Thaleia",
@@ -6679,14 +6679,14 @@ lazy_static::lazy_static! {
             ja: "異聞アロアロ島",
             de: "Kurioses Aloalo",
             fr: "Île d'Aloalo annexe",
-            zh: "",
+            zh: "异闻阿罗阿罗岛",
         },
         1180 => LocalisedText {
             en: "Another Aloalo Island",
             ja: "異聞アロアロ島",
             de: "Kurioses Aloalo",
             fr: "Île d'Aloalo annexe",
-            zh: "",
+            zh: "异闻阿罗阿罗岛",
         },
         1181 => LocalisedText {
             en: "The Abyssal Fracture",
@@ -6714,7 +6714,7 @@ lazy_static::lazy_static! {
             ja: "ブランダーヴィルスクウェア",
             de: "Stolperville-Platz",
             fr: "Square du Blunderville",
-            zh: "",
+            zh: "金碟巨豆中心广场",
         },
     };
 }
