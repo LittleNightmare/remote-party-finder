@@ -165,7 +165,7 @@ impl PartyFinderListing {
             },
             (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
             (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
-            (DutyType::Normal, _, DutyCategory::AdventuringForays) => PartyFinderCategory::AdventuringForays,
+            (DutyType::Normal, _, DutyCategory::FieldOperations) => PartyFinderCategory::FieldOperations,
             (DutyType::Normal, _, DutyCategory::VariantAndCriterionDungeonFinder) => PartyFinderCategory::VariantAndCriterionDungeonFinder,
             (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
@@ -239,7 +239,7 @@ pub enum DutyCategory {
     TheHunt = 1 << 3,
     GatheringForays = 1 << 4,
     DeepDungeons = 1 << 5,
-    AdventuringForays = 1 << 6,
+    FieldOperations = 1 << 6,
     VariantAndCriterionDungeonFinder = 1 << 7,
 }
 
@@ -257,7 +257,7 @@ impl DutyCategory {
             8 => Self::TheHunt,
             16 => Self::GatheringForays,
             32 => Self::DeepDungeons,
-            64 => Self::AdventuringForays,
+            64 => Self::FieldOperations,
             _ => return None,
         })
     }
@@ -516,7 +516,7 @@ pub enum PartyFinderCategory {
     TheHunt,
     GatheringForays,
     DeepDungeons,
-    AdventuringForays,
+    FieldOperations,
     VariantAndCriterionDungeonFinder,
     None,
 }
@@ -536,7 +536,7 @@ impl PartyFinderCategory {
         Self::TheHunt,
         Self::GatheringForays,
         Self::DeepDungeons,
-        Self::AdventuringForays,
+        Self::FieldOperations,
         Self::VariantAndCriterionDungeonFinder,
         Self::None,
     ];
@@ -556,7 +556,7 @@ impl PartyFinderCategory {
             Self::TheHunt => "TheHunt",
             Self::GatheringForays => "GatheringForays",
             Self::DeepDungeons => "DeepDungeons",
-            Self::AdventuringForays => "AdventuringForays",
+            Self::FieldOperations => "AdventuringForays",
             Self::VariantAndCriterionDungeonFinder => "V&C Dungeon Finder",
             Self::None => "None",
         }
@@ -642,8 +642,8 @@ impl PartyFinderCategory {
                 de: "Tiefe Gewölbe",
                 fr: "Donjons sans fond",
             },
-            Self::AdventuringForays => LocalisedText {
-                en: "Adventuring Forays",
+            Self::FieldOperations => LocalisedText {
+                en: "Field Operations",
                 ja: "特殊フィールド探索",
                 de: "Feldexkursion",
                 fr: "Missions d'exploration",
