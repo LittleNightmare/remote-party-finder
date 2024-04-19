@@ -7161,6 +7161,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
         },
+        959 => DutyInfo {
+            name: LocalisedText {
+                en: "Memory of Embers",
+                ja: "炎影の旅路",
+                de: "Der Pfad der Flammen",
+                fr: "Flammes primordiales",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
         960 => DutyInfo {
             name: LocalisedText {
                 en: "The Game Is Afoot",
@@ -7218,7 +7228,7 @@ lazy_static::lazy_static! {
                 de: "Eschatos - Zeromus",
                 fr: "La Fracture abyssale (extrême)",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         967 => DutyInfo {

@@ -5679,6 +5679,12 @@ lazy_static::lazy_static! {
             de: "Stolperville",
             fr: "Blunderville",
         },
+        1166 => LocalisedText {
+            en: "The Memory of Embers",
+            ja: "詩想空間",
+            de: "Lied der Flammen",
+            fr: "Interstice du chant onirique",
+        },
         1168 => LocalisedText {
             en: "The Abyssal Fracture",
             ja: "赤き月の底",
