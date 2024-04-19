@@ -167,12 +167,42 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
                 return Cow::from(info.name.text(&lang));
             }
         }
-        (_, DutyCategory::QuestBattles) => return Cow::from(match lang {
-            Language::English => "Quest Battles",
-            Language::Japanese => "クエストバトル",
-            Language::German => "Auftragskampf",
-            Language::French => "Batailles de quête",
+        // gold saucer duties appear to be all over the place. source in comments:
+        (_, DutyCategory::GoldSaucer) if duty == 11 => return Cow::from(match lang { // Addon 2308
+            Language::English => "GATEs",
+            Language::Japanese => "G.A.T.E.",
+            Language::German => "GATEs",
+            Language::French => "JACTA",
         }),
+        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
+            // in the sheet, the order is sagolii, del sol, tranquil, random
+            // in PF, random comes first:
+            let row = match duty {
+                12 | 16 => 21 + (duty - 12),
+                13..=15 => 18 + (duty - 13),
+                17..=19 => 22 + (duty - 17),
+                _ => 0
+            };
+            if let Some(info) = roulette(u32::from(row)) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+            let row = match duty {
+                20 => 195,
+                21 => 756,
+                // saucer duty 22 doesn't seem to exist
+                23 => 645,
+                24 => 650,
+                25 => 768,
+                26 => 769,
+                _ => 0,
+            };
+
+            if let Some(info) = crate::ffxiv::duty(row) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
         (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {
             return Cow::from(name.text(&lang));
         }

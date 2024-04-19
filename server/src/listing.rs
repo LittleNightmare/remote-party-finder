@@ -173,7 +173,7 @@ impl PartyFinderListing {
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Trials, .. }), _) => PartyFinderCategory::Trials,
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Raids, .. }), _) => PartyFinderCategory::Raids,
             (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::PvP, .. }), _) => PartyFinderCategory::Pvp,
-            (_, _, DutyCategory::QuestBattles) => PartyFinderCategory::QuestBattles,
+            (_, _, DutyCategory::GoldSaucer) => PartyFinderCategory::GoldSaucer,
             (_, _, DutyCategory::Fates) => PartyFinderCategory::Fates,
             (_, _, DutyCategory::TreasureHunt) => PartyFinderCategory::TreasureHunt,
             (_, _, DutyCategory::TheHunt) => PartyFinderCategory::TheHunt,
@@ -233,7 +233,7 @@ impl PartyFinderSlot {
 #[repr(u32)]
 pub enum DutyCategory {
     Duty = 0,
-    QuestBattles = 1 << 0,
+    GoldSaucer = 1 << 0,
     Fates = 1 << 1,
     TreasureHunt = 1 << 2,
     TheHunt = 1 << 3,
@@ -251,7 +251,7 @@ impl DutyCategory {
     pub fn from_u32(u: u32) -> Option<Self> {
         Some(match u {
             0 => Self::Duty,
-            1 => Self::QuestBattles,
+            1 => Self::GoldSaucer,
             2 => Self::Fates,
             4 => Self::TreasureHunt,
             8 => Self::TheHunt,
@@ -510,7 +510,7 @@ pub enum PartyFinderCategory {
     Raids,
     HighEndDuty,
     Pvp,
-    QuestBattles,
+    GoldSaucer,
     Fates,
     TreasureHunt,
     TheHunt,
@@ -530,7 +530,7 @@ impl PartyFinderCategory {
         Self::Raids,
         Self::HighEndDuty,
         Self::Pvp,
-        Self::QuestBattles,
+        Self::GoldSaucer,
         Self::Fates,
         Self::TreasureHunt,
         Self::TheHunt,
@@ -550,7 +550,7 @@ impl PartyFinderCategory {
             Self::Raids => "Raids",
             Self::HighEndDuty => "HighEndDuty",
             Self::Pvp => "Pvp",
-            Self::QuestBattles => "QuestBattles",
+            Self::GoldSaucer => "GoldSaucer",
             Self::Fates => "Fates",
             Self::TreasureHunt => "TreasureHunt",
             Self::TheHunt => "TheHunt",
@@ -606,11 +606,11 @@ impl PartyFinderCategory {
                 de: "PvP",
                 fr: "JcJ",
             },
-            Self::QuestBattles => LocalisedText {
-                en: "Quest Battles",
-                ja: "クエストバトル",
-                de: "Auftragskampf",
-                fr: "Batailles de quête",
+            Self::GoldSaucer => LocalisedText {
+                en: "Gold Saucer",
+                ja: "ゴールドソーサー",
+                de: "Gold Saucer",
+                fr: "Gold Saucer",
             },
             Self::Fates => LocalisedText {
                 en: "FATEs",
