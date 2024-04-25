@@ -191,7 +191,7 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             let row = match duty {
                 20 => 195,
                 21 => 756,
-                // saucer duty 22 doesn't seem to exist
+                22 => 199,
                 23 => 645,
                 24 => 650,
                 25 => 768,
