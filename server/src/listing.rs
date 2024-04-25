@@ -37,6 +37,7 @@ pub struct PartyFinderListing {
     pub jobs_present: Vec<u8>,
 }
 
+#[allow(unused)]
 impl PartyFinderListing {
     pub fn slots_filled(&self) -> usize {
         self.jobs_present.iter().filter(|&&job| job > 0).count()
@@ -243,6 +244,7 @@ pub enum DutyCategory {
     VariantAndCriterionDungeonFinder = 1 << 7,
 }
 
+#[allow(unused)]
 impl DutyCategory {
     pub fn as_u32(self) -> u32 {
         unsafe { std::mem::transmute(self) }
@@ -271,6 +273,7 @@ pub enum DutyType {
     Normal = 1 << 1,
 }
 
+#[allow(unused)]
 impl DutyType {
     pub fn as_u8(self) -> u8 {
         unsafe { std::mem::transmute(self) }

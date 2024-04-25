@@ -45,6 +45,7 @@ pub enum ContentKind {
     Other(u32),
 }
 
+#[allow(unused)]
 impl ContentKind {
     fn from_u32(kind: u32) -> Self {
         match kind {

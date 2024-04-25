@@ -47,7 +47,6 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
 }
 
 pub struct State {
-    config: Arc<Config>,
     mongo: MongoClient,
     stats: RwLock<Option<CachedStatistics>>,
 }
@@ -59,7 +58,6 @@ impl State {
             .context("could not create mongodb client")?;
 
         let state = Arc::new(Self {
-            config,
             mongo,
             stats: Default::default(),
         });
@@ -450,7 +448,7 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     warp::post().and(route).boxed()
 }
 
-async fn insert_listing(state: &State, mut listing: PartyFinderListing) -> Result<UpdateResult> {
+async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
     if listing.created_world >= 1_000 || listing.home_world >= 1_000 || listing.current_world >= 1_000 {
         anyhow::bail!("invalid listing");
     }
