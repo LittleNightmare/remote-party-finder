@@ -2367,7 +2367,7 @@ lazy_static::lazy_static! {
             ja: "アラヤの宝塔",
             de: "Arayas Palast",
             fr: "Temple d'Araya",
-            zh: "",
+            zh: "阿赖耶宝塔",
         },
         510 => LocalisedText {
             en: "Pharos Sirius",
@@ -6422,6 +6422,13 @@ lazy_static::lazy_static! {
             fr: "Île de Haam",
             zh: "哈姆岛",
         },
+        1136 => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アラヤの宝塔",
+            de: "Arayas Palast",
+            fr: "Temple d'Araya",
+            zh: "阿赖耶宝塔",
+        },
         1137 => LocalisedText {
             en: "Mount Rokkon",
             ja: "六根山",
@@ -6618,6 +6625,13 @@ lazy_static::lazy_static! {
             fr: "Blunderville",
             zh: "金碟巨豆中心",
         },
+        1166 => LocalisedText {
+            en: "The Memory of Embers",
+            ja: "詩想空間",
+            de: "Lied der Flammen",
+            fr: "Interstice du chant onirique",
+            zh: "",
+        },
         1168 => LocalisedText {
             en: "The Abyssal Fracture",
             ja: "赤き月の底",
@@ -6667,6 +6681,13 @@ lazy_static::lazy_static! {
             fr: "Île d'Aloalo",
             zh: "阿罗阿罗岛",
         },
+        1177 => LocalisedText {
+            en: "The Aetherfont",
+            ja: "ハーム島",
+            de: "Ätherborn",
+            fr: "Île de Haam",
+            zh: "哈姆岛",
+        },
         1178 => LocalisedText {
             en: "Thaleia",
             ja: "華めく神域 タレイア",
@@ -6701,6 +6722,13 @@ lazy_static::lazy_static! {
             de: "Thaleia",
             fr: "Domaine divin - Thalie",
             zh: "荣华神域塔利亚",
+        },
+        1183 => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アラヤの宝塔",
+            de: "Arayas Palast",
+            fr: "Temple d'Araya",
+            zh: "阿赖耶宝塔",
         },
         1184 => LocalisedText {
             en: "The Lunar Subterrane",

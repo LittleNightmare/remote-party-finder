@@ -5526,6 +5526,13 @@ lazy_static::lazy_static! {
             fr: "Golbez",
             zh: "高贝扎",
         },
+        (23, 1961) => LocalisedText {
+            en: "Zeromus",
+            ja: "ゼロムス",
+            de: "Zeromus",
+            fr: "Zeromus",
+            zh: "泽罗姆斯",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -8465,6 +8472,13 @@ lazy_static::lazy_static! {
             de: "Troll",
             fr: "troll",
             zh: "巨魔",
+        },
+        (49, 290) => LocalisedText {
+            en: "UFO",
+            ja: "UFO？",
+            de: "Fliegende Untertasse",
+            fr: "O.V.N.I.",
+            zh: "不明飞行物体？",
         },
         (49, 291) => LocalisedText {
             en: "vinegaroon",
@@ -22508,6 +22522,13 @@ lazy_static::lazy_static! {
             fr: "/encouragervert",
             zh: "/声援小绿",
         },
+        (62, 670) => LocalisedText {
+            en: "/lophop",
+            ja: "/lophop",
+            de: "/loporrittanz",
+            fr: "/dansedesloporrites",
+            zh: "/兔兔舞",
+        },
         (62, 671) => LocalisedText {
             en: "/reference",
             ja: "/reference",
@@ -32714,6 +32735,27 @@ lazy_static::lazy_static! {
             de: "Traumprüfung - Singularitäts-Reaktor",
             fr: "Réacteur de singularité (irréel)",
             zh: "圆桌骑士幻巧战",
+        },
+        (24, 5135) => LocalisedText {
+            en: "The Gilded Araya",
+            ja: "アスラ討滅戦",
+            de: "Prophetie - Asura",
+            fr: "Temple doré d'Araya",
+            zh: "阿修罗歼灭战",
+        },
+        (24, 5136) => LocalisedText {
+            en: "The Abyssal Fracture",
+            ja: "ゼロムス討滅戦",
+            de: "Prophetie - Zeromus",
+            fr: "Fracture abyssale",
+            zh: "泽罗姆斯歼灭战",
+        },
+        (24, 5137) => LocalisedText {
+            en: "The Abyssal Fracture (Extreme)",
+            ja: "極ゼロムス討滅戦",
+            de: "Eschatos - Zeromus",
+            fr: "Fracture abyssale (extrême)",
+            zh: "泽罗姆斯歼殛战",
         },
         (24, 5138) => LocalisedText {
             en: "The Red Sands",

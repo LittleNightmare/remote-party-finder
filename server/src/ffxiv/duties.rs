@@ -37,6 +37,11 @@ pub enum ContentKind {
     Eureka = 26,
     UltimateRaids = 28,
     VCDungeonFinder = 30,
+    OceanFishing = 31,
+    TripleTriad = 32,
+    TheHunt = 33,
+    Fishing = 34,
+    GATE = 35,
     Other(u32),
 }
 
@@ -68,6 +73,11 @@ impl ContentKind {
             26 => Self::Eureka,
             28 => Self::UltimateRaids,
             30 => Self::VCDungeonFinder,
+            31 => Self::OceanFishing,
+            32 => Self::TripleTriad,
+            33 => Self::TheHunt,
+            34 => Self::Fishing,
+            35 => Self::GATE,
             x => Self::Other(x),
         }
     }
@@ -99,6 +109,11 @@ impl ContentKind {
             Self::Eureka => 26,
             Self::UltimateRaids => 28,
             Self::VCDungeonFinder => 30,
+            Self::OceanFishing => 31,
+            Self::TripleTriad => 32,
+            Self::TheHunt => 33,
+            Self::Fishing => 34,
+            Self::GATE => 35,
             Self::Other(x) => x,
         }
     }
@@ -839,6 +854,17 @@ lazy_static::lazy_static! {
                 de: "Heldenlied von Ultima",
                 fr: "Le fléau d'Ultima",
                 zh: "究极神兵假想作战",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        69 => DutyInfo {
+            name: LocalisedText {
+                en: "The Gilded Araya",
+                ja: "アスラ討滅戦",
+                de: "Prophetie - Asura",
+                fr: "Le temple doré d'Araya",
+                zh: "阿修罗歼灭战",
             },
             high_end: false,
             content_kind: ContentKind::Trials,
@@ -7685,6 +7711,17 @@ lazy_static::lazy_static! {
             high_end: true,
             content_kind: ContentKind::Raids,
         },
+        944 => DutyInfo {
+            name: LocalisedText {
+                en: "The Gilded Araya",
+                ja: "アスラ討滅戦",
+                de: "Prophetie - Asura",
+                fr: "Le temple doré d'Araya",
+                zh: "阿修罗歼灭战",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
         945 => DutyInfo {
             name: LocalisedText {
                 en: "Mount Rokkon",
@@ -7827,6 +7864,17 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
+        },
+        960 => DutyInfo {
+            name: LocalisedText {
+                en: "The Game Is Afoot",
+                ja: "その瞳が見据えるもの",
+                de: "Die Jagd ist eröffnet",
+                fr: "Par-delà l'horizon",
+                zh: "那双眼中映出的是",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
         961 => DutyInfo {
             name: LocalisedText {
