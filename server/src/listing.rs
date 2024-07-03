@@ -377,6 +377,8 @@ bitflags! {
         const DANCER = 1 << 27;
         const REAPER = 1 << 28;
         const SAGE = 1 << 29;
+        const VIPER = 1 << 30;
+        const PICTOMANCER = 1 << 31;
     }
 }
 

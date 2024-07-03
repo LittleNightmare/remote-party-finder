@@ -92,7 +92,5 @@ lazy_static::lazy_static! {
         413 => World::Innocence,
         414 => World::Pixie,
         415 => World::Tycoon,
-        3000 => World::Cloudtest01,
-        3001 => World::Cloudtest02,
     };
 }
