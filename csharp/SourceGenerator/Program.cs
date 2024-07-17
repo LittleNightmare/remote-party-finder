@@ -10,10 +10,16 @@ using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
 using Pidgin;
 
-namespace SourceGenerator; 
+namespace SourceGenerator;
 
 internal class Program {
     private static void Main(string[] args) {
+        if (args.Length < 2)
+        {
+            Console.WriteLine($"Usage: SourceGenerator <sqpack dir> <out dir>");
+            return;
+        }
+
         var data = new Dictionary<Language, GameData>(4);
         foreach (var lang in Languages.Keys) {
             data[lang] = new GameData(args[0], new LuminaOptions {
@@ -23,14 +29,14 @@ internal class Program {
         }
 
         var prog = new Program(data);
-
-        File.WriteAllText(Path.Join(args[1], "duties.rs"), prog.GenerateDuties());
-        File.WriteAllText(Path.Join(args[1], "jobs.rs"), prog.GenerateJobs());
-        File.WriteAllText(Path.Join(args[1], "roulettes.rs"), prog.GenerateRoulettes());
-        File.WriteAllText(Path.Join(args[1], "worlds.rs"), prog.GenerateWorlds());
-        File.WriteAllText(Path.Join(args[1], "territory_names.rs"), prog.GenerateTerritoryNames());
-        File.WriteAllText(Path.Join(args[1], "auto_translate.rs"), prog.GenerateAutoTranslate());
-        File.WriteAllText(Path.Join(args[1], "treasure_maps.rs"), prog.GenerateTreasureMaps());
+        var outPath = args[1];
+        File.WriteAllText(Path.Join(outPath, "duties.rs"), prog.GenerateDuties());
+        File.WriteAllText(Path.Join(outPath, "jobs.rs"), prog.GenerateJobs());
+        File.WriteAllText(Path.Join(outPath, "roulettes.rs"), prog.GenerateRoulettes());
+        File.WriteAllText(Path.Join(outPath, "worlds.rs"), prog.GenerateWorlds());
+        File.WriteAllText(Path.Join(outPath, "territory_names.rs"), prog.GenerateTerritoryNames());
+        File.WriteAllText(Path.Join(outPath, "auto_translate.rs"), prog.GenerateAutoTranslate());
+        File.WriteAllText(Path.Join(outPath, "treasure_maps.rs"), prog.GenerateTreasureMaps());
     }
 
     private Dictionary<Language, GameData> Data { get; }
