@@ -154,41 +154,12 @@ impl PartyFinderListing {
             .unwrap_or_default()
     }
 
-    pub fn pf_category(&self) -> Option<PartyFinderCategory> {
-        let duty_type = self.duty_type;
-        let duty_info = crate::ffxiv::duty(u32::from(self.duty));
-        let duty_category = self.category;
-
-        let category = match (duty_type, duty_info, duty_category) {
-            (DutyType::Roulette, _, _) => match crate::ffxiv::ROULETTES.get(&u32::from(self.duty)) {
-                Some(info) if info.pvp => PartyFinderCategory::Pvp,
-                _ => PartyFinderCategory::DutyRoulette,
-            },
-            (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
-            (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
-            (DutyType::Normal, _, DutyCategory::FieldOperations) => PartyFinderCategory::FieldOperations,
-            (DutyType::Normal, _, DutyCategory::VariantAndCriterionDungeonFinder) => PartyFinderCategory::VariantAndCriterionDungeonFinder,
-            (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Guildhests, .. }), _) => PartyFinderCategory::Guildhests,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Trials, .. }), _) => PartyFinderCategory::Trials,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Raids, .. }), _) => PartyFinderCategory::Raids,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::PvP, .. }), _) => PartyFinderCategory::Pvp,
-            (_, _, DutyCategory::GoldSaucer) => PartyFinderCategory::GoldSaucer,
-            (_, _, DutyCategory::Fates) => PartyFinderCategory::Fates,
-            (_, _, DutyCategory::TreasureHunt) => PartyFinderCategory::TreasureHunt,
-            (_, _, DutyCategory::TheHunt) => PartyFinderCategory::TheHunt,
-            (DutyType::Other, None, _) => PartyFinderCategory::None,
-            _ => return None,
-        };
-
-        Some(category)
+    pub fn pf_category(&self) -> PartyFinderCategory {
+        self.category.pf_category()
     }
 
     pub fn html_pf_category(&self) -> &'static str {
-        self.pf_category()
-            .map(|cat| cat.as_str())
-            .unwrap_or("unknown")
+        self.pf_category().as_str()
     }
 }
 
@@ -233,35 +204,67 @@ impl PartyFinderSlot {
 #[derive(Debug, Clone, Copy, Deserialize_repr, Serialize_repr, PartialEq)]
 #[repr(u32)]
 pub enum DutyCategory {
-    Duty = 0,
-    GoldSaucer = 1 << 0,
-    Fates = 1 << 1,
-    TreasureHunt = 1 << 2,
-    TheHunt = 1 << 3,
-    GatheringForays = 1 << 4,
-    DeepDungeons = 1 << 5,
-    FieldOperations = 1 << 6,
-    VariantAndCriterionDungeonFinder = 1 << 7,
+    None = 0 << 0,
+    DutyRoulette = 1 << 1,
+    Dungeon = 1 << 2,
+    Guildhest = 1 << 3,
+    Trial = 1 << 4,
+    Raid = 1 << 5,
+    HighEndDuty = 1 << 6,
+    PvP = 1 << 7,
+    GoldSaucer = 1 << 8,
+    Fate = 1 << 9,
+    TreasureHunt = 1 << 10,
+    TheHunt = 1 << 11,
+    GatheringForay = 1 << 12,
+    DeepDungeon = 1 << 13,
+    FieldOperation = 1 << 14,
+    VariantAndCriterionDungeon = 1 << 15,
 }
 
 #[allow(unused)]
 impl DutyCategory {
-    pub fn as_u32(self) -> u32 {
-        unsafe { std::mem::transmute(self) }
-    }
-
     pub fn from_u32(u: u32) -> Option<Self> {
         Some(match u {
-            0 => Self::Duty,
-            1 => Self::GoldSaucer,
-            2 => Self::Fates,
-            4 => Self::TreasureHunt,
-            8 => Self::TheHunt,
-            16 => Self::GatheringForays,
-            32 => Self::DeepDungeons,
-            64 => Self::FieldOperations,
+            0 => Self::None,
+            1 => Self::DutyRoulette,
+            2 => Self::Dungeon,
+            4 => Self::Guildhest,
+            8 => Self::Trial,
+            16 => Self::Raid,
+            32 => Self::HighEndDuty,
+            64 => Self::PvP,
+            128 => Self::GoldSaucer,
+            256 => Self::Fate,
+            512 => Self::TreasureHunt,
+            1024 => Self::TheHunt,
+            2048 => Self::GatheringForay,
+            4096 => Self::DeepDungeon,
+            8192 => Self::FieldOperation,
+            16384 => Self::VariantAndCriterionDungeon,
             _ => return None,
         })
+    }
+
+    pub fn pf_category(&self) -> PartyFinderCategory {
+        match self {
+            DutyCategory::None => PartyFinderCategory::None,
+            DutyCategory::DutyRoulette => PartyFinderCategory::DutyRoulette,
+            DutyCategory::Dungeon => PartyFinderCategory::Dungeons,
+            DutyCategory::Guildhest => PartyFinderCategory::Guildhests,
+            DutyCategory::Trial => PartyFinderCategory::Trials,
+            DutyCategory::Raid => PartyFinderCategory::Raids,
+            DutyCategory::HighEndDuty => PartyFinderCategory::HighEndDuty,
+            DutyCategory::PvP => PartyFinderCategory::Pvp,
+            DutyCategory::GoldSaucer => PartyFinderCategory::GoldSaucer,
+            DutyCategory::Fate => PartyFinderCategory::Fates,
+            DutyCategory::TreasureHunt => PartyFinderCategory::TreasureHunt,
+            DutyCategory::TheHunt => PartyFinderCategory::TheHunt,
+            DutyCategory::GatheringForay => PartyFinderCategory::GatheringForays,
+            DutyCategory::DeepDungeon => PartyFinderCategory::DeepDungeons,
+            DutyCategory::FieldOperation => PartyFinderCategory::FieldOperations,
+            DutyCategory::VariantAndCriterionDungeon => PartyFinderCategory::VariantAndCriterionDungeonFinder,
+        }
     }
 }
 
@@ -500,6 +503,14 @@ impl JobFlags {
 
         if self.contains(Self::SAGE) {
             cjs.push(ClassJob::Job(Job::Sage));
+        }
+
+        if self.contains(Self::VIPER) {
+            cjs.push(ClassJob::Job(Job::Viper));
+        }
+
+        if self.contains(Self::PICTOMANCER) {
+            cjs.push(ClassJob::Job(Job::Pictomancer));
         }
 
         cjs

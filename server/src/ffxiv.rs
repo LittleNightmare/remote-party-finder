@@ -120,7 +120,7 @@ pub fn roulette(roulette: u32) -> Option<&'static roulettes::RouletteInfo> {
 
 pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
     match (duty_type, category) {
-        (DutyType::Other, DutyCategory::Fates) => {
+        (DutyType::Other, DutyCategory::Fate) => {
             if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(duty)) {
                 return Cow::from(name.text(&lang));
             }
@@ -133,25 +133,25 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::German => "Hohe Jagd",
             Language::French => "Contrats de chasse",
         }),
-        (DutyType::Other, DutyCategory::Duty) if duty == 0 => return Cow::from(match lang {
+        (_, DutyCategory::None) if duty == 0 => return Cow::from(match lang {
             Language::English => "None",
             Language::Japanese => "設定なし",
             Language::German => "Nicht festgelegt",
             Language::French => "Non spécifiée",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 1 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 1 => return Cow::from(match lang {
             Language::English => "The Palace of the Dead",
             Language::Japanese => "死者の宮殿",
             Language::German => "Palast der Toten",
             Language::French => "Palais des morts",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 2 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 2 => return Cow::from(match lang {
             Language::English => "Heaven-on-High",
             Language::Japanese => "アメノミハシラ",
             Language::German => "Himmelssäule",
             Language::French => "Pilier des Cieux",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 3 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 3 => return Cow::from(match lang {
             Language::English => "Eureka Orthos",
             Language::Japanese => "オルト・エウレカ",
             Language::German => "Eureka Orthos",
