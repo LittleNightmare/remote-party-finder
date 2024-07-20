@@ -16300,7 +16300,7 @@ lazy_static::lazy_static! {
             fr: "Tenri Jindô",
         },
         (56, 36962) => LocalisedText {
-            en: "Tengetsu",
+            en: "Tengentsu",
             ja: "天眼通",
             de: "Tengentsu",
             fr: "Tengentsû",
@@ -25875,6 +25875,12 @@ lazy_static::lazy_static! {
             ja: "検証体アンブローズ",
             de: "Ambrose-Prototyp",
             fr: "Ambrose prototype",
+        },
+        (65, 524) => LocalisedText {
+            en: "Black Kitten",
+            ja: "ブラックキトン",
+            de: "Schwarzes Kätzchen",
+            fr: "Black Kitten",
         },
         (65, 525) => LocalisedText {
             en: "brushed-up Krile",

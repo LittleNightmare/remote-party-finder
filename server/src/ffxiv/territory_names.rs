@@ -6009,6 +6009,42 @@ lazy_static::lazy_static! {
             de: "Tiefste Tiefen des Himmelstiefen Cenote",
             fr: "Profondeurs du cénote des Cieux infinis",
         },
+        1223 => LocalisedText {
+            en: "Tritails Training",
+            ja: "ジム・トライテール",
+            de: "Tatzentrio-Training",
+            fr: "Trois Queues",
+        },
+        1224 => LocalisedText {
+            en: "Greenroom",
+            ja: "控室",
+            de: "Warteraum",
+            fr: "Locaux de la Société de l'Arcadion",
+        },
+        1225 => LocalisedText {
+            en: "Scratching Ring",
+            ja: "リング・オブ・キャット",
+            de: "Katzenring",
+            fr: "Ring des Griffes félines",
+        },
+        1227 => LocalisedText {
+            en: "Lovely Lovering",
+            ja: "リング・オブ・ラブ",
+            de: "Liebesring",
+            fr: "Ring de l'Amour mielleux",
+        },
+        1229 => LocalisedText {
+            en: "Blasting Ring",
+            ja: "リング・オブ・ボンバー",
+            de: "Bombenring",
+            fr: "Ring du Bombardement brutal",
+        },
+        1231 => LocalisedText {
+            en: "The Thundering",
+            ja: "リング・オブ・サンダー",
+            de: "Donnerring",
+            fr: "Ring du Tonnerre terrifiant",
+        },
         1233 => LocalisedText {
             en: "Manor Basement",
             ja: "廃屋の地下室",
