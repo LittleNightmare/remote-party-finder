@@ -4743,6 +4743,54 @@ lazy_static::lazy_static! {
             de: "Zeromus",
             fr: "Zeromus",
         },
+        (23, 1962) => LocalisedText {
+            en: "Pelupelu",
+            ja: "ペルペル",
+            de: "Pelupelu",
+            fr: "Pelupelu",
+        },
+        (23, 1963) => LocalisedText {
+            en: "Moblins",
+            ja: "モブリン",
+            de: "Moblins",
+            fr: "Mobelins",
+        },
+        (23, 1964) => LocalisedText {
+            en: "Mamool Ja",
+            ja: "マムージャ",
+            de: "Mamool Ja",
+            fr: "Mamool Ja",
+        },
+        (23, 1965) => LocalisedText {
+            en: "Yok Huy",
+            ja: "ヨフカイ",
+            de: "Yok Huy",
+            fr: "Yok Huy",
+        },
+        (23, 1966) => LocalisedText {
+            en: "Hanuhanu",
+            ja: "ハヌハヌ",
+            de: "Hanuhanu",
+            fr: "Hanu Hanu",
+        },
+        (23, 1967) => LocalisedText {
+            en: "Valigarmanda",
+            ja: "ヴァリガルマンダ",
+            de: "Valigarmanda",
+            fr: "Valigarmanda",
+        },
+        (23, 1968) => LocalisedText {
+            en: "Zoraal Ja",
+            ja: "ゾラージャ",
+            de: "Zoraal Ja",
+            fr: "Zoraal Ja",
+        },
+        (23, 1969) => LocalisedText {
+            en: "Queen Eternal",
+            ja: "エターナルクイーン",
+            de: "Ewige Königin",
+            fr: "Reine Éternité",
+        },
         (24, 2000) => LocalisedText {
             en: "【Duty】",
             ja: "【コンテンツ】",
@@ -7575,6 +7623,12 @@ lazy_static::lazy_static! {
             de: "Mehwapyarra",
             fr: "mehwapyarra",
         },
+        (49, 349) => LocalisedText {
+            en: "monowheel S1",
+            ja: "モノホイールS1",
+            de: "Monorad S1",
+            fr: "Monoroue S1",
+        },
         (49, 350) => LocalisedText {
             en: "rroneek",
             ja: "ロネーク",
@@ -7586,6 +7640,12 @@ lazy_static::lazy_static! {
             ja: "ウッル",
             de: "Ullr",
             fr: "Ullr",
+        },
+        (49, 352) => LocalisedText {
+            en: "qeziigural",
+            ja: "ケジグラー",
+            de: "Qeziigural",
+            fr: "qeziigural",
         },
         (49, 353) => LocalisedText {
             en: "automatoise",
@@ -15502,8 +15562,8 @@ lazy_static::lazy_static! {
             fr: "Crochets d'acier",
         },
         (56, 34607) => LocalisedText {
-            en: "Dread Fangs",
-            ja: "壱の牙【惨毒】",
+            en: "Reaving Fangs",
+            ja: "壱の牙【穿裂】",
             de: "Tückische Fänge",
             fr: "Crochets mortels",
         },
@@ -15550,8 +15610,8 @@ lazy_static::lazy_static! {
             fr: "Mâchoire d'acier",
         },
         (56, 34615) => LocalisedText {
-            en: "Dread Maw",
-            ja: "壱の大牙【惨毒】",
+            en: "Reaving Maw",
+            ja: "壱の大牙【穿裂】",
             de: "Tückische Kiefer",
             fr: "Mâchoire mortelle",
         },
@@ -15580,9 +15640,9 @@ lazy_static::lazy_static! {
             fr: "Déchiquetage sanglant",
         },
         (56, 34620) => LocalisedText {
-            en: "Dreadwinder",
-            ja: "壱の蛇【惨毒】",
-            de: "Tückischer Otterngriff",
+            en: "Vicewinder",
+            ja: "壱の蛇【強砕】",
+            de: "Harter Otterngriff",
             fr: "Anneaux de l'effroi",
         },
         (56, 34621) => LocalisedText {
@@ -15598,9 +15658,9 @@ lazy_static::lazy_static! {
             fr: "Anneaux de l'écorcheur",
         },
         (56, 34623) => LocalisedText {
-            en: "Pit of Dread",
-            ja: "壱の大蛇【惨毒】",
-            de: "Tückische Otterngrube",
+            en: "Vicepit",
+            ja: "壱の大蛇【強砕】",
+            de: "Harte Otterngrube",
             fr: "Fosse de l'effroi",
         },
         (56, 34624) => LocalisedText {
@@ -25798,6 +25858,12 @@ lazy_static::lazy_static! {
             de: "Alpaka-Cria",
             fr: "cria alpaga",
         },
+        (65, 510) => LocalisedText {
+            en: "honeysuckler",
+            ja: "ハニーサッカー",
+            de: "Nektarsauger",
+            fr: "suce-nectar",
+        },
         (65, 511) => LocalisedText {
             en: "not-so-bighorn",
             ja: "ミドルホーン",
@@ -29326,6 +29392,12 @@ lazy_static::lazy_static! {
             de: "Allagische Steine der Ästhetik",
             fr: "mémoquartz allagois esthétiques",
         },
+        (17, 4047) => LocalisedText {
+            en: "Allagan tomestone of heliometry",
+            ja: "アラガントームストーン:天道",
+            de: "Allagische Steine der Heliometrie",
+            fr: "mémoquartz allagois héliologiques",
+        },
         (24, 5000) => LocalisedText {
             en: "normal raid",
             ja: "ノーマルレイド",
@@ -30111,6 +30183,102 @@ lazy_static::lazy_static! {
             ja: "レッド・サンズ",
             de: "Die Roten Sande",
             fr: "Sables sanglants",
+        },
+        (24, 5139) => LocalisedText {
+            en: "Ihuykatumu",
+            ja: "イフイカ・トゥム",
+            de: "Ihuykatumu",
+            fr: "l'Ihuykatumu",
+        },
+        (24, 5140) => LocalisedText {
+            en: "Worqor Zormor",
+            ja: "ウォーコー・ゾーモー",
+            de: "Worqor Zormor",
+            fr: "Worqor Zormor",
+        },
+        (24, 5141) => LocalisedText {
+            en: "The Skydeep Cenote",
+            ja: "天深きセノーテ",
+            de: "Himmelstiefer Cenote",
+            fr: "Cénote des Cieux infinis",
+        },
+        (24, 5142) => LocalisedText {
+            en: "Vanguard",
+            ja: "ヴァンガード",
+            de: "Der Außenposten",
+            fr: "L'Avant-garde",
+        },
+        (24, 5143) => LocalisedText {
+            en: "Origenics",
+            ja: "オリジェニクス",
+            de: "Origenik",
+            fr: "l'Origenèse",
+        },
+        (24, 5144) => LocalisedText {
+            en: "Alexandria",
+            ja: "アレクサンドリア",
+            de: "Alexandria",
+            fr: "Alexandrie",
+        },
+        (24, 5145) => LocalisedText {
+            en: "Tender Valley",
+            ja: "サボテンダーバレー",
+            de: "Kaktorsenke",
+            fr: "Vallée des Pampas",
+        },
+        (24, 5146) => LocalisedText {
+            en: "The Strayborough Deadwalk",
+            ja: "ストレイバロー",
+            de: "Mahrlingen-Promenade",
+            fr: "Parc-aux-Errants",
+        },
+        (24, 5147) => LocalisedText {
+            en: "Worqor Lar Dor",
+            ja: "ヴァリガルマンダ討滅戦",
+            de: "Zel Tajaal - Valigarmanda",
+            fr: "Worqor Lar Dor",
+        },
+        (24, 5148) => LocalisedText {
+            en: "Worqor Lar Dor (Extreme)",
+            ja: "極ヴァリガルマンダ討滅戦",
+            de: "Gok Tajaal - Valigarmanda",
+            fr: "Worqor Lar Dor (extrême)",
+        },
+        (24, 5149) => LocalisedText {
+            en: "Everkeep",
+            ja: "ゾラージャ討滅戦",
+            de: "Zel Tajaal - Zoraal Ja",
+            fr: "Pinacle de l'Éternité",
+        },
+        (24, 5150) => LocalisedText {
+            en: "Everkeep (Extreme)",
+            ja: "極ゾラージャ討滅戦",
+            de: "Gok Tajaal - Zoraal Ja",
+            fr: "Pinacle de l'Éternité (extrême)",
+        },
+        (24, 5151) => LocalisedText {
+            en: "The Interphos",
+            ja: "エターナルクイーン討滅戦",
+            de: "Zel Tajaal - Ewige Königin",
+            fr: "Interphos",
+        },
+        (24, 5152) => LocalisedText {
+            en: "The Arcadion",
+            ja: "至天の座アルカディア",
+            de: "Das Arkadion",
+            fr: "L'Arcadion",
+        },
+        (24, 5153) => LocalisedText {
+            en: "The Arcadion (Savage)",
+            ja: "至天の座アルカディア零式",
+            de: "Das Arkadion (episch)",
+            fr: "L'Arcadion (sadique)",
+        },
+        (24, 5154) => LocalisedText {
+            en: "Light-heavyweight",
+            ja: "ライトヘビー級",
+            de: "Halbschwergewicht",
+            fr: "Poids mi-lourds",
         },
     };
 }

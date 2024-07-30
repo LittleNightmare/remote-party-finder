@@ -5931,6 +5931,12 @@ lazy_static::lazy_static! {
             de: "Origenik",
             fr: "L'Origenèse",
         },
+        1209 => LocalisedText {
+            en: "Cenote Ja Ja Gural",
+            ja: "セノーテ・ジャジャグラル",
+            de: "Cenote Ja Ja Gural",
+            fr: "Cénote Ja Ja Gural",
+        },
         1210 => LocalisedText {
             en: "Sunperch",
             ja: "金凰の間",
@@ -6027,7 +6033,19 @@ lazy_static::lazy_static! {
             de: "Katzenring",
             fr: "Ring des Griffes félines",
         },
+        1226 => LocalisedText {
+            en: "Scratching Ring",
+            ja: "リング・オブ・キャット",
+            de: "Katzenring",
+            fr: "Ring des Griffes félines",
+        },
         1227 => LocalisedText {
+            en: "Lovely Lovering",
+            ja: "リング・オブ・ラブ",
+            de: "Liebesring",
+            fr: "Ring de l'Amour mielleux",
+        },
+        1228 => LocalisedText {
             en: "Lovely Lovering",
             ja: "リング・オブ・ラブ",
             de: "Liebesring",
@@ -6039,7 +6057,19 @@ lazy_static::lazy_static! {
             de: "Bombenring",
             fr: "Ring du Bombardement brutal",
         },
+        1230 => LocalisedText {
+            en: "Blasting Ring",
+            ja: "リング・オブ・ボンバー",
+            de: "Bombenring",
+            fr: "Ring du Bombardement brutal",
+        },
         1231 => LocalisedText {
+            en: "The Thundering",
+            ja: "リング・オブ・サンダー",
+            de: "Donnerring",
+            fr: "Ring du Tonnerre terrifiant",
+        },
+        1232 => LocalisedText {
             en: "The Thundering",
             ja: "リング・オブ・サンダー",
             de: "Donnerring",
