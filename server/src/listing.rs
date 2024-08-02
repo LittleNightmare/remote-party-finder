@@ -1,11 +1,12 @@
 use std::borrow::Cow;
+
 use bitflags::bitflags;
-use ffxiv_types::jobs::{ClassJob, Class, Job};
 use ffxiv_types::{Role, World};
+use ffxiv_types::jobs::{Class, ClassJob, Job};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;
-use crate::ffxiv::duties::{ContentKind, DutyInfo};
+
 use crate::ffxiv::{Language, LocalisedText};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
