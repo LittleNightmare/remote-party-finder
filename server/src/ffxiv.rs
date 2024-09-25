@@ -184,7 +184,7 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::Japanese => "G.A.T.E.",
             Language::German => "GATEs",
             Language::French => "JACTA",
-            Language::ChineseSimplified => "GATE", //TODO 找到中文
+            Language::ChineseSimplified => "机遇任务",
         }),
         (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
             // in the sheet, the order is sagolii, del sol, tranquil, random
@@ -430,6 +430,17 @@ mod old {
                     de: "Traumprüfung - Zurvan",
                     fr: "Unité de contention Z1P9 (irréel)",
                     zh: "祖尔宛幻巧战",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
+            963 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Singularity Reactor (Unreal)",
+                    ja: "幻ナイツ・オブ・ラウンド討滅戦",
+                    de: "Traumprüfung - Singularitäts-Reaktor",
+                    fr: "Le Réacteur de singularité (irréel)",
+                    zh: "圆桌骑士幻巧战",
                 },
                 high_end: true,
                 content_kind: ContentKind::Trials,

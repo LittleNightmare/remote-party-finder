@@ -162,12 +162,14 @@ lazy_static::lazy_static! {
             ja: "古ぼけた地図G16",
             de: "Schakalleder-Schatzkarte",
             fr: "Carte au trésor en peau de loup argenté",
+            zh: "陈旧的银狼革地图",
         },
         23 => LocalisedText {
             en: "Br'aaxskin Treasure Map",
             ja: "古ぼけた地図G17",
             de: "Br'aaxleder-Schatzkarte",
             fr: "Carte au trésor en peau de br'aax",
+            zh: "陈旧的狞豹革地图",
         },
     };
 }
