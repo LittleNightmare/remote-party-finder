@@ -10,28 +10,91 @@ using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
 using Pidgin;
 
-namespace SourceGenerator {
-    internal class Program {
-        private static void Main(string[] args) {
+namespace SourceGenerator;
+
+internal class Program {
+    private static void Main(string[] args) {
 #if DEBUG
-            args = new[]
-            {
-               "",
-                @"F:\GitHub\remote-party-finder\server\src\ffxiv",
-            };
-            var cnGame = @"C:\Game\FFXIV\最终幻想XIV\game\sqpack";
-            var enGame = @"C:\Game\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack";
+        args = new[]
+        {
+            "",
+            @"F:\GitHub\remote-party-finder\server\src\ffxiv",
+        };
+        var cnGame = @"C:\Game\FFXIV\最终幻想XIV\game\sqpack";
+        var enGame = @"C:\Game\SquareEnix\FINAL FANTASY XIV - A Realm Reborn\game\sqpack";
 #endif
-            var data = new Dictionary<Language, GameData>(4);
-            foreach (var lang in Languages.Keys) {
+        if (args.Length < 2)
+        {
+            Console.WriteLine($"Usage: SourceGenerator <sqpack dir> <out dir>");
+            return;
+        }
+
+        var data = new Dictionary<Language, GameData>(4);
+        foreach (var lang in Languages.Keys) {
 #if DEBUG
-                // 从国际服和国服读取，保证数据完整，防止后端变量名不一致导致的问题（至少要以英文为准，生成一些变量名）
-                args[0] = lang == Language.ChineseSimplified ? cnGame : enGame;
+            // 从国际服和国服读取，保证数据完整，防止后端变量名不一致导致的问题（至少要以英文为准，生成一些变量名）
+            args[0] = lang == Language.ChineseSimplified ? cnGame : enGame;
 #endif
-                data[lang] = new GameData(args[0], new LuminaOptions {
-                    PanicOnSheetChecksumMismatch = false,
-                    DefaultExcelLanguage = lang,
-                });
+            data[lang] = new GameData(args[0], new LuminaOptions {
+                PanicOnSheetChecksumMismatch = false,
+                DefaultExcelLanguage = lang,
+            });
+        }
+
+        var prog = new Program(data);
+        var outPath = args[1];
+        File.WriteAllText(Path.Join(outPath, "duties.rs"), prog.GenerateDuties());
+        File.WriteAllText(Path.Join(outPath, "jobs.rs"), prog.GenerateJobs());
+        File.WriteAllText(Path.Join(outPath, "roulettes.rs"), prog.GenerateRoulettes());
+        File.WriteAllText(Path.Join(outPath, "worlds.rs"), prog.GenerateWorlds());
+        File.WriteAllText(Path.Join(outPath, "territory_names.rs"), prog.GenerateTerritoryNames());
+        File.WriteAllText(Path.Join(outPath, "auto_translate.rs"), prog.GenerateAutoTranslate());
+        File.WriteAllText(Path.Join(outPath, "treasure_maps.rs"), prog.GenerateTreasureMaps());
+    }
+
+    private Dictionary<Language, GameData> Data { get; }
+
+    private Program(Dictionary<Language, GameData> data) {
+        this.Data = data;
+    }
+
+    private static StringBuilder DefaultHeader(bool localisedText = false) {
+        var sb = new StringBuilder("use std::collections::HashMap;\n");
+
+        if (localisedText) {
+            sb.Append("use super::LocalisedText;\n");
+        }
+
+        return sb;
+    }
+
+    private static readonly Dictionary<Language, string> Languages = new() {
+        [Language.English] = "en",
+        [Language.Japanese] = "ja",
+        [Language.German] = "de",
+        [Language.French] = "fr",
+        [Language.ChineseSimplified] = "zh",
+    };
+
+    private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : ExcelRow {
+        var def = this.Data[Language.English].GetExcelSheet<T>()!.GetRow(rowId)!;
+        var defName = nameFunc(def)?.TextValue();
+        if (string.IsNullOrEmpty(defName)) {
+            return null;
+        }
+
+        var sb = new StringBuilder();
+
+        sb.Append("LocalisedText {\n");
+
+        foreach (var (language, key) in Languages) {
+            var row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
+            var name = row == null
+                ? defName
+                : nameFunc(row)?.TextValue().Replace("\"", "\\\"");
+            name ??= defName;
+            if (capitalise) {
+                name = name[..1].ToUpperInvariant() + name[1..];
             }
 
             var prog = new Program(data);
@@ -583,5 +646,43 @@ namespace SourceGenerator {
 
             return sb.ToString();
         }
+    }
+
+    private string GenerateTreasureMaps() {
+        var sb = DefaultHeader(true);
+        sb.Append("\nlazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref TREASURE_MAPS: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
+        sb.Append("        0 => LocalisedText {\n");
+        sb.Append("            en: \"All Levels\",\n");
+        sb.Append("            ja: \"レベルを指定しない\",\n");
+        sb.Append("            de: \"Jede Stufe\",\n");
+        sb.Append("            fr: \"Tous niveaux\",\n");
+        sb.Append("            zh: \"所有等级\",\n");
+        sb.Append("        },\n");
+
+        var i = 1;
+        foreach (var row in this.Data[Language.English].GetExcelSheet<TreasureHuntRank>()!) {
+            // IS THIS RIGHT?
+            if (row.TreasureHuntTexture != 0) {
+                continue;
+            }
+
+            SeString? GetMapName(TreasureHuntRank thr) {
+                var name = thr.KeyItemName.Value?.Name;
+                return string.IsNullOrEmpty(name?.TextValue())
+                    ? thr.ItemName.Value?.Name
+                    : name;
+            }
+
+            var name = this.GetLocalisedStruct<TreasureHuntRank>(row.RowId, GetMapName, 8);
+            if (!string.IsNullOrEmpty(name)) {
+                sb.Append($"        {i++} => {name},\n");
+            }
+        }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
     }
 }

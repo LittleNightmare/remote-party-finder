@@ -14,14 +14,14 @@ namespace RemotePartyFinder;
 
 internal class Gatherer : IDisposable {
     #if DEBUG
-        private const string UploadUrl = "http://127.0.0.1:12345/contribute/multiple";
+    private const string UploadUrl = "http://127.0.0.1:8000/contribute/multiple";
     #elif RELEASE
     private const string UploadUrl = "https://xivpf.littlenightmare.top/contribute/multiple";
     #endif
 
     private Plugin Plugin { get; }
 
-    private ConcurrentDictionary<int, List<PartyFinderListing>> Batches { get; } = new();
+    private ConcurrentDictionary<int, List<IPartyFinderListing>> Batches { get; } = new();
     private Stopwatch UploadTimer { get; } = new();
     private HttpClient Client { get; } = new();
 
@@ -39,9 +39,9 @@ internal class Gatherer : IDisposable {
         this.Plugin.PartyFinderGui.ReceiveListing -= this.OnListing;
     }
 
-    private void OnListing(PartyFinderListing listing, PartyFinderListingEventArgs args) {
+    private void OnListing(IPartyFinderListing listing, IPartyFinderListingEventArgs args) {
         if (!this.Batches.ContainsKey(args.BatchNumber)) {
-            this.Batches[args.BatchNumber] = new List<PartyFinderListing>();
+            this.Batches[args.BatchNumber] = [];
         }
 
         this.Batches[args.BatchNumber].Add(listing);

@@ -157,5 +157,17 @@ lazy_static::lazy_static! {
             fr: "Carte au trésor inhabituelle IV",
             zh: "陈旧的特殊地图4",
         },
+        22 => LocalisedText {
+            en: "Loboskin Treasure Map",
+            ja: "古ぼけた地図G16",
+            de: "Schakalleder-Schatzkarte",
+            fr: "Carte au trésor en peau de loup argenté",
+        },
+        23 => LocalisedText {
+            en: "Br'aaxskin Treasure Map",
+            ja: "古ぼけた地図G17",
+            de: "Br'aaxleder-Schatzkarte",
+            fr: "Carte au trésor en peau de br'aax",
+        },
     };
 }

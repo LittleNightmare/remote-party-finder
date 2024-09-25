@@ -6644,6 +6644,66 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Dungeons,
         },
+        824 => DutyInfo {
+            name: LocalisedText {
+                en: "Worqor Zormor",
+                ja: "山嶺登頂 ウォーコー・ゾーモー",
+                de: "Worqor Zormor",
+                fr: "Worqor Zormor",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        825 => DutyInfo {
+            name: LocalisedText {
+                en: "Origenics",
+                ja: "魂魄工廠 オリジェニクス",
+                de: "Origenik",
+                fr: "L'Origenèse",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        826 => DutyInfo {
+            name: LocalisedText {
+                en: "Ihuykatumu",
+                ja: "濁流遡上 イフイカ・トゥム",
+                de: "Ihuykatumu",
+                fr: "La Remontée de l'Ihuykatumu",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        827 => DutyInfo {
+            name: LocalisedText {
+                en: "Alexandria",
+                ja: "記憶幻想 アレクサンドリア",
+                de: "Alexandria",
+                fr: "Alexandrie",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        828 => DutyInfo {
+            name: LocalisedText {
+                en: "A Father First",
+                ja: "王として、父として",
+                de: "Des Vaters viele Sorgen",
+                fr: "L'Aurarque et le père",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        829 => DutyInfo {
+            name: LocalisedText {
+                en: "The Skydeep Cenote",
+                ja: "遺産踏査 天深きセノーテ",
+                de: "Himmelstiefer Cenote",
+                fr: "Le cénote des Cieux infinis",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
         830 => DutyInfo {
             name: LocalisedText {
                 en: "The Porta Decumana",
@@ -6654,6 +6714,46 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Trials,
+        },
+        831 => DutyInfo {
+            name: LocalisedText {
+                en: "Vanguard",
+                ja: "外征前哨 ヴァンガード",
+                de: "Der Außenposten",
+                fr: "L'Avant-garde",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        832 => DutyInfo {
+            name: LocalisedText {
+                en: "Worqor Lar Dor",
+                ja: "ヴァリガルマンダ討滅戦",
+                de: "Zel Tajaal - Valigarmanda",
+                fr: "Worqor Lar Dor",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        833 => DutyInfo {
+            name: LocalisedText {
+                en: "Worqor Lar Dor (Extreme)",
+                ja: "極ヴァリガルマンダ討滅戦",
+                de: "Gok Tajaal - Valigarmanda",
+                fr: "Worqor Lar Dor (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        834 => DutyInfo {
+            name: LocalisedText {
+                en: "Tender Valley",
+                ja: "荒野秘境 サボテンダーバレー",
+                de: "Kaktorsenke",
+                fr: "La Vallée des Pampas",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
         },
         835 => DutyInfo {
             name: LocalisedText {
@@ -7524,6 +7624,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Trials,
         },
+        925 => DutyInfo {
+            name: LocalisedText {
+                en: "Fangs of the Viper",
+                ja: "ヴァイパーの使命",
+                de: "Einführung in die Viperologie",
+                fr: "Le devoir des rôdeurs vipère",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
         927 => DutyInfo {
             name: LocalisedText {
                 en: "Leap of Faith",
@@ -7642,7 +7752,7 @@ lazy_static::lazy_static! {
                 fr: "Le Paradis du Pandæmonium - Métempsycose (sadique)",
                 zh: "零式万魔殿 荒天之狱1",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         938 => DutyInfo {
@@ -7664,7 +7774,7 @@ lazy_static::lazy_static! {
                 fr: "Le Paradis du Pandæmonium - Monochrome (sadique)",
                 zh: "零式万魔殿 荒天之狱2",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         940 => DutyInfo {
@@ -7686,7 +7796,7 @@ lazy_static::lazy_static! {
                 fr: "Le Paradis du Pandæmonium - Tribunal (sadique)",
                 zh: "零式万魔殿 荒天之狱3",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         942 => DutyInfo {
@@ -7708,7 +7818,7 @@ lazy_static::lazy_static! {
                 fr: "Le Paradis du Pandæmonium - Apothéose (sadique)",
                 zh: "零式万魔殿 荒天之狱4",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Raids,
         },
         944 => DutyInfo {
@@ -7928,8 +8038,18 @@ lazy_static::lazy_static! {
                 fr: "La Fracture abyssale (extrême)",
                 zh: "泽罗姆斯歼殛战",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
+        },
+        966 => DutyInfo {
+            name: LocalisedText {
+                en: "Somewhere Only She Knows",
+                ja: "旅する画家は幻想を征く",
+                de: "Begegnungen und Abschiede",
+                fr: "L'œuvre de la maturité",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
         967 => DutyInfo {
             name: LocalisedText {
@@ -8084,6 +8204,236 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
+        },
+        981 => DutyInfo {
+            name: LocalisedText {
+                en: "The Strayborough Deadwalk",
+                ja: "悪夢遊園 ストレイバロー",
+                de: "Mahrlingen-Promenade",
+                fr: "Le Parc-aux-Errants",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        982 => DutyInfo {
+            name: LocalisedText {
+                en: "The Feat of the Brotherhood",
+                ja: "友の試練",
+                de: "Von Schuld und Sühne",
+                fr: "L'épreuve de l'amitié",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        983 => DutyInfo {
+            name: LocalisedText {
+                en: "Taking a Stand",
+                ja: "笑顔を護るための戦い",
+                de: "Mit scharfer Axt und leichtem Lächeln",
+                fr: "Préserver la paix",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        984 => DutyInfo {
+            name: LocalisedText {
+                en: "The Interphos",
+                ja: "エターナルクイーン討滅戦",
+                de: "Zel Tajaal - Ewige Königin",
+                fr: "Interphos",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        985 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M1",
+                ja: "至天の座アルカディア：ライトヘビー級1",
+                de: "Arkadion - Halbschwergewicht R1",
+                fr: "Poids mi-lourds CCA - match 1",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        986 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M1 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級1",
+                de: "Arkadion - Halbschwergewicht R1 (episch)",
+                fr: "Poids mi-lourds CCA - match 1 (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        987 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M2",
+                ja: "至天の座アルカディア：ライトヘビー級2",
+                de: "Arkadion - Halbschwergewicht R2",
+                fr: "Poids mi-lourds CCA - match 2",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        988 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M2 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級2",
+                de: "Arkadion - Halbschwergewicht R2 (episch)",
+                fr: "Poids mi-lourds CCA - match 2 (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        989 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M3",
+                ja: "至天の座アルカディア：ライトヘビー級3",
+                de: "Arkadion - Halbschwergewicht R3",
+                fr: "Poids mi-lourds CCA - match 3",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        990 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M3 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級3",
+                de: "Arkadion - Halbschwergewicht R3 (episch)",
+                fr: "Poids mi-lourds CCA - match 3 (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        991 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M4",
+                ja: "至天の座アルカディア：ライトヘビー級4",
+                de: "Arkadion - Halbschwergewicht R4",
+                fr: "Poids mi-lourds CCA - match 4",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        992 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M4 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級4",
+                de: "Arkadion - Halbschwergewicht R4 (episch)",
+                fr: "Poids mi-lourds CCA - match 4 (sadique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        993 => DutyInfo {
+            name: LocalisedText {
+                en: "Cenote Ja Ja Gural",
+                ja: "宝物庫 セノーテ・ジャジャグラル",
+                de: "Cenote Ja Ja Gural",
+                fr: "Cénote Ja Ja Gural",
+            },
+            high_end: false,
+            content_kind: ContentKind::TreasureHunt,
+        },
+        994 => DutyInfo {
+            name: LocalisedText {
+                en: "An Antidote for Anarchy",
+                ja: "毒と癒やしの頂上決戦",
+                de: "Heilkunst gegen Hexerei",
+                fr: "Les deux faces du scorpion",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        995 => DutyInfo {
+            name: LocalisedText {
+                en: "Everkeep",
+                ja: "ゾラージャ討滅戦",
+                de: "Zel Tajaal - Zoraal Ja",
+                fr: "Le Pinacle de l'Éternité",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        996 => DutyInfo {
+            name: LocalisedText {
+                en: "Everkeep (Extreme)",
+                ja: "極ゾラージャ討滅戦",
+                de: "Gok Tajaal - Zoraal Ja",
+                fr: "Le Pinacle de l'Éternité (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        997 => DutyInfo {
+            name: LocalisedText {
+                en: "A Hunter True",
+                ja: "一端の狩人",
+                de: "Krönender Abschuss",
+                fr: "Chasseuse à lunettes... chasseuse honnête",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        998 => DutyInfo {
+            name: LocalisedText {
+                en: "The Protector and the Destroyer",
+                ja: "護る者、壊す者",
+                de: "Schützer des Volkes, Schlächter des Volkes",
+                fr: "Protecteurs et destructeurs",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        999 => DutyInfo {
+            name: LocalisedText {
+                en: "The Mightiest Shield",
+                ja: "打倒！ シャルトフィット盗賊団",
+                de: "Der mächtigste Schild",
+                fr: "Mauvais cru pour Chalteaufite",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1000 => DutyInfo {
+            name: LocalisedText {
+                en: "Mind over Manor",
+                ja: "旅する画家は森都を征く",
+                de: "Nächtliche Ruhestörung",
+                fr: "Tapage nocturne",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1001 => DutyInfo {
+            name: LocalisedText {
+                en: "Heroes and Pretenders",
+                ja: "祭器と作られた虚像",
+                de: "Ein Mythos in Trümmern",
+                fr: "Le château de cartes s'effondre",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1002 => DutyInfo {
+            name: LocalisedText {
+                en: "Vengeance of the Viper",
+                ja: "トラルヴィドラールを狩る者",
+                de: "Der Wille der Natur",
+                fr: "Le fléau des Tural vidraal",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1003 => DutyInfo {
+            name: LocalisedText {
+                en: "Dreams of a New Day",
+                ja: "寝ても覚めても",
+                de: "Neue Bande der Freundschaft",
+                fr: "Rêves éveillés",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
     };
 }

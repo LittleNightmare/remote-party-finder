@@ -11,7 +11,7 @@ namespace RemotePartyFinder;
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 internal class UploadableListing {
     public uint Id { get; }
-    public uint ContentIdLower { get; }
+    public uint ContentIdLower { get; } // to retain backwards compatibility with old listings (stats), we stick to the lower bits
     public byte[] Name { get; }
     public byte[] Description { get; }
     public ushort CreatedWorld { get; }
@@ -34,9 +34,9 @@ internal class UploadableListing {
     public List<UploadableSlot> Slots { get; }
     public List<byte> JobsPresent { get; }
 
-    internal UploadableListing(PartyFinderListing listing) {
+    internal UploadableListing(IPartyFinderListing listing) {
         this.Id = listing.Id;
-        this.ContentIdLower = listing.ContentIdLower;
+        this.ContentIdLower = (uint) listing.ContentId;
         this.Name = listing.Name.Encode();
         this.Description = listing.Description.Encode();
         this.CreatedWorld = (ushort) listing.World.Value.RowId;
@@ -64,9 +64,9 @@ internal class UploadableListing {
 [Serializable]
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 internal class UploadableSlot {
-    public JobFlags Accepting { get; }
+    public uint Accepting { get; } // TODO: JobFlags should : uint
 
     internal UploadableSlot(PartyFinderSlot slot) {
-        this.Accepting = slot.Accepting.Aggregate((JobFlags) 0, (agg, flag) => agg | flag);
+        this.Accepting = slot.Accepting.Aggregate((uint) 0, (agg, flag) => agg | (uint)flag);
     }
 }

@@ -1,11 +1,12 @@
 use std::borrow::Cow;
+
 use bitflags::bitflags;
 use ffxiv_types_cn::jobs::{ClassJob, Class, Job};
 use ffxiv_types_cn::{Role, World};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;
-use crate::ffxiv::duties::{ContentKind, DutyInfo};
+
 use crate::ffxiv::{Language, LocalisedText};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
@@ -37,6 +38,7 @@ pub struct PartyFinderListing {
     pub jobs_present: Vec<u8>,
 }
 
+#[allow(unused)]
 impl PartyFinderListing {
     pub fn slots_filled(&self) -> usize {
         self.jobs_present.iter().filter(|&&job| job > 0).count()
@@ -113,6 +115,10 @@ impl PartyFinderListing {
             flags.push("[Duty Complete]");
         }
 
+        if self.conditions.contains(ConditionFlags::DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED) {
+            flags.push("[Duty Complete (Weekly Reward Unclaimed)]")
+        }
+
         if self.conditions.contains(ConditionFlags::DUTY_INCOMPLETE) {
             flags.push("[Duty Incomplete]");
         }
@@ -149,41 +155,12 @@ impl PartyFinderListing {
             .unwrap_or_default()
     }
 
-    pub fn pf_category(&self) -> Option<PartyFinderCategory> {
-        let duty_type = self.duty_type;
-        let duty_info = crate::ffxiv::duty(u32::from(self.duty));
-        let duty_category = self.category;
-
-        let category = match (duty_type, duty_info, duty_category) {
-            (DutyType::Roulette, _, _) => match crate::ffxiv::ROULETTES.get(&u32::from(self.duty)) {
-                Some(info) if info.pvp => PartyFinderCategory::Pvp,
-                _ => PartyFinderCategory::DutyRoulette,
-            },
-            (DutyType::Normal, _, DutyCategory::GatheringForays) => PartyFinderCategory::GatheringForays,
-            (DutyType::Other, _, DutyCategory::DeepDungeons) => PartyFinderCategory::DeepDungeons,
-            (DutyType::Normal, _, DutyCategory::AdventuringForays) => PartyFinderCategory::AdventuringForays,
-            (DutyType::Normal, _, DutyCategory::VariantAndCriterionDungeonFinder) => PartyFinderCategory::VariantAndCriterionDungeonFinder,
-            (DutyType::Normal, Some(DutyInfo { high_end: true, .. }), _) => PartyFinderCategory::HighEndDuty,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Dungeons, .. }), _) => PartyFinderCategory::Dungeons,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Guildhests, .. }), _) => PartyFinderCategory::Guildhests,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Trials, .. }), _) => PartyFinderCategory::Trials,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::Raids, .. }), _) => PartyFinderCategory::Raids,
-            (DutyType::Normal, Some(DutyInfo { content_kind: ContentKind::PvP, .. }), _) => PartyFinderCategory::Pvp,
-            (_, _, DutyCategory::QuestBattles) => PartyFinderCategory::QuestBattles,
-            (_, _, DutyCategory::Fates) => PartyFinderCategory::Fates,
-            (_, _, DutyCategory::TreasureHunt) => PartyFinderCategory::TreasureHunt,
-            (_, _, DutyCategory::TheHunt) => PartyFinderCategory::TheHunt,
-            (DutyType::Other, None, _) => PartyFinderCategory::None,
-            _ => return None,
-        };
-
-        Some(category)
+    pub fn pf_category(&self) -> PartyFinderCategory {
+        self.category.pf_category()
     }
 
     pub fn html_pf_category(&self) -> &'static str {
-        self.pf_category()
-            .map(|cat| cat.as_str())
-            .unwrap_or("unknown")
+        self.pf_category().as_str()
     }
 }
 
@@ -228,34 +205,67 @@ impl PartyFinderSlot {
 #[derive(Debug, Clone, Copy, Deserialize_repr, Serialize_repr, PartialEq)]
 #[repr(u32)]
 pub enum DutyCategory {
-    Duty = 0,
-    QuestBattles = 1 << 0,
-    Fates = 1 << 1,
-    TreasureHunt = 1 << 2,
-    TheHunt = 1 << 3,
-    GatheringForays = 1 << 4,
-    DeepDungeons = 1 << 5,
-    AdventuringForays = 1 << 6,
-    VariantAndCriterionDungeonFinder = 1 << 7,
+    None = 0 << 0,
+    DutyRoulette = 1 << 1,
+    Dungeon = 1 << 2,
+    Guildhest = 1 << 3,
+    Trial = 1 << 4,
+    Raid = 1 << 5,
+    HighEndDuty = 1 << 6,
+    PvP = 1 << 7,
+    GoldSaucer = 1 << 8,
+    Fate = 1 << 9,
+    TreasureHunt = 1 << 10,
+    TheHunt = 1 << 11,
+    GatheringForay = 1 << 12,
+    DeepDungeon = 1 << 13,
+    FieldOperation = 1 << 14,
+    VariantAndCriterionDungeon = 1 << 15,
 }
 
+#[allow(unused)]
 impl DutyCategory {
-    pub fn as_u32(self) -> u32 {
-        unsafe { std::mem::transmute(self) }
-    }
-
     pub fn from_u32(u: u32) -> Option<Self> {
         Some(match u {
-            0 => Self::Duty,
-            1 => Self::QuestBattles,
-            2 => Self::Fates,
-            4 => Self::TreasureHunt,
-            8 => Self::TheHunt,
-            16 => Self::GatheringForays,
-            32 => Self::DeepDungeons,
-            64 => Self::AdventuringForays,
+            0 => Self::None,
+            1 => Self::DutyRoulette,
+            2 => Self::Dungeon,
+            4 => Self::Guildhest,
+            8 => Self::Trial,
+            16 => Self::Raid,
+            32 => Self::HighEndDuty,
+            64 => Self::PvP,
+            128 => Self::GoldSaucer,
+            256 => Self::Fate,
+            512 => Self::TreasureHunt,
+            1024 => Self::TheHunt,
+            2048 => Self::GatheringForay,
+            4096 => Self::DeepDungeon,
+            8192 => Self::FieldOperation,
+            16384 => Self::VariantAndCriterionDungeon,
             _ => return None,
         })
+    }
+
+    pub fn pf_category(&self) -> PartyFinderCategory {
+        match self {
+            DutyCategory::None => PartyFinderCategory::None,
+            DutyCategory::DutyRoulette => PartyFinderCategory::DutyRoulette,
+            DutyCategory::Dungeon => PartyFinderCategory::Dungeons,
+            DutyCategory::Guildhest => PartyFinderCategory::Guildhests,
+            DutyCategory::Trial => PartyFinderCategory::Trials,
+            DutyCategory::Raid => PartyFinderCategory::Raids,
+            DutyCategory::HighEndDuty => PartyFinderCategory::HighEndDuty,
+            DutyCategory::PvP => PartyFinderCategory::Pvp,
+            DutyCategory::GoldSaucer => PartyFinderCategory::GoldSaucer,
+            DutyCategory::Fate => PartyFinderCategory::Fates,
+            DutyCategory::TreasureHunt => PartyFinderCategory::TreasureHunt,
+            DutyCategory::TheHunt => PartyFinderCategory::TheHunt,
+            DutyCategory::GatheringForay => PartyFinderCategory::GatheringForays,
+            DutyCategory::DeepDungeon => PartyFinderCategory::DeepDungeons,
+            DutyCategory::FieldOperation => PartyFinderCategory::FieldOperations,
+            DutyCategory::VariantAndCriterionDungeon => PartyFinderCategory::VariantAndCriterionDungeonFinder,
+        }
     }
 }
 
@@ -267,6 +277,7 @@ pub enum DutyType {
     Normal = 1 << 1,
 }
 
+#[allow(unused)]
 impl DutyType {
     pub fn as_u8(self) -> u8 {
         unsafe { std::mem::transmute(self) }
@@ -300,6 +311,7 @@ bitflags! {
         const NONE = 1 << 0;
         const DUTY_COMPLETE = 1 << 1;
         const DUTY_INCOMPLETE = 1 << 2;
+        const DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED = 1 << 3;
     }
 }
 
@@ -369,6 +381,8 @@ bitflags! {
         const DANCER = 1 << 27;
         const REAPER = 1 << 28;
         const SAGE = 1 << 29;
+        const VIPER = 1 << 30;
+        const PICTOMANCER = 1 << 31;
     }
 }
 
@@ -492,6 +506,14 @@ impl JobFlags {
             cjs.push(ClassJob::Job(Job::Sage));
         }
 
+        if self.contains(Self::VIPER) {
+            cjs.push(ClassJob::Job(Job::Viper));
+        }
+
+        if self.contains(Self::PICTOMANCER) {
+            cjs.push(ClassJob::Job(Job::Pictomancer));
+        }
+
         cjs
     }
 }
@@ -505,13 +527,13 @@ pub enum PartyFinderCategory {
     Raids,
     HighEndDuty,
     Pvp,
-    QuestBattles,
+    GoldSaucer,
     Fates,
     TreasureHunt,
     TheHunt,
     GatheringForays,
     DeepDungeons,
-    AdventuringForays,
+    FieldOperations,
     VariantAndCriterionDungeonFinder,
     None,
 }
@@ -525,13 +547,13 @@ impl PartyFinderCategory {
         Self::Raids,
         Self::HighEndDuty,
         Self::Pvp,
-        Self::QuestBattles,
+        Self::GoldSaucer,
         Self::Fates,
         Self::TreasureHunt,
         Self::TheHunt,
         Self::GatheringForays,
         Self::DeepDungeons,
-        Self::AdventuringForays,
+        Self::FieldOperations,
         Self::VariantAndCriterionDungeonFinder,
         Self::None,
     ];
@@ -545,13 +567,13 @@ impl PartyFinderCategory {
             Self::Raids => "Raids",
             Self::HighEndDuty => "HighEndDuty",
             Self::Pvp => "Pvp",
-            Self::QuestBattles => "QuestBattles",
+            Self::GoldSaucer => "GoldSaucer",
             Self::Fates => "Fates",
             Self::TreasureHunt => "TreasureHunt",
             Self::TheHunt => "TheHunt",
             Self::GatheringForays => "GatheringForays",
             Self::DeepDungeons => "DeepDungeons",
-            Self::AdventuringForays => "AdventuringForays",
+            Self::FieldOperations => "AdventuringForays",
             Self::VariantAndCriterionDungeonFinder => "V&C Dungeon Finder",
             Self::None => "None",
         }
@@ -608,12 +630,12 @@ impl PartyFinderCategory {
                 fr: "JcJ",
                 zh: "玩家对战",
             },
-            Self::QuestBattles => LocalisedText {
-                en: "Quest Battles",
-                ja: "クエストバトル",
-                de: "Auftragskampf",
-                fr: "Batailles de quête",
-                zh: "任务战斗",
+            Self::GoldSaucer => LocalisedText {
+                en: "Gold Saucer",
+                ja: "ゴールドソーサー",
+                de: "Gold Saucer",
+                fr: "Gold Saucer",
+                zh: "金碟游乐场",
             },
             Self::Fates => LocalisedText {
                 en: "FATEs",
@@ -650,8 +672,8 @@ impl PartyFinderCategory {
                 fr: "Donjons sans fond",
                 zh: "深层迷宫",
             },
-            Self::AdventuringForays => LocalisedText {
-                en: "Adventuring Forays",
+            Self::FieldOperations => LocalisedText {
+                en: "Field Operations",
                 ja: "特殊フィールド探索",
                 de: "Feldexkursion",
                 fr: "Missions d'exploration",

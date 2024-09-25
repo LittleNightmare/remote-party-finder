@@ -126,7 +126,7 @@ pub fn roulette(roulette: u32) -> Option<&'static roulettes::RouletteInfo> {
 
 pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
     match (duty_type, category) {
-        (DutyType::Other, DutyCategory::Fates) => {
+        (DutyType::Other, DutyCategory::Fate) => {
             if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(duty)) {
                 return Cow::from(name.text(&lang));
             }
@@ -140,28 +140,28 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::French => "Contrats de chasse",
             Language::ChineseSimplified => "怪物狩猎",
         }),
-        (DutyType::Other, DutyCategory::Duty) if duty == 0 => return Cow::from(match lang {
+        (_, DutyCategory::None) if duty == 0 => return Cow::from(match lang {
             Language::English => "None",
             Language::Japanese => "設定なし",
             Language::German => "Nicht festgelegt",
             Language::French => "Non spécifiée",
             Language::ChineseSimplified => "无",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 1 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 1 => return Cow::from(match lang {
             Language::English => "The Palace of the Dead",
             Language::Japanese => "死者の宮殿",
             Language::German => "Palast der Toten",
             Language::French => "Palais des morts",
             Language::ChineseSimplified => "死者宫殿",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 2 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 2 => return Cow::from(match lang {
             Language::English => "Heaven-on-High",
             Language::Japanese => "アメノミハシラ",
             Language::German => "Himmelssäule",
             Language::French => "Pilier des Cieux",
             Language::ChineseSimplified => "天之御柱",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeons) if duty == 3 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 3 => return Cow::from(match lang {
             Language::English => "Eureka Orthos",
             Language::Japanese => "オルト・エウレカ",
             Language::German => "Eureka Orthos",
@@ -178,13 +178,43 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
                 return Cow::from(info.name.text(&lang));
             }
         }
-        (_, DutyCategory::QuestBattles) => return Cow::from(match lang {
-            Language::English => "Quest Battles",
-            Language::Japanese => "クエストバトル",
-            Language::German => "Auftragskampf",
-            Language::French => "Batailles de quête",
-            Language::ChineseSimplified => "任务战斗",
+        // gold saucer duties appear to be all over the place. source in comments:
+        (_, DutyCategory::GoldSaucer) if duty == 11 => return Cow::from(match lang { // Addon 2308
+            Language::English => "GATEs",
+            Language::Japanese => "G.A.T.E.",
+            Language::German => "GATEs",
+            Language::French => "JACTA",
+            Language::ChineseSimplified => "GATE", //TODO 找到中文
         }),
+        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
+            // in the sheet, the order is sagolii, del sol, tranquil, random
+            // in PF, random comes first:
+            let row = match duty {
+                12 | 16 => 21 + (duty - 12),
+                13..=15 => 18 + (duty - 13),
+                17..=19 => 22 + (duty - 17),
+                _ => 0
+            };
+            if let Some(info) = roulette(u32::from(row)) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+            let row = match duty {
+                20 => 195,
+                21 => 756,
+                22 => 199,
+                23 => 645,
+                24 => 650,
+                25 => 768,
+                26 => 769,
+                _ => 0,
+            };
+
+            if let Some(info) = crate::ffxiv::duty(row) {
+                return Cow::from(info.name.text(&lang));
+            }
+        }
         (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {
             return Cow::from(name.text(&lang));
         }

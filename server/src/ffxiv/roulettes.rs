@@ -21,11 +21,11 @@ lazy_static::lazy_static! {
         },
         2 => RouletteInfo {
             name: LocalisedText {
-                en: "Duty Roulette: Level 50/60/70/80 Dungeons",
-                ja: "コンテンツルーレット：レベル50・60・70・80ダンジョン",
-                de: "Zufallsinhalt: Stufe 50/60/70/80",
-                fr: "Mission aléatoire : donjons nv 50/60/70/80",
-                zh: "随机任务：50级/60级/70级/80级",
+                en: "Duty Roulette: High-level Dungeons",
+                ja: "コンテンツルーレット：ハイレベリング",
+                de: "Zufallsinhalt: Hohe Stufen",
+                fr: "Mission aléatoire : donjons avancés",
+                zh: "随机任务：待定", //TODO 没找到，一会再找
             },
             pvp: false,
         },
@@ -81,11 +81,11 @@ lazy_static::lazy_static! {
         },
         8 => RouletteInfo {
             name: LocalisedText {
-                en: "Duty Roulette: Level 90 Dungeons",
-                ja: "コンテンツルーレット：レベル90ダンジョン",
-                de: "Zufallsinhalt: Stufe 90",
-                fr: "Mission aléatoire : donjons nv 90",
-                zh: "随机任务：90级",
+                en: "Duty Roulette: Level Cap Dungeons",
+                ja: "コンテンツルーレット：レベルキャップダンジョン",
+                de: "Zufallsinhalt: Höchststufe",
+                fr: "Mission aléatoire : donjons supérieurs",
+                zh: "随机任务：拾级迷宫",
             },
             pvp: false,
         },
