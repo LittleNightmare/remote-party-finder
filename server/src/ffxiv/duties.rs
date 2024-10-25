@@ -8261,6 +8261,50 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Trials,
         },
+        985 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M1",
+                ja: "至天の座アルカディア：ライトヘビー級1",
+                de: "Arkadion - Halbschwergewicht R1",
+                fr: "Poids mi-lourds CCA - match 1",
+                zh: "阿卡狄亚登天斗技场 轻量级1",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        987 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M2",
+                ja: "至天の座アルカディア：ライトヘビー級2",
+                de: "Arkadion - Halbschwergewicht R2",
+                fr: "Poids mi-lourds CCA - match 2",
+                zh: "阿卡狄亚登天斗技场 轻量级2",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        989 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M3",
+                ja: "至天の座アルカディア：ライトヘビー級3",
+                de: "Arkadion - Halbschwergewicht R3",
+                fr: "Poids mi-lourds CCA - match 3",
+                zh: "阿卡狄亚登天斗技场 轻量级3",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        991 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M4",
+                ja: "至天の座アルカディア：ライトヘビー級4",
+                de: "Arkadion - Halbschwergewicht R4",
+                fr: "Poids mi-lourds CCA - match 4",
+                zh: "阿卡狄亚登天斗技场 轻量级4",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
         994 => DutyInfo {
             name: LocalisedText {
                 en: "An Antidote for Anarchy",

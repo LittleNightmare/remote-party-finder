@@ -8891,7 +8891,7 @@ lazy_static::lazy_static! {
             ja: "メワピャラ",
             de: "Mehwapyarra",
             fr: "mehwapyarra",
-            zh: "梅瓦皮亚拉",
+            zh: "美花帕拉",
         },
         (49, 350) => LocalisedText {
             en: "rroneek",
@@ -30229,6 +30229,13 @@ lazy_static::lazy_static! {
             de: "Ambrose-Prototyp",
             fr: "Ambrose prototype",
             zh: "验证体安布罗斯",
+        },
+        (65, 524) => LocalisedText {
+            en: "Black Kitten",
+            ja: "ブラックキトン",
+            de: "Schwarzes Kätzchen",
+            fr: "Black Kitten",
+            zh: "黑小猫",
         },
         (65, 525) => LocalisedText {
             en: "brushed-up Krile",

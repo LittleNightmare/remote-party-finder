@@ -7022,21 +7022,21 @@ lazy_static::lazy_static! {
             ja: "ジム・トライテール",
             de: "Tatzentrio-Training",
             fr: "Trois Queues",
-            zh: "",
+            zh: "三尾训练馆",
         },
         1224 => LocalisedText {
             en: "Greenroom",
             ja: "控室",
             de: "Warteraum",
             fr: "Locaux de la Société de l'Arcadion",
-            zh: "",
+            zh: "休息室",
         },
         1225 => LocalisedText {
             en: "Scratching Ring",
             ja: "リング・オブ・キャット",
             de: "Katzenring",
             fr: "Ring des Griffes félines",
-            zh: "",
+            zh: "狩猎格斗场",
         },
         1226 => LocalisedText {
             en: "Scratching Ring",
@@ -7050,7 +7050,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・ラブ",
             de: "Liebesring",
             fr: "Ring de l'Amour mielleux",
-            zh: "",
+            zh: "爱意格斗场",
         },
         1228 => LocalisedText {
             en: "Lovely Lovering",
@@ -7064,7 +7064,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・ボンバー",
             de: "Bombenring",
             fr: "Ring du Bombardement brutal",
-            zh: "",
+            zh: "爆破格斗场",
         },
         1230 => LocalisedText {
             en: "Blasting Ring",
@@ -7078,7 +7078,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・サンダー",
             de: "Donnerring",
             fr: "Ring du Tonnerre terrifiant",
-            zh: "",
+            zh: "闪雷格斗场",
         },
         1232 => LocalisedText {
             en: "The Thundering",
