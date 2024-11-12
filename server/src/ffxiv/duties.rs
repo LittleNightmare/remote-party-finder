@@ -8272,6 +8272,17 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        986 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M1 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級1",
+                de: "Arkadion - Halbschwergewicht R1 (episch)",
+                fr: "Poids mi-lourds CCA - match 1 (sadique)",
+                zh: "阿卡狄亚零式登天斗技场 轻量级1",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
         987 => DutyInfo {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M2",
@@ -8281,6 +8292,17 @@ lazy_static::lazy_static! {
                 zh: "阿卡狄亚登天斗技场 轻量级2",
             },
             high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        988 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M2 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級2",
+                de: "Arkadion - Halbschwergewicht R2 (episch)",
+                fr: "Poids mi-lourds CCA - match 2 (sadique)",
+                zh: "阿卡狄亚零式登天斗技场 轻量级2",
+            },
+            high_end: true,
             content_kind: ContentKind::Raids,
         },
         989 => DutyInfo {
@@ -8294,6 +8316,17 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        990 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M3 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級3",
+                de: "Arkadion - Halbschwergewicht R3 (episch)",
+                fr: "Poids mi-lourds CCA - match 3 (sadique)",
+                zh: "阿卡狄亚零式登天斗技场 轻量级3",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
         991 => DutyInfo {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M4",
@@ -8304,6 +8337,28 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::Raids,
+        },
+        992 => DutyInfo {
+            name: LocalisedText {
+                en: "AAC Light-heavyweight M4 (Savage)",
+                ja: "至天の座アルカディア零式：ライトヘビー級4",
+                de: "Arkadion - Halbschwergewicht R4 (episch)",
+                fr: "Poids mi-lourds CCA - match 4 (sadique)",
+                zh: "阿卡狄亚零式登天斗技场 轻量级4",
+            },
+            high_end: true,
+            content_kind: ContentKind::Raids,
+        },
+        993 => DutyInfo {
+            name: LocalisedText {
+                en: "Cenote Ja Ja Gural",
+                ja: "宝物庫 セノーテ・ジャジャグラル",
+                de: "Cenote Ja Ja Gural",
+                fr: "Cénote Ja Ja Gural",
+                zh: "加加财富天坑",
+            },
+            high_end: false,
+            content_kind: ContentKind::TreasureHunt,
         },
         994 => DutyInfo {
             name: LocalisedText {
@@ -8366,7 +8421,7 @@ lazy_static::lazy_static! {
                 ja: "打倒！ シャルトフィット盗賊団",
                 de: "Der mächtigste Schild",
                 fr: "Mauvais cru pour Chalteaufite",
-                zh: "打倒！沙尔托菲特盗贼团",
+                zh: "打倒！沙尔托菲特盗贼团！",
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,

@@ -6924,7 +6924,7 @@ lazy_static::lazy_static! {
             ja: "セノーテ・ジャジャグラル",
             de: "Cenote Ja Ja Gural",
             fr: "Cénote Ja Ja Gural",
-            zh: "",
+            zh: "加加财富天坑",
         },
         1210 => LocalisedText {
             en: "Sunperch",
@@ -7043,7 +7043,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・キャット",
             de: "Katzenring",
             fr: "Ring des Griffes félines",
-            zh: "",
+            zh: "狩猎格斗场",
         },
         1227 => LocalisedText {
             en: "Lovely Lovering",
@@ -7057,7 +7057,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・ラブ",
             de: "Liebesring",
             fr: "Ring de l'Amour mielleux",
-            zh: "",
+            zh: "爱意格斗场",
         },
         1229 => LocalisedText {
             en: "Blasting Ring",
@@ -7071,7 +7071,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・ボンバー",
             de: "Bombenring",
             fr: "Ring du Bombardement brutal",
-            zh: "",
+            zh: "爆破格斗场",
         },
         1231 => LocalisedText {
             en: "The Thundering",
@@ -7085,7 +7085,7 @@ lazy_static::lazy_static! {
             ja: "リング・オブ・サンダー",
             de: "Donnerring",
             fr: "Ring du Tonnerre terrifiant",
-            zh: "",
+            zh: "闪雷格斗场",
         },
         1233 => LocalisedText {
             en: "Manor Basement",
