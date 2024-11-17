@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Lumina" Version="4.1.0"/>
-        <PackageReference Include="Lumina.Excel" Version="7.0.0"/>
+        <PackageReference Include="Lumina" Version="5.4.0"/>
+        <PackageReference Include="Lumina.Excel" Version="7.1.2"/>
         <PackageReference Include="Pidgin" Version="3.2.1"/>
     </ItemGroup>
 
