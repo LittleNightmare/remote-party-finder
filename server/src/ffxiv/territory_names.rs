@@ -5505,6 +5505,24 @@ lazy_static::lazy_static! {
             de: "Ätherborn",
             fr: "Île de Haam",
         },
+        1127 => LocalisedText {
+            en: "The Fold",
+            ja: "ザ・フォールド",
+            de: "Wolfspferch (The Fold)",
+            fr: "La Louverie (The Fold)",
+        },
+        1128 => LocalisedText {
+            en: "The Fold",
+            ja: "ザ・フォールド",
+            de: "Wolfspferch (The Fold)",
+            fr: "La Louverie (The Fold)",
+        },
+        1129 => LocalisedText {
+            en: "The Fold",
+            ja: "ザ・フォールド",
+            de: "Wolfspferch (The Fold)",
+            fr: "La Louverie (The Fold)",
+        },
         1136 => LocalisedText {
             en: "The Gilded Araya",
             ja: "アラヤの宝塔",
@@ -6098,6 +6116,72 @@ lazy_static::lazy_static! {
             ja: "南ザナラーン",
             de: "Südliches Thanalan",
             fr: "Thanalan méridional",
+        },
+        1239 => LocalisedText {
+            en: "The Jade Stoa",
+            ja: "白帝の竹林",
+            de: "Jadelichtung",
+            fr: "Clairière de Jade",
+        },
+        1242 => LocalisedText {
+            en: "Yuweyawata",
+            ja: "ユウェヤーワータ",
+            de: "Yuweyawata",
+            fr: "Yuweyawata",
+        },
+        1243 => LocalisedText {
+            en: "Interphos",
+            ja: "次元黄道",
+            de: "Interdimensionale Ekliptik",
+            fr: "Écliptique dimensionnelle",
+        },
+        1244 => LocalisedText {
+            en: "Shaaloani",
+            ja: "シャーローニ荒野",
+            de: "Shaaloani",
+            fr: "Shaaloani",
+        },
+        1245 => LocalisedText {
+            en: "Halatali",
+            ja: "ハラタリ修練所",
+            de: "Halatali",
+            fr: "Halatali",
+        },
+        1247 => LocalisedText {
+            en: "Starlight Stalls",
+            ja: "星芒マーケット",
+            de: "Sternenlicht-Stände",
+            fr: "Marché des étoiles",
+        },
+        1248 => LocalisedText {
+            en: "Jeuno: The First Walk",
+            ja: "ジュノ：ザ・ファーストウォーク",
+            de: "Jeuno: Die erste Etappe",
+            fr: "Jeuno - La première perambulation",
+        },
+        1253 => LocalisedText {
+            en: "Starlight Stalls",
+            ja: "星芒マーケット",
+            de: "Sternenlicht-Stände",
+            fr: "Marché des étoiles",
+        },
+        1254 => LocalisedText {
+            en: "Yuweyawata",
+            ja: "ユウェヤーワータ",
+            de: "Yuweyawata",
+            fr: "Yuweyawata",
+        },
+        1264 => LocalisedText {
+            en: "Lower Jeuno",
+            ja: "ジュノ下層",
+            de: "Unter-Jeuno",
+            fr: "Bas Jeuno",
+        },
+        1265 => LocalisedText {
+            en: "Lower Jeuno",
+            ja: "ジュノ下層",
+            de: "Unter-Jeuno",
+            fr: "Bas Jeuno",
         },
     };
 }
