@@ -7723,6 +7723,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        1006 => DutyInfo {
+            name: LocalisedText {
+                en: "Futures Rewritten (Ultimate)",
+                ja: "絶もうひとつの未来",
+                de: "Eine zweite Zukunft (fatal)",
+                fr: "Avenirs réécrits (fatal)",
+            },
+            high_end: true,
+            content_kind: ContentKind::UltimateRaids,
+        },
         1007 => DutyInfo {
             name: LocalisedText {
                 en: "The Jade Stoa (Unreal)",

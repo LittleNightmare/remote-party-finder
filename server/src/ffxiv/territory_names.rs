@@ -6117,6 +6117,12 @@ lazy_static::lazy_static! {
             de: "Südliches Thanalan",
             fr: "Thanalan méridional",
         },
+        1238 => LocalisedText {
+            en: "A Future Rewritten",
+            ja: "もうひとつの未来",
+            de: "Eine zweite Zukunft",
+            fr: "Avenirs réécrits",
+        },
         1239 => LocalisedText {
             en: "The Jade Stoa",
             ja: "白帝の竹林",

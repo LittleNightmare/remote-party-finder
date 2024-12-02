@@ -10737,6 +10737,12 @@ lazy_static::lazy_static! {
             de: "Yuweyawata",
             fr: "Yuweyawata",
         },
+        (51, 5137) => LocalisedText {
+            en: "A Future Rewritten",
+            ja: "もうひとつの未来",
+            de: "Eine zweite Zukunft",
+            fr: "Avenirs réécrits",
+        },
         (51, 5138) => LocalisedText {
             en: "Jeuno: The First Walk",
             ja: "ジュノ：ザ・ファーストウォーク",
@@ -26546,7 +26552,7 @@ lazy_static::lazy_static! {
             en: "Solid Barrel Combo",
             ja: "コンボ：バーストストライク",
             de: "Kombo Explosiver Stoß",
-            fr: "Combo Salve tranchante",
+            fr: "Combo Frappe explosive",
         },
         (67, 54) => LocalisedText {
             en: "Fountain Combo",
@@ -30849,6 +30855,12 @@ lazy_static::lazy_static! {
             ja: "ライトヘビー級",
             de: "Halbschwergewicht",
             fr: "Poids mi-lourds",
+        },
+        (24, 5155) => LocalisedText {
+            en: "Futures Rewritten (Ultimate)",
+            ja: "絶もうひとつの未来",
+            de: "Eine zweite Zukunft (fatal)",
+            fr: "Avenirs réécrits (fatal)",
         },
         (24, 5156) => LocalisedText {
             en: "Jeuno: The First Walk",
