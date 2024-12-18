@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Version>1.0.14</Version>
@@ -34,10 +34,14 @@
             <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="ImGuiNET">
+        <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
     </ItemGroup>
 
     <ItemGroup>
