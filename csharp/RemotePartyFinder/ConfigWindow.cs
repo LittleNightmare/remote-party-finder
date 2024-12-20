@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Threading.Tasks;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
@@ -17,7 +16,8 @@ public class ConfigWindow : Window, IDisposable {
     private bool uploadUrlsChanged;
     private string uploadUrlTempString = string.Empty;
     private string uploadUrlError = string.Empty;
-    public ConfigWindow(Plugin plugin) : base("Remote Party Finder###Title") {
+
+    public ConfigWindow(Plugin plugin) : base("Remote Party Finder") {
         uploadUrlsChanged = false;
         Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize;
         Size = new Vector2(500, 250);
@@ -26,7 +26,7 @@ public class ConfigWindow : Window, IDisposable {
         uploadUrls = Configuration.UploadUrls.Select(x => x.Clone()).ToList();
     }
 
-    public void Dispose() {}
+    public void Dispose() { }
 
     public override void OnClose() {
         uploadUrls = Configuration.UploadUrls.Select(x => x.Clone()).ToList();
@@ -74,7 +74,6 @@ public class ConfigWindow : Window, IDisposable {
 
             ImGui.NextColumn();
             ImGui.Separator();
-
 
             UploadUrl uploadUrlToRemove = null;
 

@@ -34,14 +34,14 @@
             <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
             <Private>false</Private>
         </Reference>
-      <Reference Include="Newtonsoft.Json">
-        <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
-        <Private>false</Private>
-      </Reference>
-      <Reference Include="ImGuiNET">
-        <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
-        <Private>false</Private>
-      </Reference>
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="ImGuiNET">
+          <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>

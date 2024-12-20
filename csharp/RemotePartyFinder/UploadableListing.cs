@@ -5,7 +5,7 @@ using Dalamud.Game.Gui.PartyFinder.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace RemotePartyFinder; 
+namespace RemotePartyFinder;
 
 [Serializable]
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
@@ -36,12 +36,12 @@ internal class UploadableListing {
 
     internal UploadableListing(IPartyFinderListing listing) {
         this.Id = listing.Id;
-        this.ContentIdLower = (uint) listing.ContentId;
+        this.ContentIdLower = (uint)listing.ContentId;
         this.Name = listing.Name.Encode();
         this.Description = listing.Description.Encode();
-        this.CreatedWorld = (ushort) listing.World.Value.RowId;
-        this.HomeWorld = (ushort) listing.HomeWorld.Value.RowId;
-        this.CurrentWorld = (ushort) listing.CurrentWorld.Value.RowId;
+        this.CreatedWorld = (ushort)listing.World.Value.RowId;
+        this.HomeWorld = (ushort)listing.HomeWorld.Value.RowId;
+        this.CurrentWorld = (ushort)listing.CurrentWorld.Value.RowId;
         this.Category = listing.Category;
         this.Duty = listing.RawDuty;
         this.DutyType = listing.DutyType;
@@ -67,6 +67,6 @@ internal class UploadableSlot {
     public uint Accepting { get; } // TODO: JobFlags should : uint
 
     internal UploadableSlot(PartyFinderSlot slot) {
-        this.Accepting = slot.Accepting.Aggregate((uint) 0, (agg, flag) => agg | (uint)flag);
+        this.Accepting = slot.Accepting.Aggregate((uint)0, (agg, flag) => agg | (uint)flag);
     }
 }

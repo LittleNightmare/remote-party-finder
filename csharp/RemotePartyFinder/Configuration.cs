@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dalamud.Configuration;
-using Dalamud.Plugin;
 
 namespace RemotePartyFinder;
 
@@ -16,7 +15,6 @@ public class Configuration : IPluginConfiguration {
             UploadUrls.Add(new UploadUrl("https://xivpf.com/contribute/multiple") { IsDefault = true });
             UploadUrls.Add(new UploadUrl("https://findingway.io/receiver") { IsDefault = true });
         }
-
     }
 
     public void Save() {
