@@ -1,15 +1,8 @@
 ﻿namespace RemotePartyFinder;
 
-public class UploadUrl {
-    public string Url { get; set; }
-    public bool IsDefault { get; set; }
-    public bool IsEnabled { get; set; }
-
-    public UploadUrl(string url) {
-        Url = url;
-        IsDefault = false;
-        IsEnabled = true;
-    }
-
-    public UploadUrl Clone() => this.MemberwiseClone() as UploadUrl;
+public record UploadUrl(string Url)
+{
+    public string Url { get; set; } = Url;
+    public bool IsDefault { get; init; }
+    public bool IsEnabled { get; set; } = true;
 }

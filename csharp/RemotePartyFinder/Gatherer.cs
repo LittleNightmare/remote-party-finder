@@ -47,7 +47,6 @@ internal class Gatherer : IDisposable {
         }
 
         this.UploadTimer.Restart();
-        List<UploadUrl> uploadUrls = Plugin.Configuration.UploadUrls.Select(x => x.Clone()).ToList();
 
         foreach (var (batch, listings) in this.Batches.ToList()) {
             this.Batches.Remove(batch, out _);
@@ -57,9 +56,8 @@ internal class Gatherer : IDisposable {
                     .ToList();
                 var json = JsonConvert.SerializeObject(uploadable);
 
-                foreach (var uploadUrl in uploadUrls) {
-                    if (!uploadUrl.IsEnabled) continue;
-
+                foreach (var uploadUrl in Plugin.Configuration.UploadUrls.Where(uploadUrl => uploadUrl.IsEnabled))
+                {
                     var resp = await this.Client.PostAsync(uploadUrl.Url, new StringContent(json) {
                         Headers = { ContentType = MediaTypeHeaderValue.Parse("application/json") },
                     });
