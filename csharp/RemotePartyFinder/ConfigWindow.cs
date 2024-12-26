@@ -19,8 +19,9 @@ public class ConfigWindow : Window, IDisposable
     public ConfigWindow(Plugin plugin) : base("Remote Party Finder")
     {
         _configuration = plugin.Configuration;
-        Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize;
-        Size = new Vector2(500, 250);
+        Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.AlwaysAutoResize;
+
+        Size = new Vector2(500, 0);
     }
 
     public void Dispose()
@@ -28,10 +29,6 @@ public class ConfigWindow : Window, IDisposable
     }
 
     public override void OnClose()
-    {
-    }
-
-    private void Save()
     {
         _configuration.Save();
     }
@@ -50,128 +47,79 @@ public class ConfigWindow : Window, IDisposable
 
         if (!isAdvanced) return;
 
-        using var id = ImRaii.PushId("uploadUrls");
-        ImGui.Columns(4);
+        using (ImRaii.Table("uploadUrls", 3, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Borders))
+        {
+            ImGui.TableSetupColumn("#", ImGuiTableColumnFlags.WidthFixed);
+            ImGui.TableSetupColumn("URL", ImGuiTableColumnFlags.WidthStretch);
+            ImGui.TableSetupColumn("Enabled", ImGuiTableColumnFlags.WidthFixed);
+            ImGui.TableHeadersRow();
+            
+            foreach (var (uploadUrl, index) in _configuration.UploadUrls.Select((url, index) => (url, index + 1)))
+            {
+                ImGui.TableNextRow();
+                ImGui.TableSetColumnIndex(0);
+                ImGui.TextUnformatted(index.ToString());
+                
+                ImGui.TableSetColumnIndex(1);
+                ImGui.TextUnformatted(uploadUrl.Url);
 
-        ImGui.SetColumnWidth(0, 28 * ImGui.GetIO().FontGlobalScale);
-        ImGui.SetColumnWidth(1,
-            ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X -
-            (28 + 60 + 75) * ImGui.GetIO().FontGlobalScale);
-        ImGui.SetColumnWidth(2, 60 * ImGui.GetIO().FontGlobalScale);
-        ImGui.SetColumnWidth(3, 75 * ImGui.GetIO().FontGlobalScale);
+                ImGui.TableSetColumnIndex(2);
+                var isEnabled = uploadUrl.IsEnabled;
+                if (ImGui.Checkbox("##uploadUrlCheckbox", ref isEnabled))
+                {
+                    uploadUrl.IsEnabled = isEnabled;
+                }
 
-        ImGui.Separator();
+                if (uploadUrl.IsDefault) continue;
+                
+                ImGui.SameLine();
+                if (ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Trash))
+                {
+                    _configuration.UploadUrls = _configuration.UploadUrls.Remove(uploadUrl);
+                }
+            }
+            
+            ImGui.TableNextRow();
+            ImGui.TableSetColumnIndex(1);
+            ImGui.SetNextItemWidth(-1);
+            ImGui.InputText("##uploadUrlInput", ref _uploadUrlTempString, 300);
+            ImGui.TableNextColumn();
 
-        ImGui.TextUnformatted("#");
+            if (!string.IsNullOrEmpty(_uploadUrlTempString) &&
+                ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Plus))
+            {
+                _uploadUrlTempString = _uploadUrlTempString.TrimEnd();
 
-        ImGui.NextColumn();
-        ImGui.TextUnformatted("URL");
+                if (_configuration.UploadUrls.Any(r =>
+                        string.Equals(r.Url, _uploadUrlTempString, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    _uploadUrlError = "Endpoint already exists.";
+                    Task.Delay(5000).ContinueWith(t => _uploadUrlError = string.Empty);
+                }
+                else if (!ValidUrl(_uploadUrlTempString))
+                {
+                    this._uploadUrlError = "Invalid URL format.";
+                    Task.Delay(5000).ContinueWith(t => _uploadUrlError = string.Empty);
+                }
+                else
+                {
+                    _configuration.UploadUrls = _configuration.UploadUrls.Add(new(_uploadUrlTempString));
+                    _uploadUrlTempString = string.Empty;
+                }
+            }
+        }
 
-        ImGui.NextColumn();
-        ImGui.TextUnformatted("Enabled");
+        ImGui.Dummy(new (0, 5));
 
-        ImGui.NextColumn();
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() +
-            (ImGui.GetColumnWidth() - ImGui.CalcTextSize("Add/Delete").X) / 2 - 2);
-        ImGui.TextUnformatted("Add/Delete");
+        if (ImGui.Button("Reset To Default##uploadUrlDefault"))
+        {
+            ResetToDefault();
+        }
 
-        ImGui.NextColumn();
-        ImGui.Separator();
+        if (string.IsNullOrEmpty(_uploadUrlError)) return;
         
-        UploadUrl? uploadUrlToRemove = null;
-
-        var urlNumber = 1;
-
-        foreach (var uploadUrl in _configuration.UploadUrls)
-        {
-            id.Push(uploadUrl.Url);
-            ImGui.TextUnformatted(urlNumber.ToString());
-
-            ImGui.NextColumn();
-            ImGui.TextUnformatted(uploadUrl.Url);
-
-            ImGui.NextColumn();
-            ImGui.SetCursorPosX(ImGui.GetCursorPosX() + (ImGui.GetColumnWidth() / 2) - 6 -
-                                (12 * ImGui.GetIO().FontGlobalScale));
-
-            var isEnabled = uploadUrl.IsEnabled;
-            if (ImGui.Checkbox("##uploadUrlCheckbox", ref isEnabled))
-            {
-                _configuration.UploadUrls = _configuration.UploadUrls.Remove(uploadUrl);
-            }
-
-            ImGui.NextColumn();
-            ImGui.SetCursorPosX(ImGui.GetCursorPosX() +
-                                (ImGui.GetColumnWidth() - (24 * ImGui.GetIO().FontGlobalScale)) / 2);
-
-            if (!uploadUrl.IsDefault && ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Trash))
-            {
-                uploadUrlToRemove = uploadUrl;
-            }
-
-            uploadUrl.IsEnabled = isEnabled;
-            urlNumber++;
-            id.Pop();
-
-            ImGui.NextColumn();
-            ImGui.Separator();
-        }
-
-        ImGui.TextUnformatted(urlNumber.ToString());
-
-        ImGui.NextColumn();
-        ImGui.SetNextItemWidth(-1);
-        ImGui.InputText("##uploadUrlInput", ref _uploadUrlTempString, 300);
-        ImGui.NextColumn();
-
-        ImGui.NextColumn();
-
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() +
-                            (ImGui.GetColumnWidth() - (24 * ImGui.GetIO().FontGlobalScale)) / 2);
-        if (!string.IsNullOrEmpty(_uploadUrlTempString) &&
-            ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Plus))
-        {
-            _uploadUrlTempString = _uploadUrlTempString.TrimEnd();
-
-            if (_configuration.UploadUrls.Any(r =>
-                    string.Equals(r.Url, _uploadUrlTempString, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                _uploadUrlError = "Endpoint already exists.";
-                Task.Delay(5000).ContinueWith(t => _uploadUrlError = string.Empty);
-            }
-            else if (!ValidUrl(_uploadUrlTempString))
-            {
-                this._uploadUrlError = "Invalid URL format.";
-                Task.Delay(5000).ContinueWith(t => _uploadUrlError = string.Empty);
-            }
-            else
-            {
-                _configuration.UploadUrls = _configuration.UploadUrls.Add(new(_uploadUrlTempString));
-                _uploadUrlTempString = string.Empty;
-            }
-        }
-
-        ImGui.NextColumn();
-        ImGui.Separator();
-
-        ImGui.Columns(1);
-        if (!string.IsNullOrEmpty(_uploadUrlError))
-        {
-            ImGui.TextColored(new Vector4(1, 0, 0, 1), _uploadUrlError);
-        }
-        else
-        {
-            if (ImGui.Button("Save Changes##uploadUrlSave"))
-            {
-                Save();
-            }
-
-            ImGui.SameLine();
-            if (ImGui.Button("Reset To Default##uploadUrlDefault"))
-            {
-                ResetToDefault();
-            }
-        }
+        ImGui.SameLine();
+        ImGui.TextColored(new Vector4(1, 0, 0, 1), _uploadUrlError);
     }
 
     private void ResetToDefault()
