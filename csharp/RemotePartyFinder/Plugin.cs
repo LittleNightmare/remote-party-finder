@@ -25,7 +25,6 @@ public class Plugin : IDalamudPlugin {
 
     public Plugin() {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-        Configuration.Initialize();
         this.Gatherer = new Gatherer(this);
         ConfigWindow = new ConfigWindow(this);
         WindowSystem.AddWindow(ConfigWindow);

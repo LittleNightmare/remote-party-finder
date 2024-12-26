@@ -13,19 +13,14 @@ namespace RemotePartyFinder;
 public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration _configuration;
-    private List<UploadUrl> _uploadUrls;
-    private bool _uploadUrlsChanged;
     private string _uploadUrlTempString = string.Empty;
     private string _uploadUrlError = string.Empty;
 
     public ConfigWindow(Plugin plugin) : base("Remote Party Finder")
     {
-        _uploadUrlsChanged = false;
+        _configuration = plugin.Configuration;
         Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize;
         Size = new Vector2(500, 250);
-        _configuration = plugin.Configuration;
-
-        _uploadUrls = _configuration.UploadUrls.ToList();
     }
 
     public void Dispose()
@@ -34,26 +29,19 @@ public class ConfigWindow : Window, IDisposable
 
     public override void OnClose()
     {
-        _uploadUrls = _configuration.UploadUrls.ToList();
     }
 
     private void Save()
     {
-        _configuration.UploadUrls = _uploadUrls.ToList();
-        if (_uploadUrlsChanged)
-        {
-            _configuration.Save();
-            _uploadUrlsChanged = false;
-        }
-
-        Toggle();
+        _configuration.Save();
     }
 
     public override void Draw()
     {
         var isAdvanced = _configuration.AdvancedSettingsEnabled;
         ImGui.TextWrapped(
-            "This section is for advanced users to configure which services to send party finder data to. Only enable if you know what you are doing.");
+            "This section is for advanced users to configure which services to send party finder data to. " +
+            "Only enable if you know what you are doing.");
         if (ImGui.Checkbox("Enable Advanced Settings", ref isAdvanced))
         {
             _configuration.AdvancedSettingsEnabled = isAdvanced;
@@ -61,7 +49,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         if (!isAdvanced) return;
-        
+
         using var id = ImRaii.PushId("uploadUrls");
         ImGui.Columns(4);
 
@@ -94,11 +82,8 @@ public class ConfigWindow : Window, IDisposable
 
         var urlNumber = 1;
 
-        foreach (var uploadUrl in _uploadUrls)
+        foreach (var uploadUrl in _configuration.UploadUrls)
         {
-            var isEnabled = uploadUrl.IsEnabled;
-            var isDefault = uploadUrl.IsDefault;
-
             id.Push(uploadUrl.Url);
             ImGui.TextUnformatted(urlNumber.ToString());
 
@@ -109,9 +94,10 @@ public class ConfigWindow : Window, IDisposable
             ImGui.SetCursorPosX(ImGui.GetCursorPosX() + (ImGui.GetColumnWidth() / 2) - 6 -
                                 (12 * ImGui.GetIO().FontGlobalScale));
 
+            var isEnabled = uploadUrl.IsEnabled;
             if (ImGui.Checkbox("##uploadUrlCheckbox", ref isEnabled))
             {
-                this._uploadUrlsChanged = true;
+                _configuration.UploadUrls = _configuration.UploadUrls.Remove(uploadUrl);
             }
 
             ImGui.NextColumn();
@@ -131,12 +117,6 @@ public class ConfigWindow : Window, IDisposable
             ImGui.Separator();
         }
 
-        if (uploadUrlToRemove != null)
-        {
-            this._uploadUrls.Remove(uploadUrlToRemove);
-            this._uploadUrlsChanged = true;
-        }
-
         ImGui.TextUnformatted(urlNumber.ToString());
 
         ImGui.NextColumn();
@@ -153,7 +133,7 @@ public class ConfigWindow : Window, IDisposable
         {
             _uploadUrlTempString = _uploadUrlTempString.TrimEnd();
 
-            if (_uploadUrls.Any(r =>
+            if (_configuration.UploadUrls.Any(r =>
                     string.Equals(r.Url, _uploadUrlTempString, StringComparison.InvariantCultureIgnoreCase)))
             {
                 _uploadUrlError = "Endpoint already exists.";
@@ -166,8 +146,7 @@ public class ConfigWindow : Window, IDisposable
             }
             else
             {
-                _uploadUrls.Add(new UploadUrl(_uploadUrlTempString));
-                _uploadUrlsChanged = true;
+                _configuration.UploadUrls = _configuration.UploadUrls.Add(new(_uploadUrlTempString));
                 _uploadUrlTempString = string.Empty;
             }
         }
@@ -197,11 +176,8 @@ public class ConfigWindow : Window, IDisposable
 
     private void ResetToDefault()
     {
-        _configuration.UploadUrls.Clear();
-        _configuration.Initialize();
+        _configuration.UploadUrls = Configuration.DefaultUploadUrls();
         _configuration.Save();
-        _uploadUrlsChanged = false;
-        _uploadUrls = _configuration.UploadUrls.ToList();
     }
 
     private static bool ValidUrl(string url)

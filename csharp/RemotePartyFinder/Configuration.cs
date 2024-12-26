@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using Dalamud.Configuration;
 
 namespace RemotePartyFinder;
@@ -8,15 +8,12 @@ namespace RemotePartyFinder;
 public class Configuration : IPluginConfiguration {
     public int Version { get; set; } = 1;
     public bool AdvancedSettingsEnabled = false;
-    public List<UploadUrl> UploadUrls = [];
+    public ImmutableList<UploadUrl> UploadUrls = DefaultUploadUrls();
 
-    public void Initialize()
-    {
-        if (UploadUrls.Count != 0) return;
-        
-        UploadUrls.Add(new UploadUrl("https://xivpf.com/contribute/multiple") { IsDefault = true });
-        UploadUrls.Add(new UploadUrl("https://findingway.io/receiver") { IsDefault = true });
-    }
+    public static ImmutableList<UploadUrl> DefaultUploadUrls() => [
+        new("https://xivpf.com/contribute/multiple") { IsDefault = true },
+        new("https://findingway.io/receiver") { IsDefault = true }
+    ];
 
     public void Save() {
         Plugin.PluginInterface.SavePluginConfig(this);
