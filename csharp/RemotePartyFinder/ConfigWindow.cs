@@ -47,6 +47,7 @@ public class ConfigWindow : Window, IDisposable
 
         if (!isAdvanced) return;
 
+        
         using (ImRaii.Table("uploadUrls", 3, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Borders))
         {
             ImGui.TableSetupColumn("#", ImGuiTableColumnFlags.WidthFixed);
@@ -54,8 +55,11 @@ public class ConfigWindow : Window, IDisposable
             ImGui.TableSetupColumn("Enabled", ImGuiTableColumnFlags.WidthFixed);
             ImGui.TableHeadersRow();
             
+            using var id = ImRaii.PushId("urls");
             foreach (var (uploadUrl, index) in _configuration.UploadUrls.Select((url, index) => (url, index + 1)))
             {
+                id.Push(index);
+
                 ImGui.TableNextRow();
                 ImGui.TableSetColumnIndex(0);
                 ImGui.TextUnformatted(index.ToString());
@@ -70,13 +74,16 @@ public class ConfigWindow : Window, IDisposable
                     uploadUrl.IsEnabled = isEnabled;
                 }
 
-                if (uploadUrl.IsDefault) continue;
-                
-                ImGui.SameLine();
-                if (ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Trash))
+                if (!uploadUrl.IsDefault)
                 {
-                    _configuration.UploadUrls = _configuration.UploadUrls.Remove(uploadUrl);
+                    ImGui.SameLine();
+                    if (ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Trash))
+                    {
+                        _configuration.UploadUrls = _configuration.UploadUrls.Remove(uploadUrl);
+                    }
                 }
+                
+                id.Pop();
             }
             
             ImGui.TableNextRow();
