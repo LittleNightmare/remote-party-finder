@@ -7763,6 +7763,16 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        1010 => DutyInfo {
+            name: LocalisedText {
+                en: "The Cloud of Darkness (Chaotic)",
+                ja: "滅暗闇の雲激闘戦",
+                de: "Die Wolke der Dunkelheit (chaotisch)",
+                fr: "La Tour de Ténèbres (chaotique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::ChaoticAllianceRaid,
+        },
         1012 => DutyInfo {
             name: LocalisedText {
                 en: "React to Attack Markers",
@@ -7805,7 +7815,7 @@ lazy_static::lazy_static! {
         },
         1017 => DutyInfo {
             name: LocalisedText {
-                en: "The Minstrel’s Ballad: Sphene's Burden",
+                en: "The Minstrel's Ballad: Sphene's Burden",
                 ja: "極エターナルクイーン討滅戦",
                 de: "Gok Tajaal - Ewige Königin",
                 fr: "Interphos (extrême)",

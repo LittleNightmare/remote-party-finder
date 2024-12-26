@@ -7683,6 +7683,18 @@ lazy_static::lazy_static! {
             de: "Punutiy",
             fr: "punutiy",
         },
+        (49, 360) => LocalisedText {
+            en: "shroud of Darkness",
+            ja: "暗闇の羽衣",
+            de: "Wolkenkleid der Dunkelheit",
+            fr: "exhalaison de Ténèbres",
+        },
+        (49, 361) => LocalisedText {
+            en: "dais of Darkness",
+            ja: "暗黒領域",
+            de: "Dunkle Falle",
+            fr: "domaine ténébreux",
+        },
         (49, 363) => LocalisedText {
             en: "wings of eternity",
             ja: "ウィング・オブ・エターナル",
@@ -26518,6 +26530,12 @@ lazy_static::lazy_static! {
             de: "Spielzeugsoldat[p] S3",
             fr: "soldat d'étain S3",
         },
+        (65, 537) => LocalisedText {
+            en: "wisp of Darkness",
+            ja: "淡闇の雲",
+            de: "Dunstwölkchen[p] der Dunkelheit",
+            fr: "vapeur de Ténèbres",
+        },
         (65, 538) => LocalisedText {
             en: "wind-up Themis",
             ja: "マメット・テミス",
@@ -30885,6 +30903,18 @@ lazy_static::lazy_static! {
             ja: "ユウェヤーワータ",
             de: "Yuweyawata",
             fr: "Yuweyawata",
+        },
+        (24, 5160) => LocalisedText {
+            en: "Cloud of Darkness (Chaotic)",
+            ja: "滅暗闇の雲激闘戦",
+            de: "Die Wolke der Dunkelheit (chaotisch)",
+            fr: "La Tour de Ténèbres (chaotique)",
+        },
+        (24, 5161) => LocalisedText {
+            en: "chaotic alliance raid",
+            ja: "滅アライアンスレイド",
+            de: "Chaotischer Allianz-Raid",
+            fr: "raid en alliance chaotique",
         },
     };
 }

@@ -6129,6 +6129,12 @@ lazy_static::lazy_static! {
             de: "Jadelichtung",
             fr: "Clairière de Jade",
         },
+        1241 => LocalisedText {
+            en: "Sphere of Naught",
+            ja: "暗闇の領域",
+            de: "Sphäre der Leere",
+            fr: "Sphère de l'absence",
+        },
         1242 => LocalisedText {
             en: "Yuweyawata",
             ja: "ユウェヤーワータ",
