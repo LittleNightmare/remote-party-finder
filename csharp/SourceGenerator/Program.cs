@@ -6,8 +6,9 @@ using System.Text;
 using Lumina;
 using Lumina.Data;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Lumina.Text;
+using Lumina.Text.ReadOnly;
 using Pidgin;
 
 namespace SourceGenerator;
@@ -76,9 +77,10 @@ internal class Program {
         [Language.ChineseSimplified] = "zh",
     };
 
-        private string? GetLocalisedStruct<T>(uint rowId, Func<T, SeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : ExcelRow {
+        private string? GetLocalisedStruct<T>(uint rowId, Func<T, ReadOnlySeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : struct, IExcelRow<T>
+    {
             var def = this.Data[Language.English].GetExcelSheet<T>()!.GetRow(rowId)!;
-            var defName = nameFunc(def)?.TextValue();
+            var defName = nameFunc(def)?.ExtractText();
             if (string.IsNullOrEmpty(defName)) {
                 return null;
             }
@@ -88,12 +90,23 @@ internal class Program {
             sb.Append("LocalisedText {\n");
 
             var line = 0;
-            foreach (var (language, key) in Languages) {
-                var row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
+            foreach (var (language, key) in Languages)
+            {
+                T? row;
+                try
+                {
+                    row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
+
+                }
+                catch (Exception e)
+                {
+                    row = null;
+                }
+               
                 var name = row == null
                     ? defName
-                    : nameFunc(row)?.TextValue().Replace("\"", "\\\"");
-                name ??= defName;
+                    : nameFunc((T)row)?.ExtractText().Replace("\"", "\\\"");
+            name ??= defName;
                 if (capitalise) {
                     if (name.Length == 0)
                     {
@@ -138,7 +151,7 @@ internal class Program {
             sb.Append("#[repr(u32)]\n");
             sb.Append("pub enum ContentKind {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
+                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"    {name} = {kind.RowId},\n");
                 }
@@ -152,7 +165,7 @@ internal class Program {
             sb.Append("    fn from_u32(kind: u32) -> Self {\n");
             sb.Append("        match kind {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
+                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"            {kind.RowId} => Self::{name},\n");
                 }
@@ -165,7 +178,7 @@ internal class Program {
             sb.Append("    pub fn as_u32(self) -> u32 {\n");
             sb.Append("        match self {\n");
             foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.TextValue().Replace(" ", "").Replace("&", "");
+                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
                 if (name.Length > 0) {
                     sb.Append($"            Self::{name} => {kind.RowId},\n");
                 }
@@ -203,9 +216,9 @@ internal class Program {
                     // Console.WriteLine(e);
                 }
 
-                var contentKind = contentType?.Name?.TextValue().Replace(" ", "").Replace("&", "");
+                var contentKind = contentType.Name.ExtractText().Replace(" ", "").Replace("&", "");
                 if (string.IsNullOrEmpty(contentKind)) {
-                    contentKind = $"Other({contentType?.RowId ?? 0})";
+                    contentKind = $"Other({contentType.RowId})";
                 }
 
                 sb.Append($"        {cfc.RowId} => DutyInfo {{\n");
@@ -232,7 +245,7 @@ internal class Program {
                     continue;
                 }
 
-                var name = cj.NameEnglish.TextValue().Replace(" ", "");
+                var name = cj.NameEnglish.ExtractText().Replace(" ", "");
                 if (name.Length <= 0) {
                     continue;
                 }
@@ -365,20 +378,22 @@ internal class Program {
                    },
                 },
             };
-            var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
+            //var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
             var worldExcel = this.Data[Language.English].GetExcelSheet<World>();
+
             foreach (var dc in chineseWorldDCGroups)
             {
-                var dcToReplaced = dcExcel.GetRow(dc.Id);
-                dcToReplaced.Name = new SeString(dc.Name);
-                dcToReplaced.Region = 5;
+                //var dcToReplaced = dcExcel.GetRow(dc.Id);
+
+                //dcToReplaced.Name = new SeString(dc.Name);
+                //dcToReplaced.Region = 5;
 
                 foreach (var world in dc.Worlds)
                 {
                     var worldToUpdated = worldExcel.GetRow(world.Id);
-                    worldToUpdated.IsPublic = true;
-                    worldToUpdated.UserType = 10;
-                    worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
+                    //worldToUpdated.IsPublic = true;
+                    //worldToUpdated.UserType = 10;
+                    //worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
                 }
             }
 
@@ -394,11 +409,11 @@ internal class Program {
             sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
             foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
-                if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.Row == 0) {
+                if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.RowId == 0) {
                     continue;
                 }
 
-                var name = world.Name.TextValue();
+                var name = world.Name.ExtractText();
                 if (name.Length <= 0) {
                     continue;
                 }
@@ -418,7 +433,7 @@ internal class Program {
             sb.Append("    pub static ref TERRITORY_NAMES: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
 
             foreach (var tt in this.Data[Language.English].GetExcelSheet<TerritoryType>()!) {
-                if (tt.RowId == 0 || tt.PlaceName.Row == 0) {
+                if (tt.RowId == 0 || tt.PlaceName.RowId == 0) {
                     continue;
                 }
 
@@ -440,39 +455,37 @@ internal class Program {
             return sb.ToString();
         }
 
-        private string GenerateAutoTranslate() {
-            var sb = DefaultHeader(true);
-            sb.Append("\nlazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref AUTO_TRANSLATE: HashMap<(u32, u32), LocalisedText> = maplit::hashmap! {\n");
+    private string GenerateAutoTranslate() {
+        var sb = DefaultHeader(true);
+        sb.Append("\nlazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref AUTO_TRANSLATE: HashMap<(u32, u32), LocalisedText> = maplit::hashmap! {\n");
 
-            var parser = AutoTranslate.Parser();
-            foreach (var row in this.Data[Language.English].GetExcelSheet<Completion>()!) {
-                var lookup = row.LookupTable.TextValue();
-                if (lookup is not ("" or "@")) {
-                    var (sheetName, selector) = parser.ParseOrThrow(lookup);
-                    var sheetType = typeof(Completion)
-                        .Assembly
-                        .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
-                    var getSheet = this.Data[Language.English]
-                        .GetType()
-                        .GetMethod("GetExcelSheet", Type.EmptyTypes)!
-                        .MakeGenericMethod(sheetType);
-                    var sheets = this.Data.ToDictionary(
-                        pair => pair.Key,
-                        pair => {
-                            var sheet = (ExcelSheetImpl) getSheet.Invoke(pair.Value, null)!;
-                            return (sheet, sheet.GetRowParsers().ToArray());
-                        });
+        var parser = AutoTranslate.Parser();
+        foreach (var row in this.Data[Language.English].GetExcelSheet<Completion>()!) {
+            //var lookup = row.LookupTable.ExtractText();
+            var lookup = row.LookupTable.ToString().Replace("<num(", "").Replace(")>", "");
+            if (lookup is not ("" or "@")) {
+                var (sheetName, selector) = parser.ParseOrThrow(lookup);
+                //var sheetType = typeof(Completion)
+                //    .Assembly
+                //    .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
+                //var getSheet = this.Data[Language.English]
+                //    .GetType()
+                //    .GetMethod("GetExcelSheet", Type.EmptyTypes)!
+                //    .MakeGenericMethod(sheetType);
+                var sheets = this.Data
+                .Select(kv => (kv.Key, new ExcelSheet<RawRow>(kv.Value.Excel.GetRawSheet(sheetName))))
+                .ToDictionary();
 
-                    var columns = new List<int>();
-                    var rows = new List<Range>();
-                    if (selector.HasValue) {
-                        columns.Clear();
-                        rows.Clear();
+                var columns = new List<int>();
+                var rows = new List<Range>();
+                if (selector.HasValue) {
+                    columns.Clear();
+                    rows.Clear();
 
-                        foreach (var part in selector.Value) {
-                            switch (part) {
-                                case IndexRange range: {
+                    foreach (var part in selector.Value) {
+                        switch (part) {
+                            case IndexRange range: {
                                     var start = (int) range.Start;
                                     var end = (int) (range.End + 1);
                                     rows.Add(start..end);
@@ -483,77 +496,83 @@ internal class Program {
                                     rows.Add(idx..(idx + 1));
                                     break;
                                 }
-                                case ColumnSpecifier col:
+                            case ColumnSpecifier col:
                                     columns.Add((int) col.Column);
-                                    break;
-                            }
+                                break;
                         }
-                    }
-
-                    if (columns.Count == 0) {
-                        columns.Add(0);
-                    }
-
-                    if (rows.Count == 0) {
-                        rows.Add(..);
-                    }
-
-                    var builder = new StringBuilder();
-                    foreach (var range in rows) {
-                        var validRows = sheets[Language.English]
-                            .Item2
-                            .Select(parser => parser.RowId)
-                            .ToArray();
-                        for (var i = range.Start.Value; i < range.End.Value; i++) {
-                            if (!validRows.Contains((uint) i)) {
-                                continue;
-                            }
-
-                            builder.Clear();
-
-                            builder.Append($"        ({row.Group}, {i}) => LocalisedText {{\n");
-
-                            var lines = 0;
-                            foreach (var (lang, (_, parsers)) in sheets) {
-                                // take the first column that works
-                                foreach (var col in columns) {
-                                    var rowParser = parsers.FirstOrDefault(parser => parser.RowId == i);
-                                    if (rowParser != null) {
-                                        var name = rowParser.ReadColumn<SeString>(col)!;
-                                        var text = name.TextValue().Replace("\"", "\\\"");
-                                        if (text.Length > 0) {
-                                            builder.Append($"            {Languages[lang]}: \"{text}\",\n");
-                                            lines += 1;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
-                            builder.Append("        },\n");
-                            // 5 means we have all 5 languages
-                            if (lines != 5) {
-                                continue;
-                            }
-
-                            sb.Append(builder);
-                        }
-                    }
-                } else {
-                    var text = this.GetLocalisedStruct<Completion>(row.RowId, row => row.Text, 8);
-                    if (text != null) {
-                        sb.Append($"        ({row.Group}, {row.RowId}) => {text},\n");
                     }
                 }
+
+                if (columns.Count == 0) {
+                    columns.Add(0);
+                }
+
+                if (rows.Count == 0) {
+                    rows.Add(..);
+                }
+
+                var builder = new StringBuilder();
+                foreach (var range in rows) {
+                    for (var i = (uint)range.Start.Value; i < range.End.Value; i++) {
+                        if (!sheets[Language.English].HasRow(i)) {
+                            continue;
+                        }
+
+                        builder.Clear();
+
+                        builder.Append($"        ({row.Group}, {i}) => LocalisedText {{\n");
+
+                        var lines = 0;
+                        foreach (var lang in this.Data.Keys) {
+                            var sheet = sheets[lang];
+                            var idx = i;
+                            try
+                            {
+                                foreach (var text in from col in columns
+                                         let rawRow = sheet.GetRow(idx)
+                                         select rawRow.ReadStringColumn(col).ExtractText()
+                                         into text
+                                         where text.Length > 0
+                                         select text)
+                                {
+                                    //var replace = text.Replace(" ", "").Replace("­", ""); 
+                                    var replace = text.Replace("\"", "\\\""); 
+                                    builder.Append($"            {Languages[lang]}: \"{replace}\",\n");
+                                    lines += 1;
+                                    break;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                continue;
+                            }
+                            
+                        }
+
+                        builder.Append("        },\n");
+                        // 5 means we have all 5 languages
+                        if (lines != 5) {
+                            continue;
+                        }
+
+                        sb.Append(builder);
+                    }
+                }
+            }else {
+                var text = this.GetLocalisedStruct<Completion>(row.RowId, row => row.Text, 8);
+                if (text != null) {
+                    sb.Append($"        ({row.Group}, {row.RowId}) => {text},\n");
+                }
             }
-
-            sb.Append("    };\n");
-            sb.Append("}\n");
-
-            return sb.ToString();
         }
 
-        private string GenerateTreasureMaps() {
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
+    }
+
+    private string GenerateTreasureMaps() {
             var sb = DefaultHeader(true);
             sb.Append("\nlazy_static::lazy_static! {\n");
             sb.Append("    pub static ref TREASURE_MAPS: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
@@ -572,10 +591,19 @@ internal class Program {
                     continue;
                 }
 
-                SeString? GetMapName(TreasureHuntRank thr) {
-                    var name = thr.KeyItemName.Value?.Name;
-                    return string.IsNullOrEmpty(name?.TextValue())
-                        ? thr.ItemName.Value?.Name
+                ReadOnlySeString? GetMapName(TreasureHuntRank thr)
+                {
+                    ReadOnlySeString name;
+                    try
+                    {
+                        name = thr.KeyItemName.Value.Name;
+                    }
+                    catch (Exception e)
+                    {
+                        name = thr.ItemName.Value.Name;
+                    }
+                    return string.IsNullOrEmpty(name.ExtractText())
+                        ? thr.ItemName.Value.Name
                         : name;
                 }
 

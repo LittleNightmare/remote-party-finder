@@ -11,8 +11,7 @@ public class Configuration : IPluginConfiguration {
     public ImmutableList<UploadUrl> UploadUrls = DefaultUploadUrls();
 
     public static ImmutableList<UploadUrl> DefaultUploadUrls() => [
-        new("https://xivpf.com/contribute/multiple") { IsDefault = true },
-        new("https://findingway.io/receiver") { IsDefault = true }
+        new("https://xivpf.littlenightmare.top/contribute/multiple") { IsDefault = true }
     ];
 
     public void Save() {
