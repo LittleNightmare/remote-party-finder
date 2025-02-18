@@ -35,13 +35,17 @@ pub enum ContentKind {
     WondrousTails = 24,
     CustomDeliveries = 25,
     Eureka = 26,
+    TheMaskedCarnivale = 27,
     UltimateRaids = 28,
+    SavetheQueen = 29,
     VCDungeonFinder = 30,
     OceanFishing = 31,
     TripleTriad = 32,
     TheHunt = 33,
     Fishing = 34,
     GATE = 35,
+    IslandSanctuary = 36,
+    ChaoticAllianceRaid = 37,
     Other(u32),
 }
 
@@ -71,13 +75,17 @@ impl ContentKind {
             24 => Self::WondrousTails,
             25 => Self::CustomDeliveries,
             26 => Self::Eureka,
+            27 => Self::TheMaskedCarnivale,
             28 => Self::UltimateRaids,
+            29 => Self::SavetheQueen,
             30 => Self::VCDungeonFinder,
             31 => Self::OceanFishing,
             32 => Self::TripleTriad,
             33 => Self::TheHunt,
             34 => Self::Fishing,
             35 => Self::GATE,
+            36 => Self::IslandSanctuary,
+            37 => Self::ChaoticAllianceRaid,
             x => Self::Other(x),
         }
     }
@@ -107,13 +115,17 @@ impl ContentKind {
             Self::WondrousTails => 24,
             Self::CustomDeliveries => 25,
             Self::Eureka => 26,
+            Self::TheMaskedCarnivale => 27,
             Self::UltimateRaids => 28,
+            Self::SavetheQueen => 29,
             Self::VCDungeonFinder => 30,
             Self::OceanFishing => 31,
             Self::TripleTriad => 32,
             Self::TheHunt => 33,
             Self::Fishing => 34,
             Self::GATE => 35,
+            Self::IslandSanctuary => 36,
+            Self::ChaoticAllianceRaid => 37,
             Self::Other(x) => x,
         }
     }
@@ -4519,7 +4531,7 @@ lazy_static::lazy_static! {
                 zh: "出道战",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         611 => DutyInfo {
             name: LocalisedText {
@@ -4541,7 +4553,7 @@ lazy_static::lazy_static! {
                 zh: "布丁拼盘",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         613 => DutyInfo {
             name: LocalisedText {
@@ -4552,7 +4564,7 @@ lazy_static::lazy_static! {
                 zh: "最初的岩壁——希帕克纳",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         614 => DutyInfo {
             name: LocalisedText {
@@ -4563,7 +4575,7 @@ lazy_static::lazy_static! {
                 zh: "怪力铁巨人——克利俄斯",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         615 => DutyInfo {
             name: LocalisedText {
@@ -4574,7 +4586,7 @@ lazy_static::lazy_static! {
                 zh: "金币龟兄弟",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         616 => DutyInfo {
             name: LocalisedText {
@@ -4585,7 +4597,7 @@ lazy_static::lazy_static! {
                 zh: "铁鹰战士",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         617 => DutyInfo {
             name: LocalisedText {
@@ -4596,7 +4608,7 @@ lazy_static::lazy_static! {
                 zh: "粘液怪合唱团",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         618 => DutyInfo {
             name: LocalisedText {
@@ -4607,7 +4619,7 @@ lazy_static::lazy_static! {
                 zh: "青之牙、红之牙",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         619 => DutyInfo {
             name: LocalisedText {
@@ -4618,7 +4630,7 @@ lazy_static::lazy_static! {
                 zh: "七彩甜点——棉花软糖",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         620 => DutyInfo {
             name: LocalisedText {
@@ -4629,7 +4641,7 @@ lazy_static::lazy_static! {
                 zh: "无头王者——幽黑曲偶",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         621 => DutyInfo {
             name: LocalisedText {
@@ -4640,7 +4652,7 @@ lazy_static::lazy_static! {
                 zh: "爆前速攻",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         622 => DutyInfo {
             name: LocalisedText {
@@ -4651,7 +4663,7 @@ lazy_static::lazy_static! {
                 zh: "寄生植物——火花草",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         623 => DutyInfo {
             name: LocalisedText {
@@ -4662,7 +4674,7 @@ lazy_static::lazy_static! {
                 zh: "猩红死妖姬——卡蜜拉",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         624 => DutyInfo {
             name: LocalisedText {
@@ -4673,7 +4685,7 @@ lazy_static::lazy_static! {
                 zh: "陪葬",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         625 => DutyInfo {
             name: LocalisedText {
@@ -4684,7 +4696,7 @@ lazy_static::lazy_static! {
                 zh: "来自亚拉戈的威胁——斗兽系统",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         626 => DutyInfo {
             name: LocalisedText {
@@ -4695,7 +4707,7 @@ lazy_static::lazy_static! {
                 zh: "怪力兽王——迪克巴朗",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         627 => DutyInfo {
             name: LocalisedText {
@@ -4706,7 +4718,7 @@ lazy_static::lazy_static! {
                 zh: "刚柔铁巨人——克利俄斯改",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         628 => DutyInfo {
             name: LocalisedText {
@@ -4717,7 +4729,7 @@ lazy_static::lazy_static! {
                 zh: "爆破死斗",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         629 => DutyInfo {
             name: LocalisedText {
@@ -4728,7 +4740,7 @@ lazy_static::lazy_static! {
                 zh: "魅惑芳香——反射魔花瑞贝卡",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         630 => DutyInfo {
             name: LocalisedText {
@@ -4739,7 +4751,7 @@ lazy_static::lazy_static! {
                 zh: "著名组合——奥尔特罗斯&提丰",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         631 => DutyInfo {
             name: LocalisedText {
@@ -4750,7 +4762,7 @@ lazy_static::lazy_static! {
                 zh: "愤怒合成兽——阿帕德马克",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         632 => DutyInfo {
             name: LocalisedText {
@@ -4761,7 +4773,7 @@ lazy_static::lazy_static! {
                 zh: "爆炸湮灭——爆弹之祖",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         633 => DutyInfo {
             name: LocalisedText {
@@ -4772,7 +4784,7 @@ lazy_static::lazy_static! {
                 zh: "魔兽皇太子——贝希摩斯太子",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         634 => DutyInfo {
             name: LocalisedText {
@@ -4783,7 +4795,7 @@ lazy_static::lazy_static! {
                 zh: "异形人偶师——艾匹罗基",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         635 => DutyInfo {
             name: LocalisedText {
@@ -4794,7 +4806,7 @@ lazy_static::lazy_static! {
                 zh: "邪恶青魔法师——启示者",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         636 => DutyInfo {
             name: LocalisedText {
@@ -5289,7 +5301,7 @@ lazy_static::lazy_static! {
                 zh: "强大的老爹——洪巴巴之父",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         696 => DutyInfo {
             name: LocalisedText {
@@ -5300,7 +5312,7 @@ lazy_static::lazy_static! {
                 zh: "鼻息爆破死斗",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         697 => DutyInfo {
             name: LocalisedText {
@@ -5311,7 +5323,7 @@ lazy_static::lazy_static! {
                 zh: "绝妙傀儡师——都灵",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         698 => DutyInfo {
             name: LocalisedText {
@@ -5322,7 +5334,7 @@ lazy_static::lazy_static! {
                 zh: "水与火之歌",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         699 => DutyInfo {
             name: LocalisedText {
@@ -5333,7 +5345,7 @@ lazy_static::lazy_static! {
                 zh: "世界第一剑士——齐格弗里德",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         700 => DutyInfo {
             name: LocalisedText {
@@ -5718,7 +5730,7 @@ lazy_static::lazy_static! {
                 zh: "南方博兹雅战线",
             },
             high_end: false,
-            content_kind: ContentKind::Other(29),
+            content_kind: ContentKind::SavetheQueen,
         },
         736 => DutyInfo {
             name: LocalisedText {
@@ -5916,7 +5928,7 @@ lazy_static::lazy_static! {
                 zh: "黄金头巾——模仿师格格",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         755 => DutyInfo {
             name: LocalisedText {
@@ -5971,7 +5983,7 @@ lazy_static::lazy_static! {
                 zh: "女王古殿",
             },
             high_end: false,
-            content_kind: ContentKind::Other(29),
+            content_kind: ContentKind::SavetheQueen,
         },
         761 => DutyInfo {
             name: LocalisedText {
@@ -5982,7 +5994,7 @@ lazy_static::lazy_static! {
                 zh: "零式女王古殿",
             },
             high_end: false,
-            content_kind: ContentKind::Other(29),
+            content_kind: ContentKind::SavetheQueen,
         },
         762 => DutyInfo {
             name: LocalisedText {
@@ -6158,7 +6170,7 @@ lazy_static::lazy_static! {
                 zh: "扎杜诺尔高原",
             },
             high_end: false,
-            content_kind: ContentKind::Other(29),
+            content_kind: ContentKind::SavetheQueen,
         },
         779 => DutyInfo {
             name: LocalisedText {
@@ -6751,7 +6763,7 @@ lazy_static::lazy_static! {
                 fr: "Worqor Lar Dor (extrême)",
                 zh: "艳翼蛇鸟歼殛战",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         834 => DutyInfo {
@@ -7885,7 +7897,7 @@ lazy_static::lazy_static! {
                 zh: "黄金斗士——金德尔",
             },
             high_end: false,
-            content_kind: ContentKind::Other(27),
+            content_kind: ContentKind::TheMaskedCarnivale,
         },
         949 => DutyInfo {
             name: LocalisedText {
@@ -8390,7 +8402,7 @@ lazy_static::lazy_static! {
                 fr: "Le Pinacle de l'Éternité (extrême)",
                 zh: "佐拉加歼殛战",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         997 => DutyInfo {
@@ -8469,6 +8481,106 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        1006 => DutyInfo {
+            name: LocalisedText {
+                en: "Futures Rewritten (Ultimate)",
+                ja: "絶もうひとつの未来",
+                de: "Eine zweite Zukunft (fatal)",
+                fr: "Avenirs réécrits (fatal)",
+            },
+            high_end: true,
+            content_kind: ContentKind::UltimateRaids,
+        },
+        1007 => DutyInfo {
+            name: LocalisedText {
+                en: "The Jade Stoa (Unreal)",
+                ja: "幻白虎征魂戦",
+                de: "Traumprüfung - Byakko",
+                fr: "La Clairière de Jade (irréel)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        1008 => DutyInfo {
+            name: LocalisedText {
+                en: "Yuweyawata Field Station",
+                ja: "廃地討究 ユウェヤーワータ",
+                de: "Forschungsstation Yuweyawata",
+                fr: "Le centre de recherche de Yuweyawata",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        1009 => DutyInfo {
+            name: LocalisedText {
+                en: "The Warmth of Family",
+                ja: "王の家族",
+                de: "Ein Land, eine Familie",
+                fr: "La famille de l'Aurarque",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1010 => DutyInfo {
+            name: LocalisedText {
+                en: "The Cloud of Darkness (Chaotic)",
+                ja: "滅暗闇の雲激闘戦",
+                de: "Die Wolke der Dunkelheit (chaotisch)",
+                fr: "La Tour de Ténèbres (chaotique)",
+            },
+            high_end: true,
+            content_kind: ContentKind::ChaoticAllianceRaid,
+        },
+        1012 => DutyInfo {
+            name: LocalisedText {
+                en: "React to Attack Markers",
+                ja: "マーカーが出る攻撃に対処しよう！",
+                de: "Achte auf Attackenmarkierungen!",
+                fr: "Réagir à des marquages",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(20),
+        },
+        1013 => DutyInfo {
+            name: LocalisedText {
+                en: "React to Floor Markers",
+                ja: "地面に予兆が出る攻撃に対処しよう！",
+                de: "Achte auf Geländemarkierungen!",
+                fr: "Réagir à des indications au sol",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(20),
+        },
+        1014 => DutyInfo {
+            name: LocalisedText {
+                en: "React to Advanced Visual Indicators",
+                ja: "さまざまな攻撃に対処しよう！",
+                de: "Stelle dich allerlei Angriffsmanövern!",
+                fr: "Réagir à des mécaniques variées",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(20),
+        },
+        1015 => DutyInfo {
+            name: LocalisedText {
+                en: "Jeuno: The First Walk",
+                ja: "ジュノ：ザ・ファーストウォーク",
+                de: "Jeuno: Die erste Etappe",
+                fr: "Jeuno - La première perambulation",
+            },
+            high_end: false,
+            content_kind: ContentKind::Raids,
+        },
+        1017 => DutyInfo {
+            name: LocalisedText {
+                en: "The Minstrel's Ballad: Sphene's Burden",
+                ja: "極エターナルクイーン討滅戦",
+                de: "Gok Tajaal - Ewige Königin",
+                fr: "Interphos (extrême)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
         },
     };
 }

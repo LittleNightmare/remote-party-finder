@@ -13,12 +13,6 @@ using Newtonsoft.Json;
 namespace RemotePartyFinder;
 
 internal class Gatherer : IDisposable {
-    #if DEBUG
-    private const string UploadUrl = "http://127.0.0.1:8000/contribute/multiple";
-    #elif RELEASE
-    private const string UploadUrl = "https://xivpf.littlenightmare.top/contribute/multiple";
-    #endif
-
     private Plugin Plugin { get; }
 
     private ConcurrentDictionary<int, List<IPartyFinderListing>> Batches { get; } = new();
@@ -61,11 +55,15 @@ internal class Gatherer : IDisposable {
                     .Select(listing => new UploadableListing(listing))
                     .ToList();
                 var json = JsonConvert.SerializeObject(uploadable);
-                var resp = await this.Client.PostAsync(UploadUrl, new StringContent(json) {
-                    Headers = { ContentType = MediaTypeHeaderValue.Parse("application/json") },
-                });
-                var output = await resp.Content.ReadAsStringAsync();
-                Plugin.Log.Info(output);
+
+                foreach (var uploadUrl in Plugin.Configuration.UploadUrls.Where(uploadUrl => uploadUrl.IsEnabled))
+                {
+                    var resp = await this.Client.PostAsync(uploadUrl.Url, new StringContent(json) {
+                        Headers = { ContentType = MediaTypeHeaderValue.Parse("application/json") },
+                    });
+                    var output = await resp.Content.ReadAsStringAsync();
+                    Plugin.Log.Info($"{uploadUrl.Url}:\n{output}");
+                }
             });
         }
     }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>1.0.13</Version>
+        <Version>1.0.15</Version>
         <TargetFramework>net8.0-windows</TargetFramework>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -35,13 +35,17 @@
             <Private>false</Private>
         </Reference>
         <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
-            <Private>false</Private>
+          <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="ImGuiNET">
+          <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
+          <Private>false</Private>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.13" />
+        <PackageReference Include="DalamudPackager" Version="11.0.0" />
     </ItemGroup>
 
 </Project>
