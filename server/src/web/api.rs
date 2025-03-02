@@ -67,8 +67,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         let per_page = per_page.unwrap_or(20).min(100); // 限制每页最大数量为100
         
         // 打印接收到的参数
-        println!("API请求参数: page={:?}, per_page={:?}, category={:?}, world={:?}, search={:?}, datacenter={:?}", 
-                 page, per_page, category, world, search, datacenter);
+        // println!("API请求参数: page={:?}, per_page={:?}, category={:?}, world={:?}, search={:?}, datacenter={:?}", 
+        //          page, per_page, category, world, search, datacenter);
         
         let lang = Language::ChineseSimplified;
 
@@ -131,7 +131,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             .aggregate(pipeline, None)
             .await;
             
-        println!("MongoDB查询结果: {:?}", res.is_ok());
+        // println!("MongoDB查询结果: {:?}", res.is_ok());
         
         Ok(match res {
             Ok(mut cursor) => {
@@ -211,7 +211,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 // 检查页码是否有效
                 let api_listings = if page > total_pages && total > 0 {
                     // 如果请求的页码超出范围且有数据，返回空数组
-                    println!("请求的页码 {} 超出范围，总页数为 {}", page, total_pages);
+                    // println!("请求的页码 {} 超出范围，总页数为 {}", page, total_pages);
                     Vec::new()
                 } else {
                     // 正常分页逻辑
@@ -219,8 +219,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     let items_left = if total > start { total - start } else { 0 };
                     let end = start + per_page.min(items_left);
                     
-                    println!("分页信息: total={}, page={}, per_page={}, start={}, end={}, total_pages={}", 
-                             total, page, per_page, start, end, total_pages);
+                    // println!("分页信息: total={}, page={}, per_page={}, start={}, end={}, total_pages={}", 
+                    //          total, page, per_page, start, end, total_pages);
                     
                     // 转换为API响应格式
                     filtered_containers
@@ -314,7 +314,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         state: Arc<State>,
         id: u32,
     ) -> std::result::Result<impl Reply, Infallible> {
-        println!("API请求招募详情: id={}", id);
+        // println!("API请求招募详情: id={}", id);
         
         let lang = Language::ChineseSimplified;
         let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
@@ -376,7 +376,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             .aggregate(pipeline, None)
             .await;
             
-        println!("MongoDB查询结果: {:?}", res.is_ok());
+        // println!("MongoDB查询结果: {:?}", res.is_ok());
         
         #[derive(Serialize)]
         struct DetailedApiListing {
@@ -413,7 +413,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         Ok(match res {
             Ok(mut cursor) => {
                 if let Ok(Some(container)) = cursor.try_next().await {
-                    println!("成功获取到招募数据");
+                    // println!("成功获取到招募数据");
                     let res: anyhow::Result<QueriedListing> = try {
                         let result: QueriedListing = mongodb::bson::from_document(container)?;
                         result
