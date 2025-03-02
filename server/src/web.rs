@@ -35,6 +35,7 @@ use crate::{
 };
 
 mod stats;
+pub mod api;
 
 pub async fn start(config: Arc<Config>) -> Result<()> {
     let state = State::new(Arc::clone(&config)).await?;
@@ -128,13 +129,15 @@ impl State {
 }
 
 fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
-    index()
+    assets()
         .or(listings(Arc::clone(&state)))
-        .or(contribute(Arc::clone(&state)))
-        .or(contribute_multiple(Arc::clone(&state)))
         .or(stats(Arc::clone(&state)))
         .or(stats_seven_days(Arc::clone(&state)))
-        .or(assets())
+        .or(contribute(Arc::clone(&state)))
+        .or(contribute_multiple(Arc::clone(&state)))
+        .or(crate::web::api::listings_api(Arc::clone(&state)))
+        .or(crate::web::api::listing_detail_api(Arc::clone(&state)))
+        .or(index())
         .boxed()
 }
 
