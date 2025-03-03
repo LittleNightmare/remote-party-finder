@@ -1,11 +1,10 @@
 use std::{
-    convert::Infallible,
-    sync::Arc,
+    any::Any, convert::Infallible, fmt::Debug, i128::MAX, sync::Arc
 };
 
 use chrono::Utc;
 use mongodb::bson::doc;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 use tokio_stream::StreamExt;
 use warp::{
     Filter,
@@ -15,28 +14,26 @@ use warp::{
 };
 
 use crate::{
-    ffxiv::Language,
-    listing_container::QueriedListing,
-    web::State,
-    sestring_ext::SeStringExt,
+    ffxiv::{self, Language}, listing::{DutyCategory, PartyFinderCategory}, listing_container::QueriedListing, sestring_ext::SeStringExt, web::State
 };
+use ffxiv_types_cn::World;
 
-#[derive(Serialize)]
-struct ApiResponse<T> {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApiResponse<T> {
     data: T,
     pagination: Pagination,
 }
 
-#[derive(Serialize)]
-struct Pagination {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Pagination {
     total: usize,
     page: usize,
     per_page: usize,
     total_pages: usize,
 }
 
-#[derive(Serialize)]
-struct ApiListing {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ApiListing {
     id: u32,
     name: String,
     description: String,
@@ -53,6 +50,55 @@ struct ApiListing {
     datacenter: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DetailedApiListing {
+    pub id: u32,
+    pub name: String,
+    pub description: String,
+    pub created_world: String,
+    pub home_world: String,
+    pub category: String,
+    pub duty: String,
+    pub min_item_level: u16,
+    pub slots_filled: usize,
+    pub slots_available: u8,
+    pub time_left: f64,
+    pub updated_at: String,
+    pub is_cross_world: bool,
+    // 添加更多详细信息
+    pub beginners_welcome: bool,
+    pub duty_type: String,
+    pub objective: String,
+    pub conditions: String,
+    pub loot_rules: String,
+    pub slots: Vec<SlotInfo>,
+    pub datacenter: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SlotInfo {
+    pub filled: bool,
+    pub role: Option<String>,
+    pub job: Option<String>,
+}
+
+/// 获取招募列表的API
+/// 
+/// 支持以下查询参数:
+/// - page: 页码，默认为1
+/// - per_page: 每页数量，默认为20，最大为100
+/// - category: 分类过滤
+/// - world: 世界过滤
+/// - search: 搜索关键词，会匹配名称和描述
+/// - datacenter: 数据中心过滤
+/// - jobs: 职业过滤，支持多个职业ID，用逗号分隔，如"1,2,8"
+/// - jobs[]: 职业过滤，支持数组格式，如jobs[]=8&jobs[]=10&jobs[]=21
+///
+/// 职业ID对应关系:
+/// 请参考jobs.rs中的hashmap
+/// 示例:
+/// GET /api/listings?page=1&per_page=20&category=None&world=拉诺西亚&jobs=8,10,21
+/// GET /api/listings?page=1&per_page=20&datacenter=猫小胖&category=HighEndDuty&jobs[]=10&jobs[]=21
 pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(
         state: Arc<State>, 
@@ -62,59 +108,270 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         world: Option<String>,
         search: Option<String>,
         datacenter: Option<String>,
+        jobs: Option<String>,
+        jobs_array: Vec<String>,
     ) -> std::result::Result<impl Reply, Infallible> {
         let page = page.unwrap_or(1);
         let per_page = per_page.unwrap_or(20).min(100); // 限制每页最大数量为100
         
-        // 打印接收到的参数
-        // println!("API请求参数: page={:?}, per_page={:?}, category={:?}, world={:?}, search={:?}, datacenter={:?}", 
-        //          page, per_page, category, world, search, datacenter);
+        // 转换category为DutyCategory
+        let category = category.and_then(|cat| {
+            match cat.as_str() {
+                "None" => Some(DutyCategory::None),
+                "DutyRoulette" => Some(DutyCategory::DutyRoulette),
+                "Dungeons" => Some(DutyCategory::Dungeon),
+                "Guildhests" => Some(DutyCategory::Guildhest),
+                "Trials" => Some(DutyCategory::Trial),
+                "Raids" => Some(DutyCategory::Raid),
+                "HighEndDuty" => Some(DutyCategory::HighEndDuty),
+                "Pvp" => Some(DutyCategory::PvP),
+                "GoldSaucer" => Some(DutyCategory::GoldSaucer),
+                "Fates" => Some(DutyCategory::Fate),
+                "TreasureHunt" => Some(DutyCategory::TreasureHunt),
+                "TheHunt" => Some(DutyCategory::TheHunt),
+                "GatheringForays" => Some(DutyCategory::GatheringForays),
+                "DeepDungeons" => Some(DutyCategory::DeepDungeon),
+                "FieldOperations" => Some(DutyCategory::FieldOperation),
+                "V&C Dungeon Finder" => Some(DutyCategory::VariantAndCriterionDungeon),
+                _ => None,
+            }
+        });
+
+        // 转换world为World，如果提供了world但找不到匹配的，直接返回空结果
+        let world = if let Some(w) = world {
+            match crate::ffxiv::WORLDS.values().find(|world| world.name() == w) {
+                Some(found_world) => Some(found_world),
+                None => {
+                    // 如果提供了world但找不到匹配的，返回空结果
+                    let pagination = Pagination {
+                        total: 0,
+                        page,
+                        per_page,
+                        total_pages: 0,
+                    };
+                    
+                    let response = ApiResponse {
+                        data: Vec::<ApiListing>::new(),
+                        pagination,
+                    };
+                    
+                    return Ok(warp::reply::with_status(
+                        warp::reply::json(&response),
+                        StatusCode::OK,
+                    ));
+                }
+            }
+        } else {
+            None
+        };
+
+        // 验证数据中心是否存在，如果提供了datacenter但找不到匹配的，直接返回空结果
+        if let Some(dc) = &datacenter {
+            if !crate::ffxiv::WORLDS.values().any(|world| world.data_center().name() == dc) {
+                let pagination = Pagination {
+                    total: 0,
+                    page,
+                    per_page,
+                    total_pages: 0,
+                };
+                
+                let response = ApiResponse {
+                    data: Vec::<ApiListing>::new(),
+                    pagination,
+                };
+                
+                return Ok(warp::reply::with_status(
+                    warp::reply::json(&response),
+                    StatusCode::OK,
+                ));
+            }
+        }
+
+        // 验证职业ID是否合法
+        let mut job_list = Vec::new();
+        // 从jobs.rs中hashmap中获取最大职业ID
+        let max_job_id = crate::ffxiv::JOBS.keys().max().unwrap_or(&0);
+        // 处理逗号分隔的格式
+        if let Some(jobs_str) = jobs.as_deref() {
+            for job_id in jobs_str.split(',').filter_map(|s| s.trim().parse::<u32>().ok()) {
+                if job_id <= *max_job_id {  // 检查职业ID是否在有效范围内
+                    job_list.push(job_id);
+                }
+            }
+        }
+        
+        // 处理数组格式
+        if !jobs_array.is_empty() {
+            for job_id in jobs_array.iter().filter_map(|s| s.trim().parse::<u32>().ok()) {
+                if job_id <= *max_job_id {  // 检查职业ID是否在有效范围内
+                    job_list.push(job_id);
+                }
+            }
+        }
+
+        // 如果提供了职业参数但没有有效的职业ID，返回空结果
+        if (jobs.is_some() || !jobs_array.is_empty()) && job_list.is_empty() {
+            let pagination = Pagination {
+                total: 0,
+                page,
+                per_page,
+                total_pages: 0,
+            };
+            
+            let response = ApiResponse {
+                data: Vec::<ApiListing>::new(),
+                pagination,
+            };
+            
+            return Ok(warp::reply::with_status(
+                warp::reply::json(&response),
+                StatusCode::OK,
+            ));
+        }
+        
+        // 构建缓存键 - 使用jobs参数
+        let cache_key = format!(
+            "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}", 
+            page, 
+            per_page, 
+            category.map(|c| c.pf_category().as_str()).unwrap_or(""),
+            world.as_deref().map(|w| w.name()).unwrap_or(""), 
+            search.as_deref().unwrap_or(""), 
+            datacenter.as_deref().unwrap_or(""),
+            job_list.iter().map(|j| j.to_string()).collect::<Vec<String>>().join("_")
+        );
+        
+        // 尝试从缓存获取
+        if let Some(cached) = state.get_listings_cache(&cache_key).await {
+            return Ok(warp::reply::with_status(
+                warp::reply::json(&cached),
+                StatusCode::OK,
+            ));
+        }
         
         let lang = Language::ChineseSimplified;
 
         let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
         
-        // 构建基本查询 - 不包含分页，获取所有符合条件的数据
+        // 构建基本查询 - 将尽可能多的过滤条件移到数据库端
         let mut pipeline = vec![
             doc! {
                 "$match": {
                     "updated_at": { "$gte": two_hours_ago },
-                }
-            },
-            doc! {
-                "$match": {
                     // 过滤私有PF
                     "listing.search_area": { "$bitsAllClear": 2 },
                 }
             },
-            doc! {
-                "$set": {
-                    "time_left": {
-                        "$divide": [
-                            {
-                                "$subtract": [
-                                    { "$multiply": ["$listing.seconds_remaining", 1000] },
-                                    { "$subtract": ["$$NOW", "$updated_at"] },
-                                ]
-                            },
-                            1000,
-                        ]
-                    },
-                    "updated_minute": {
-                        "$dateTrunc": {
-                            "date": "$updated_at",
-                            "unit": "minute",
-                            "binSize": 5,
-                        },
-                    },
-                }
-            },
-            doc! {
-                "$match": {
-                    "time_left": { "$gte": 0 },
-                }
-            },
         ];
+        
+        // 添加分类过滤条件到MongoDB查询
+        if let Some(cat) = &category {
+            pipeline.push(doc! {
+                "$match": {
+                    "listing.category": *cat as u32,
+                }
+            });
+        }
+        // 添加世界过滤条件到MongoDB查询
+        if let Some(w) = &world {
+            // 查找匹配的世界
+            let world_id = crate::ffxiv::WORLDS.iter().find(|(_, world)| world.name() == w.name()).map(|(id, _)| *id as u32);
+            
+            if let Some(id) = world_id {
+                pipeline.push(doc! {
+                    "$match": {
+                        "$or": [
+                            { "listing.created_world": id },
+                            { "listing.home_world": id }
+                        ]
+                    }
+                });
+            }
+        }
+        // 如果没有指定世界但指定了数据中心，则添加数据中心过滤条件
+        else if let Some(dc) = &datacenter {
+            // 获取数据中心下的所有世界ID
+            let world_ids: Vec<u32> = crate::ffxiv::WORLDS.iter()
+                .filter(|(_, world)| world.data_center().name() == dc)
+                .map(|(id, _)| *id)
+                .collect();
+
+            if !world_ids.is_empty() {
+                // 将u32转换为i32，因为MongoDB的BSON支持i32
+                let world_ids_i32: Vec<i32> = world_ids.iter()
+                    .map(|&id| id as i32)
+                    .collect();
+                
+                pipeline.push(doc! {
+                    "$match": {
+                        "$or": [
+                            { "listing.created_world": { "$in": world_ids_i32.clone() } },
+                            { "listing.home_world": { "$in": world_ids_i32 } }
+                        ]
+                    }
+                });
+            }
+        }
+        
+        // 添加职业过滤条件 - 支持多个职业
+        if !job_list.is_empty() {
+            // 构建多个职业的OR条件
+            let mut job_conditions = Vec::new();
+            
+            for &job_id in &job_list {
+                // 匹配accepting字段 - 使用位掩码
+                let job_bit = 1u32 << job_id;
+                job_conditions.push(doc! {
+                    "listing.slots": {
+                        "$elemMatch": {
+                            "accepting": {
+                                "$bitsAllSet": job_bit
+                            }
+                        }
+                    }
+                });
+            }
+            
+            if !job_conditions.is_empty() {
+                // 将所有职业条件组合为OR查询
+                pipeline.push(doc! {
+                    "$match": {
+                        "$or": job_conditions
+                    }
+                });
+            }
+        }
+        
+        // 计算剩余时间
+        pipeline.push(doc! {
+            "$set": {
+                "time_left": {
+                    "$divide": [
+                        {
+                            "$subtract": [
+                                { "$multiply": ["$listing.seconds_remaining", 1000] },
+                                { "$subtract": ["$$NOW", "$updated_at"] },
+                            ]
+                        },
+                        1000,
+                    ]
+                },
+                "updated_minute": {
+                    "$dateTrunc": {
+                        "date": "$updated_at",
+                        "unit": "minute",
+                        "binSize": 5,
+                    },
+                },
+            }
+        });
+        
+        // 过滤已过期的招募
+        pipeline.push(doc! {
+            "$match": {
+                "time_left": { "$gte": 0 },
+            }
+        });
         
         // 添加排序
         pipeline.push(doc! {
@@ -125,16 +382,141 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             }
         });
         
-        // 执行主查询 - 获取所有符合条件的数据
+        // 如果有搜索条件，我们需要在Rust端处理
+        // 但如果没有搜索条件，可以直接在MongoDB中分页
+        if search.is_none() {
+            // 添加计数阶段以获取总数
+            pipeline.push(doc! {
+                "$facet": {
+                    "metadata": [{ "$count": "total" }],
+                    "data": [
+                        { "$skip": ((page - 1) * per_page) as i64 },
+                        { "$limit": per_page as i64 }
+                    ]
+                }
+            });
+        }
+        
+        // 执行主查询
         let res = state
             .collection()
             .aggregate(pipeline, None)
             .await;
             
-        // println!("MongoDB查询结果: {:?}", res.is_ok());
-        
-        Ok(match res {
+        let reply = match res {
             Ok(mut cursor) => {
+                // 如果没有搜索条件，直接使用MongoDB的分页结果
+                if search.is_none() {
+                    if let Ok(Some(result)) = cursor.try_next().await {
+                        // 将结果转换为Document
+                        let facet_result = match mongodb::bson::from_document::<mongodb::bson::Document>(result) {
+                            Ok(doc) => doc,
+                            Err(_) => {
+                                // 返回空结果
+                                let pagination = Pagination {
+                                    total: 0,
+                                    page,
+                                    per_page,
+                                    total_pages: 0,
+                                };
+                                
+                                let response = ApiResponse {
+                                    data: Vec::<ApiListing>::new(),
+                                    pagination,
+                                };
+                                
+                                return Ok(warp::reply::with_status(
+                                    warp::reply::json(&response),
+                                    StatusCode::OK,
+                                ));
+                            }
+                        };
+                        
+                        // 提取元数据
+                        let total = match facet_result.get_array("metadata") {
+                            Ok(metadata) if !metadata.is_empty() => {
+                                match metadata[0].as_document() {
+                                    Some(doc) => match doc.get_i32("total") {
+                                        Ok(count) => count as usize,
+                                        Err(_) => 0
+                                    },
+                                    None => 0
+                                }
+                            },
+                            _ => 0
+                        };
+                        
+                        let total_pages = (total + per_page - 1) / per_page;
+                        
+                        // 提取数据
+                        let mut api_listings = Vec::new();
+                        if let Ok(data) = facet_result.get_array("data") {
+                            for item in data {
+                                if let Some(doc) = item.as_document() {
+                                    if let Ok(container) = mongodb::bson::from_document::<QueriedListing>(doc.clone()) {
+                                        let listing = &container.listing;
+                                        api_listings.push(ApiListing {
+                                            id: listing.id,
+                                            name: listing.name.full_text(&lang).to_string(),
+                                            description: listing.description.full_text(&lang).to_string(),
+                                            created_world: listing.created_world_string().to_string(),
+                                            home_world: listing.home_world_string().to_string(),
+                                            category: listing.pf_category().as_str().to_string(),
+                                            duty: listing.duty_name(&lang).to_string(),
+                                            min_item_level: listing.min_item_level,
+                                            slots_filled: listing.slots_filled(),
+                                            slots_available: listing.slots_available,
+                                            time_left: container.time_left,
+                                            updated_at: container.updated_at.to_rfc3339(),
+                                            is_cross_world: listing.is_cross_world(),
+                                            datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        
+                        let pagination = Pagination {
+                            total,
+                            page,
+                            per_page,
+                            total_pages,
+                        };
+                        
+                        let response = ApiResponse {
+                            data: api_listings,
+                            pagination,
+                        };
+                        
+                        // 缓存结果 - 设置30秒的TTL
+                        state.set_listings_cache(cache_key, response.clone(), 30).await;
+
+                        return Ok(warp::reply::with_status(
+                            warp::reply::json(&response),
+                            StatusCode::OK,
+                        ));
+                    }
+                    
+                    // 如果没有结果，返回空数组
+                    let pagination = Pagination {
+                        total: 0,
+                        page,
+                        per_page,
+                        total_pages: 0,
+                    };
+                    
+                    let response = ApiResponse {
+                        data: Vec::<ApiListing>::new(),
+                        pagination,
+                    };
+                    
+                    return Ok(warp::reply::with_status(
+                        warp::reply::json(&response),
+                        StatusCode::OK,
+                    ));
+                }
+                
+                // 如果有搜索条件，需要在Rust端处理
                 let mut containers = Vec::new();
 
                 while let Ok(Some(container)) = cursor.try_next().await {
@@ -147,57 +529,72 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     }
                 }
 
-                // 在Rust端进行过滤
+                // 在Rust端进行搜索过滤
                 let mut filtered_containers = Vec::new();
                 
-                // 应用所有过滤条件
-                for container in containers {
-                    let mut include = true;
-                    let listing = &container.listing;
-                    
-                    // 分类过滤
-                    if let Some(cat) = &category {
-                        if listing.pf_category().as_str() != *cat {
-                            include = false;
-                        }
-                    }
-                    
-                    // 世界过滤
-                    if include && world.is_some() {
-                        let w = world.as_ref().unwrap();
-                        if listing.created_world_string().to_string() != *w && 
-                           listing.home_world_string().to_string() != *w {
-                            include = false;
-                        }
-                    }
-                    
-                    // 数据中心过滤
-                    if include && datacenter.is_some() {
-                        let dc = datacenter.as_ref().unwrap();
-                        let listing_dc = listing.data_centre_name();
-                        
-                        if let Some(listing_dc_name) = listing_dc {
-                            if listing_dc_name != dc {
-                                include = false;
-                            }
-                        } else {
-                            include = false;
-                        }
-                    }
-                    
-                    // 搜索过滤
-                    if include && search.is_some() {
-                        let s = search.as_ref().unwrap();
-                        let search_lower = s.to_lowercase();
+                // 应用搜索过滤条件
+                if let Some(s) = &search {
+                    let search_lower = s.to_lowercase();
+                    for container in containers {
+                        let listing = &container.listing;
                         let name = listing.name.full_text(&lang).to_string().to_lowercase();
                         let description = listing.description.full_text(&lang).to_string().to_lowercase();
-                        if !name.contains(&search_lower) && !description.contains(&search_lower) {
-                            include = false;
+                        if name.contains(&search_lower) || description.contains(&search_lower) {
+                            // 如果有职业过滤，再次检查（以防MongoDB查询不完整）
+                            if !job_list.is_empty() {
+                                let mut has_job = false;
+                                
+                                // 检查slots的accepting字段
+                                for slot in &listing.slots {
+                                    for &job_id in &job_list {
+                                        // 检查位掩码是否包含该职业
+                                        let job_bit = 1u32 << job_id;
+                                        if slot.accepting.bits() & job_bit != 0 {
+                                            has_job = true;
+                                            break;
+                                        }
+                                    }
+                                    if has_job {
+                                        break;
+                                    }
+                                }
+                                
+                                if has_job {
+                                    filtered_containers.push(container);
+                                }
+                            } else {
+                                filtered_containers.push(container);
+                            }
                         }
                     }
-                    
-                    if include {
-                        filtered_containers.push(container);
+                } else {
+                    // 如果没有搜索条件，但有职业过滤
+                    if !job_list.is_empty() {
+                        for container in containers {
+                            let listing = &container.listing;
+                            let mut has_job = false;
+                            
+                            // 检查slots的accepting字段
+                            for slot in &listing.slots {
+                                for &job_id in &job_list {
+                                    // 检查位掩码是否包含该职业
+                                    let job_bit = 1u32 << job_id;
+                                    if slot.accepting.bits() & job_bit != 0 {
+                                        has_job = true;
+                                        break;
+                                    }
+                                }
+                                if has_job {
+                                    break;
+                                }
+                            }
+                            
+                            if has_job {
+                                filtered_containers.push(container);
+                            }
+                        }
+                    } else {
+                        filtered_containers = containers;
                     }
                 }
                 
@@ -211,16 +608,12 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 // 检查页码是否有效
                 let api_listings = if page > total_pages && total > 0 {
                     // 如果请求的页码超出范围且有数据，返回空数组
-                    // println!("请求的页码 {} 超出范围，总页数为 {}", page, total_pages);
                     Vec::new()
                 } else {
                     // 正常分页逻辑
                     let start = if start >= total { 0 } else { start };
                     let items_left = if total > start { total - start } else { 0 };
                     let end = start + per_page.min(items_left);
-                    
-                    // println!("分页信息: total={}, page={}, per_page={}, start={}, end={}, total_pages={}", 
-                    //          total, page, per_page, start, end, total_pages);
                     
                     // 转换为API响应格式
                     filtered_containers
@@ -261,10 +654,13 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     pagination,
                 };
 
-                warp::reply::with_status(
+                // 缓存结果 - 设置30秒的TTL
+                state.set_listings_cache(cache_key, response.clone(), 30).await;
+
+                return Ok(warp::reply::with_status(
                     warp::reply::json(&response),
                     StatusCode::OK,
-                )
+                ));
             },
             Err(e) => {
                 eprintln!("{:#?}", e);
@@ -285,27 +681,42 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     StatusCode::INTERNAL_SERVER_ERROR,
                 )
             }
-        })
+        };
+        
+        Ok(reply)
     }
 
-    let route = warp::path("api")
+    // 使用原始的路由实现方式，避免复杂的类型问题
+    let state_clone = state.clone();
+    warp::path("api")
         .and(warp::path("listings"))
         .and(warp::path::end())
+        .and(warp::get())
+        .and(warp::any().map(move || state_clone.clone()))
         .and(warp::query::<std::collections::HashMap<String, String>>())
-        .map(|params: std::collections::HashMap<String, String>| {
-            let page = params.get("page").and_then(|p| p.parse::<usize>().ok());
-            let per_page = params.get("per_page").and_then(|p| p.parse::<usize>().ok());
+        .then(move |state: Arc<State>, params: std::collections::HashMap<String, String>| {
+            let page = params.get("page").and_then(|v| v.parse().ok());
+            let per_page = params.get("per_page").and_then(|v| v.parse().ok());
             let category = params.get("category").cloned();
             let world = params.get("world").cloned();
             let search = params.get("search").cloned();
             let datacenter = params.get("datacenter").cloned();
-            (page, per_page, category, world, search, datacenter)
+            let jobs = params.get("jobs").cloned();
+            
+            // 收集所有jobs[]参数
+            let mut jobs_array = Vec::new();
+            for (key, value) in params.iter() {
+                if key.starts_with("jobs[") && key.ends_with("]") {
+                    jobs_array.push(value.clone());
+                }
+            }
+            
+            let state_clone = state.clone();
+            async move {
+                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, jobs_array).await
+            }
         })
-        .and_then(move |(page, per_page, category, world, search, datacenter)| {
-            logic(Arc::clone(&state), page, per_page, category, world, search, datacenter)
-        });
-
-    warp::get().and(route).boxed()
+        .boxed()
 }
 
 // 添加获取单个招募详细信息的API
@@ -314,21 +725,23 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         state: Arc<State>,
         id: u32,
     ) -> std::result::Result<impl Reply, Infallible> {
-        // println!("API请求招募详情: id={}", id);
+        // 尝试从缓存获取
+        if let Some(cached) = state.get_detail_cache(id).await {
+            return Ok(warp::reply::with_status(
+                warp::reply::json(&cached),
+                StatusCode::OK,
+            ));
+        }
         
         let lang = Language::ChineseSimplified;
         let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
         
-        // 构建查询
+        // 简化查询 - 合并多个$match阶段
         let pipeline = vec![
             doc! {
                 "$match": {
                     "updated_at": { "$gte": two_hours_ago },
                     "listing.id": id,
-                }
-            },
-            doc! {
-                "$match": {
                     // 过滤私有PF
                     "listing.search_area": { "$bitsAllClear": 2 },
                 }
@@ -376,44 +789,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             .aggregate(pipeline, None)
             .await;
             
-        // println!("MongoDB查询结果: {:?}", res.is_ok());
-        
-        #[derive(Serialize)]
-        struct DetailedApiListing {
-            id: u32,
-            name: String,
-            description: String,
-            created_world: String,
-            home_world: String,
-            category: String,
-            duty: String,
-            min_item_level: u16,
-            slots_filled: usize,
-            slots_available: u8,
-            time_left: f64,
-            updated_at: String,
-            is_cross_world: bool,
-            // 添加更多详细信息
-            beginners_welcome: bool,
-            duty_type: String,
-            objective: String,
-            conditions: String,
-            loot_rules: String,
-            slots: Vec<SlotInfo>,
-            datacenter: Option<String>,
-        }
-        
-        #[derive(Serialize)]
-        struct SlotInfo {
-            filled: bool,
-            role: Option<String>,
-            job: Option<String>,
-        }
-            
         Ok(match res {
             Ok(mut cursor) => {
                 if let Ok(Some(container)) = cursor.try_next().await {
-                    // println!("成功获取到招募数据");
                     let res: anyhow::Result<QueriedListing> = try {
                         let result: QueriedListing = mongodb::bson::from_document(container)?;
                         result
@@ -422,9 +800,10 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     if let Ok(container) = res {
                         let listing = &container.listing;
                         
-                        // 构建槽位信息
-                        let slots = listing.slots().iter().enumerate().map(|(_i, slot_result)| {
-                            match slot_result {
+                        // 构建槽位信息 - 使用迭代器而不是collect以提高性能
+                        let mut slots = Vec::with_capacity(listing.slots().len());
+                        for (_i, slot_result) in listing.slots().iter().enumerate() {
+                            let slot_info = match slot_result {
                                 Ok(job) => SlotInfo {
                                     filled: true,
                                     role: job.role().map(|r| r.to_string()),
@@ -443,8 +822,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                     },
                                     job: if job_code.is_empty() { None } else { Some(job_code.clone()) },
                                 },
-                            }
-                        }).collect();
+                            };
+                            slots.push(slot_info);
+                        }
                         
                         // 构建详细信息
                         let detailed = DetailedApiListing {
@@ -470,6 +850,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                             slots,
                             datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
                         };
+                        
+                        // 缓存结果 - 设置60秒的TTL
+                        state.set_detail_cache(id, detailed.clone(), 60).await;
                         
                         warp::reply::with_status(
                             warp::reply::json(&detailed),

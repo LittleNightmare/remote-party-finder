@@ -3,10 +3,11 @@ use std::{
     convert::Infallible,
     sync::Arc,
     time::Duration,
+    collections::HashMap,
 };
 
 use anyhow::{Context, Result};
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use mongodb::{
     bson::doc,
     Client as MongoClient,
@@ -15,7 +16,7 @@ use mongodb::{
     options::{IndexOptions, UpdateOptions},
     results::UpdateResult,
 };
-use tokio::sync::RwLock;
+use tokio::sync::{RwLock, Mutex};
 use tokio_stream::StreamExt;
 use warp::{
     Filter,
@@ -37,6 +38,8 @@ use crate::{
 mod stats;
 pub mod api;
 
+use crate::web::api::{ApiResponse, DetailedApiListing, ApiListing};
+
 pub async fn start(config: Arc<Config>) -> Result<()> {
     let state = State::new(Arc::clone(&config)).await?;
 
@@ -50,6 +53,21 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
 pub struct State {
     mongo: MongoClient,
     stats: RwLock<Option<CachedStatistics>>,
+    listings_cache: RwLock<ListingsCache>,
+    detail_cache: RwLock<DetailCache>,
+}
+
+struct CacheEntry<T> {
+    data: T,
+    expires_at: DateTime<Utc>,
+}
+
+struct ListingsCache {
+    entries: HashMap<String, CacheEntry<ApiResponse<Vec<ApiListing>>>>,
+}
+
+struct DetailCache {
+    entries: HashMap<u32, CacheEntry<DetailedApiListing>>,
 }
 
 impl State {
@@ -61,6 +79,12 @@ impl State {
         let state = Arc::new(Self {
             mongo,
             stats: Default::default(),
+            listings_cache: RwLock::new(ListingsCache {
+                entries: HashMap::new(),
+            }),
+            detail_cache: RwLock::new(DetailCache {
+                entries: HashMap::new(),
+            }),
         });
 
         state.collection()
@@ -92,6 +116,102 @@ impl State {
             .await
             .context("could not create updated_at index")?;
 
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.id": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.id index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.pf_category": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.pf_category index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.created_world": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.created_world index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.home_world": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.home_world index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.data_centre": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.data_centre index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.search_area": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.search_area index")?;
+
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.slots.job": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.slots.job index")?;
+            
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.slots.accepting_classes": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.slots.accepting_classes index")?;
+
         let task_state = Arc::clone(&state);
         tokio::task::spawn(async move {
             loop {
@@ -120,11 +240,62 @@ impl State {
             }
         });
 
+        let cache_state = Arc::clone(&state);
+        tokio::task::spawn(async move {
+            loop {
+                tokio::time::sleep(Duration::from_secs(60)).await;
+                
+                {
+                    let mut cache = cache_state.listings_cache.write().await;
+                    let now = Utc::now();
+                    cache.entries.retain(|_, entry| entry.expires_at > now);
+                }
+                
+                {
+                    let mut cache = cache_state.detail_cache.write().await;
+                    let now = Utc::now();
+                    cache.entries.retain(|_, entry| entry.expires_at > now);
+                }
+            }
+        });
+
         Ok(state)
     }
 
     pub fn collection(&self) -> Collection<ListingContainer> {
         self.mongo.database("rpf").collection("listings")
+    }
+
+    pub async fn get_listings_cache(&self, cache_key: &str) -> Option<ApiResponse<Vec<ApiListing>>> {
+        let cache = self.listings_cache.read().await;
+        if let Some(entry) = cache.entries.get(cache_key) {
+            if entry.expires_at > Utc::now() {
+                return Some(entry.data.clone());
+            }
+        }
+        None
+    }
+    
+    pub async fn set_listings_cache(&self, cache_key: String, data: ApiResponse<Vec<ApiListing>>, ttl_seconds: i64) {
+        let mut cache = self.listings_cache.write().await;
+        let expires_at = Utc::now() + chrono::Duration::seconds(ttl_seconds);
+        cache.entries.insert(cache_key, CacheEntry { data, expires_at });
+    }
+    
+    pub async fn get_detail_cache(&self, id: u32) -> Option<DetailedApiListing> {
+        let cache = self.detail_cache.read().await;
+        if let Some(entry) = cache.entries.get(&id) {
+            if entry.expires_at > Utc::now() {
+                return Some(entry.data.clone());
+            }
+        }
+        None
+    }
+    
+    pub async fn set_detail_cache(&self, id: u32, data: DetailedApiListing, ttl_seconds: i64) {
+        let mut cache = self.detail_cache.write().await;
+        let expires_at = Utc::now() + chrono::Duration::seconds(ttl_seconds);
+        cache.entries.insert(id, CacheEntry { data, expires_at });
     }
 }
 

@@ -247,6 +247,28 @@ impl DutyCategory {
         })
     }
 
+    pub fn as_u32(&self) -> u32 {
+        match self {
+            Self::None => 0,
+            Self::DutyRoulette => 1,
+            Self::Dungeon => 2,
+            Self::Guildhest => 4,
+            Self::Trial => 8,
+            Self::Raid => 16,
+            Self::HighEndDuty => 32,
+            Self::PvP => 64,
+            Self::GoldSaucer => 128,
+            Self::Fate => 256,
+            Self::TreasureHunt => 512,
+            Self::TheHunt => 1024,
+            Self::GatheringForays => 2048,
+            Self::DeepDungeon => 4096,
+            Self::FieldOperation => 8192,
+            Self::VariantAndCriterionDungeon => 16384,
+            _ => 0,
+        }
+    }
+
     pub fn pf_category(&self) -> PartyFinderCategory {
         match self {
             DutyCategory::None => PartyFinderCategory::None,
