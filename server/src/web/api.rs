@@ -253,8 +253,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
         let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
         
-        // 构建基本查询 - 将尽可能多的过滤条件移到数据库端
         let mut pipeline = vec![
+            // 1. 首先进行基础过滤，尽早减少数据量
             doc! {
                 "$match": {
                     "updated_at": { "$gte": two_hours_ago },
@@ -263,8 +263,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 }
             },
         ];
-        
-        // 添加分类过滤条件到MongoDB查询
+
+        // 2. 添加分类过滤条件 - 提前过滤
         if let Some(cat) = &category {
             pipeline.push(doc! {
                 "$match": {
@@ -272,9 +272,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 }
             });
         }
-        // 添加世界过滤条件到MongoDB查询
+
+        // 3. 添加世界/数据中心过滤条件 - 提前过滤
         if let Some(w) = &world {
-            // 查找匹配的世界
             let world_id = crate::ffxiv::WORLDS.iter().find(|(_, world)| world.name() == w.name()).map(|(id, _)| *id as u32);
             
             if let Some(id) = world_id {
@@ -287,21 +287,14 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     }
                 });
             }
-        }
-        // 如果没有指定世界但指定了数据中心，则添加数据中心过滤条件
-        else if let Some(dc) = &datacenter {
-            // 获取数据中心下的所有世界ID
+        } else if let Some(dc) = &datacenter {
             let world_ids: Vec<u32> = crate::ffxiv::WORLDS.iter()
                 .filter(|(_, world)| world.data_center().name() == dc)
                 .map(|(id, _)| *id)
                 .collect();
 
             if !world_ids.is_empty() {
-                // 将u32转换为i32，因为MongoDB的BSON支持i32
-                let world_ids_i32: Vec<i32> = world_ids.iter()
-                    .map(|&id| id as i32)
-                    .collect();
-                
+                let world_ids_i32: Vec<i32> = world_ids.iter().map(|&id| id as i32).collect();
                 pipeline.push(doc! {
                     "$match": {
                         "$or": [
@@ -312,14 +305,11 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 });
             }
         }
-        
-        // 添加职业过滤条件 - 支持多个职业
+
+        // 4. 添加职业过滤条件 - 提前过滤
         if !job_list.is_empty() {
-            // 构建多个职业的OR条件
             let mut job_conditions = Vec::new();
-            
             for &job_id in &job_list {
-                // 匹配accepting字段 - 使用位掩码
                 let job_bit = 1u32 << job_id;
                 job_conditions.push(doc! {
                     "listing.slots": {
@@ -333,7 +323,6 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             }
             
             if !job_conditions.is_empty() {
-                // 将所有职业条件组合为OR查询
                 pipeline.push(doc! {
                     "$match": {
                         "$or": job_conditions
@@ -341,8 +330,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 });
             }
         }
-        
-        // 计算剩余时间
+
+        // 5. 计算时间相关字段
         pipeline.push(doc! {
             "$set": {
                 "time_left": {
@@ -355,25 +344,51 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         },
                         1000,
                     ]
-                },
+                }
+            }
+        });
+
+        // 6. 过滤过期招募
+        pipeline.push(doc! {
+            "$match": {
+                "time_left": { "$gte": 0 },
+            }
+        });
+
+        // 7. 按content_id_lower分组前先排序，确保获取最新的招募
+        pipeline.push(doc! {
+            "$sort": {
+                "updated_at": -1
+            }
+        });
+
+        // 8. 分组获取每个玩家最新的招募
+        pipeline.push(doc! {
+            "$group": {
+                "_id": "$listing.content_id_lower",
+                "doc": { "$first": "$$ROOT" }
+            }
+        });
+
+        // 9. 恢复文档结构
+        pipeline.push(doc! {
+            "$replaceRoot": { "newRoot": "$doc" }
+        });
+
+        // 10. 最后添加分页相关的排序和时间分组
+        pipeline.push(doc! {
+            "$set": {
                 "updated_minute": {
                     "$dateTrunc": {
                         "date": "$updated_at",
                         "unit": "minute",
                         "binSize": 5,
                     },
-                },
+                }
             }
         });
-        
-        // 过滤已过期的招募
-        pipeline.push(doc! {
-            "$match": {
-                "time_left": { "$gte": 0 },
-            }
-        });
-        
-        // 添加排序
+
+        // 11. 最终排序
         pipeline.push(doc! {
             "$sort": {
                 "updated_minute": -1,
