@@ -7,6 +7,11 @@ name: Build and Publish
       - main
     paths:
       - 'server/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'server/**'
 
 jobs:
   build:
