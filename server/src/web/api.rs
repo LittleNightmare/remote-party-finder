@@ -851,9 +851,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                     role_id: if role_class.contains("tank") {
                                         1
                                     } else if role_class.contains("healer") {
-                                        2
-                                    } else if role_class.contains("dps") {
                                         3
+                                    } else if role_class.contains("dps") {
+                                        2
                                     } else {
                                         0
                                     },
