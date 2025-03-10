@@ -830,12 +830,25 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         let mut slots = Vec::with_capacity(listing.slots().len());
                         for (_i, slot_result) in listing.slots().iter().enumerate() {
                             let slot_info = match slot_result {
-                                Ok(job) => SlotInfo {
-                                    filled: true,
-                                    role: job.role().map(|r| r.to_string()),
-                                    role_id: job.role().map(|r| r.as_u32()).unwrap_or(0),
-                                    job: Some(job.code().to_string()),
-                                    job_id: job.as_u32(),
+                                Ok(job) => {
+                                    // 从 JOBS HashMap 中找到对应的 job_id
+                                    let job_id = crate::ffxiv::JOBS.iter()
+                                        .find(|(_, &j)| j == *job)
+                                        .map(|(id, _)| *id)
+                                        .unwrap_or(0);
+                                    
+                                    SlotInfo {
+                                        filled: true,
+                                        role: job.role().map(|r| r.to_string()),
+                                        role_id: match job.role() {
+                                            Some(ffxiv_types_cn::Role::Tank) => 1,
+                                            Some(ffxiv_types_cn::Role::Healer) => 2,
+                                            Some(ffxiv_types_cn::Role::Dps) => 3,
+                                            None => 0,
+                                        },
+                                        job: Some(job.code().to_string()),
+                                        job_id,
+                                    }
                                 },
                                 Err((role_class, job_code)) => SlotInfo {
                                     filled: false,
@@ -851,9 +864,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                     role_id: if role_class.contains("tank") {
                                         1
                                     } else if role_class.contains("healer") {
-                                        3
-                                    } else if role_class.contains("dps") {
                                         2
+                                    } else if role_class.contains("dps") {
+                                        3
                                     } else {
                                         0
                                     },
