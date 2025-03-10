@@ -84,7 +84,7 @@ pub struct SlotInfo {
     pub role: Option<String>,
     pub role_id: u32,
     pub job: Option<String>,
-    pub job_id: u32,
+    pub job_id: Vec<u32>,
 }
 
 /// 获取招募列表的API
@@ -847,31 +847,46 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                             None => 0,
                                         },
                                         job: Some(job.code().to_string()),
-                                        job_id,
+                                        job_id: vec![job_id],
                                     }
                                 },
-                                Err((role_class, job_code)) => SlotInfo {
-                                    filled: false,
-                                    role: if role_class.contains("tank") {
-                                        Some("Tank".to_string())
-                                    } else if role_class.contains("healer") {
-                                        Some("Healer".to_string())
-                                    } else if role_class.contains("dps") {
-                                        Some("DPS".to_string())
+                                Err((role_class, job_code)) => {
+                                    // 解析多个职业代码
+                                    let job_ids: Vec<u32> = if !job_code.is_empty() {
+                                        job_code.split_whitespace()
+                                            .filter_map(|code| {
+                                                crate::ffxiv::JOBS.iter()
+                                                    .find(|(_, job)| job.code() == code)
+                                                    .map(|(id, _)| *id)
+                                            })
+                                            .collect()
                                     } else {
-                                        None
-                                    },
-                                    role_id: if role_class.contains("tank") {
-                                        1
-                                    } else if role_class.contains("healer") {
-                                        2
-                                    } else if role_class.contains("dps") {
-                                        3
-                                    } else {
-                                        0
-                                    },
-                                    job: if job_code.is_empty() { None } else { Some(job_code.clone()) },
-                                    job_id: 0, // 空槽位职业ID为0
+                                        Vec::new()
+                                    };
+
+                                    SlotInfo {
+                                        filled: false,
+                                        role: if role_class.contains("tank") {
+                                            Some("Tank".to_string())
+                                        } else if role_class.contains("healer") {
+                                            Some("Healer".to_string())
+                                        } else if role_class.contains("dps") {
+                                            Some("DPS".to_string())
+                                        } else {
+                                            None
+                                        },
+                                        role_id: if role_class.contains("tank") {
+                                            1
+                                        } else if role_class.contains("healer") {
+                                            2
+                                        } else if role_class.contains("dps") {
+                                            3
+                                        } else {
+                                            0
+                                        },
+                                        job: if job_code.is_empty() { None } else { Some(job_code.clone()) },
+                                        job_id: job_ids,
+                                    }
                                 },
                             };
                             slots.push(slot_info);
