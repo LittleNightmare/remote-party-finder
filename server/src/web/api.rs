@@ -38,8 +38,11 @@ pub struct ApiListing {
     name: String,
     description: String,
     created_world: String,
+    created_world_id: u32,
     home_world: String,
+    home_world_id: u32,
     category: String,
+    category_id: u32,
     duty: String,
     min_item_level: u16,
     slots_filled: usize,
@@ -79,7 +82,9 @@ pub struct DetailedApiListing {
 pub struct SlotInfo {
     pub filled: bool,
     pub role: Option<String>,
+    pub role_id: u32,
     pub job: Option<String>,
+    pub job_id: u32,
 }
 
 /// 获取招募列表的API
@@ -475,8 +480,11 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                             name: listing.name.full_text(&lang).to_string(),
                                             description: listing.description.full_text(&lang).to_string(),
                                             created_world: listing.created_world_string().to_string(),
+                                            created_world_id: u32::from(listing.created_world),
                                             home_world: listing.home_world_string().to_string(),
+                                            home_world_id: u32::from(listing.home_world),
                                             category: listing.pf_category().as_str().to_string(),
+                                            category_id: listing.category.as_u32(),
                                             duty: listing.duty_name(&lang).to_string(),
                                             min_item_level: listing.min_item_level,
                                             slots_filled: listing.slots_filled(),
@@ -642,8 +650,11 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                 name: listing.name.full_text(&lang).to_string(),
                                 description: listing.description.full_text(&lang).to_string(),
                                 created_world: listing.created_world_string().to_string(),
+                                created_world_id: u32::from(listing.created_world),
                                 home_world: listing.home_world_string().to_string(),
+                                home_world_id: u32::from(listing.home_world),
                                 category: listing.pf_category().as_str().to_string(),
+                                category_id: listing.category.as_u32(),
                                 duty: listing.duty_name(&lang).to_string(),
                                 min_item_level: listing.min_item_level,
                                 slots_filled: listing.slots_filled(),
@@ -822,7 +833,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                 Ok(job) => SlotInfo {
                                     filled: true,
                                     role: job.role().map(|r| r.to_string()),
+                                    role_id: job.role().map(|r| r.as_u32()).unwrap_or(0),
                                     job: Some(job.code().to_string()),
+                                    job_id: job.as_u32(),
                                 },
                                 Err((role_class, job_code)) => SlotInfo {
                                     filled: false,
@@ -835,7 +848,17 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                     } else {
                                         None
                                     },
+                                    role_id: if role_class.contains("tank") {
+                                        1
+                                    } else if role_class.contains("healer") {
+                                        3
+                                    } else if role_class.contains("dps") {
+                                        2
+                                    } else {
+                                        0
+                                    },
                                     job: if job_code.is_empty() { None } else { Some(job_code.clone()) },
+                                    job_id: 0, // 空槽位职业ID为0
                                 },
                             };
                             slots.push(slot_info);
