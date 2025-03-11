@@ -12526,6 +12526,13 @@ lazy_static::lazy_static! {
             fr: "Yuweyawata",
             zh: "玉韦亚瓦塔",
         },
+        (51, 5137) => LocalisedText {
+            en: "A Future Rewritten",
+            ja: "もうひとつの未来",
+            de: "Eine zweite Zukunft",
+            fr: "Avenirs réécrits",
+            zh: "另一个未来",
+        },
         (51, 5138) => LocalisedText {
             en: "Jeuno: The First Walk",
             ja: "ジュノ：ザ・ファーストウォーク",
@@ -24697,7 +24704,7 @@ lazy_static::lazy_static! {
             ja: "/ohokaliy",
             de: "/ohokaliy",
             fr: "/ohokaliy",
-            zh: "/噢霍卡利！",
+            zh: "/噢霍卡利",
         },
         (63, 29054) => LocalisedText {
             en: "Guard",
@@ -35982,7 +35989,7 @@ lazy_static::lazy_static! {
             ja: "絶もうひとつの未来",
             de: "Eine zweite Zukunft (fatal)",
             fr: "Avenirs réécrits (fatal)",
-            zh: "Futures Rewritten (Ultimate)",
+            zh: "光暗未来绝境战",
         },
         (24, 5156) => LocalisedText {
             en: "Jeuno: The First Walk",

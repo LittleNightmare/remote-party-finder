@@ -7141,7 +7141,7 @@ lazy_static::lazy_static! {
             ja: "もうひとつの未来",
             de: "Eine zweite Zukunft",
             fr: "Avenirs réécrits",
-            zh: "",
+            zh: "另一个未来",
         },
         1239 => LocalisedText {
             en: "The Jade Stoa",

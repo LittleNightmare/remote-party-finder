@@ -77,7 +77,7 @@ internal class Program {
         [Language.ChineseSimplified] = "zh",
     };
 
-        private string? GetLocalisedStruct<T>(uint rowId, Func<T, ReadOnlySeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : struct, IExcelRow<T>
+    private string? GetLocalisedStruct<T>(uint rowId, Func<T, ReadOnlySeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : struct, IExcelRow<T>
     {
             var def = this.Data[Language.English].GetExcelSheet<T>()!.GetRow(rowId)!;
             var defName = nameFunc(def)?.ExtractText();
@@ -96,7 +96,6 @@ internal class Program {
                 try
                 {
                     row = this.Data[language].GetExcelSheet<T>(language)?.GetRow(rowId);
-
                 }
                 catch (Exception e)
                 {
@@ -105,8 +104,8 @@ internal class Program {
                
                 var name = row == null
                     ? defName
-                    : nameFunc((T)row)?.ExtractText().Replace("\"", "\\\"");
-            name ??= defName;
+                    : nameFunc((T)row)?.ExtractText().Replace("\"", "\\\"") ?? defName;
+                
                 if (capitalise) {
                     if (name.Length == 0)
                     {
@@ -135,325 +134,335 @@ internal class Program {
             return sb.ToString();
         }
 
-        private string GenerateDuties() {
-            var sb = DefaultHeader(true);
-            sb.Append('\n');
+    private string GenerateDuties() {
+        var sb = DefaultHeader(true);
+        sb.Append('\n');
 
-            sb.Append("#[derive(Debug)]\n");
-            sb.Append("pub struct DutyInfo {\n");
-            sb.Append("    pub name: LocalisedText,\n");
-            sb.Append("    pub high_end: bool,\n");
-            sb.Append("    pub content_kind: ContentKind,\n");
-            sb.Append("}\n\n");
+        sb.Append("#[derive(Debug)]\n");
+        sb.Append("pub struct DutyInfo {\n");
+        sb.Append("    pub name: LocalisedText,\n");
+        sb.Append("    pub high_end: bool,\n");
+        sb.Append("    pub content_kind: ContentKind,\n");
+        sb.Append("}\n\n");
 
-            sb.Append("#[derive(Debug, Clone, Copy)]\n");
-            sb.Append("#[allow(unused)]\n");
-            sb.Append("#[repr(u32)]\n");
-            sb.Append("pub enum ContentKind {\n");
-            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
-                if (name.Length > 0) {
-                    sb.Append($"    {name} = {kind.RowId},\n");
-                }
+        sb.Append("#[derive(Debug, Clone, Copy)]\n");
+        sb.Append("#[allow(unused)]\n");
+        sb.Append("#[repr(u32)]\n");
+        sb.Append("pub enum ContentKind {\n");
+        foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
+            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            if (name.Length > 0) {
+                sb.Append($"    {name} = {kind.RowId},\n");
             }
-
-            sb.Append("    Other(u32),\n");
-            sb.Append("}\n\n");
-
-            sb.Append("impl ContentKind {\n");
-
-            sb.Append("    fn from_u32(kind: u32) -> Self {\n");
-            sb.Append("        match kind {\n");
-            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
-                if (name.Length > 0) {
-                    sb.Append($"            {kind.RowId} => Self::{name},\n");
-                }
-            }
-
-            sb.Append("            x => Self::Other(x),\n");
-            sb.Append("        }\n");
-            sb.Append("    }\n\n");
-
-            sb.Append("    pub fn as_u32(self) -> u32 {\n");
-            sb.Append("        match self {\n");
-            foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-                var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
-                if (name.Length > 0) {
-                    sb.Append($"            Self::{name} => {kind.RowId},\n");
-                }
-            }
-
-            sb.Append("            Self::Other(x) => x,\n");
-            sb.Append("        }\n");
-            sb.Append("    }\n");
-
-            sb.Append("}\n\n");
-
-            sb.Append("lazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {\n");
-
-            foreach (var cfc in this.Data[Language.English].GetExcelSheet<ContentFinderCondition>()!) {
-                if (cfc.RowId == 0) {
-                    continue;
-                }
-
-                var name = this.GetLocalisedStruct<ContentFinderCondition>(cfc.RowId, row => row.Name, 12, true);
-                if (name == null) {
-                    continue;
-                }
-                var highEnd = cfc.HighEndDuty ? "true" : "false";
-                var contentType = cfc.ContentType.Value;
-                // Chinese has different status
-                try
-                {
-                    var cn = Data[Language.ChineseSimplified].GetExcelSheet<ContentFinderCondition>()!
-                        .GetRow(cfc.RowId);
-                    highEnd = cn.HighEndDuty ? "true" : "false";
-                }
-                catch (Exception e)
-                {
-                    // Console.WriteLine(e);
-                }
-
-                var contentKind = contentType.Name.ExtractText().Replace(" ", "").Replace("&", "");
-                if (string.IsNullOrEmpty(contentKind)) {
-                    contentKind = $"Other({contentType.RowId})";
-                }
-
-                sb.Append($"        {cfc.RowId} => DutyInfo {{\n");
-                sb.Append($"            name: {name},\n");
-                sb.Append($"            high_end: {highEnd},\n");
-                sb.Append($"            content_kind: ContentKind::{contentKind},\n");
-                sb.Append("        },\n");
-            }
-
-            sb.Append("    };\n");
-            sb.Append("}\n");
-
-            return sb.ToString();
         }
 
-        private string GenerateJobs() {
-            var sb = DefaultHeader();
-            sb.Append("use ffxiv_types_cn::jobs::{ClassJob, Class, Job, NonCombatJob};\n\n");
-            sb.Append("lazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref JOBS: HashMap<u32, ClassJob> = maplit::hashmap! {\n");
+        sb.Append("    Other(u32),\n");
+        sb.Append("}\n\n");
 
-            foreach (var cj in this.Data[Language.English].GetExcelSheet<ClassJob>()!) {
-                if (cj.RowId == 0) {
-                    continue;
-                }
+        sb.Append("impl ContentKind {\n");
 
-                var name = cj.NameEnglish.ExtractText().Replace(" ", "");
-                if (name.Length <= 0) {
-                    continue;
-                }
-
-                var isCombat = cj.Role != 0;
-                var isClass = cj.JobIndex == 0;
-
-                string value;
-                if (isCombat) {
-                    value = isClass
-                        ? $"ClassJob::Class(Class::{name})"
-                        : $"ClassJob::Job(Job::{name})";
-                } else {
-                    value = $"ClassJob::NonCombat(NonCombatJob::{name})";
-                }
-
-                sb.Append($"        {cj.RowId} => {value},\n");
+        sb.Append("    fn from_u32(kind: u32) -> Self {\n");
+        sb.Append("        match kind {\n");
+        foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
+            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            if (name.Length > 0) {
+                sb.Append($"            {kind.RowId} => Self::{name},\n");
             }
-
-            sb.Append("    };\n");
-            sb.Append("}\n");
-
-            return sb.ToString();
         }
 
-        private string GenerateRoulettes() {
-            var sb = DefaultHeader(true);
-            sb.Append('\n');
-            sb.Append("#[derive(Debug)]\n");
-            sb.Append("pub struct RouletteInfo {\n");
-            sb.Append("    pub name: LocalisedText,\n");
-            sb.Append("    pub pvp: bool,\n");
-            sb.Append("}\n\n");
+        sb.Append("            x => Self::Other(x),\n");
+        sb.Append("        }\n");
+        sb.Append("    }\n\n");
 
-            sb.Append("lazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {\n");
+        sb.Append("    pub fn as_u32(self) -> u32 {\n");
+        sb.Append("        match self {\n");
+        foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
+            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            if (name.Length > 0) {
+                sb.Append($"            Self::{name} => {kind.RowId},\n");
+            }
+        }
 
-            foreach (var cr in this.Data[Language.English].GetExcelSheet<ContentRoulette>()!) {
-                if (cr.RowId == 0) {
-                    continue;
-                }
+        sb.Append("            Self::Other(x) => x,\n");
+        sb.Append("        }\n");
+        sb.Append("    }\n");
 
-                var name = this.GetLocalisedStruct<ContentRoulette>(cr.RowId, row => row.Name, 12);
-                if (name == null) {
-                    continue;
-                }
+        sb.Append("}\n\n");
 
-                var pvp = cr.IsPvP
-                    ? "true"
-                    : "false";
+        sb.Append("lazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {\n");
 
-                sb.Append($"        {cr.RowId} => RouletteInfo {{\n");
-                sb.Append($"            name: {name},\n");
-                sb.Append($"            pvp: {pvp},\n");
-                sb.Append("        },\n");
+        foreach (var cfc in this.Data[Language.English].GetExcelSheet<ContentFinderCondition>()!) {
+            if (cfc.RowId == 0) {
+                continue;
             }
 
-            sb.Append("    };\n");
-            sb.Append("}\n");
-
-            return sb.ToString();
-        }
-        /// <summary>
-        /// 为国服服务器临时修正isPublic & DataCenter数据.
-        /// </summary>
-        private void ChangeWorldForCN()
-        {
-            var chineseWorldDCGroups = new[] {
-                new
-                {
-                    Name = "陆行鸟",
-                    Id   = 101u,
-                    Worlds = new[]
-                    {
-                        new { Id = 1175u, Name = "晨曦王座" },
-                        new { Id = 1174u, Name = "沃仙曦染" },
-                        new { Id = 1173u, Name = "宇宙和音" },
-                        new { Id = 1167u, Name = "红玉海"   },
-                        new { Id = 1060u, Name = "萌芽池"   },
-                        new { Id = 1081u, Name = "神意之地" },
-                        new { Id = 1044u, Name = "幻影群岛" },
-                        new { Id = 1042u, Name = "拉诺西亚" },
-                    },
-                },
-                new
-                {
-                   Name = "莫古力",
-                   Id   = 102u,
-                   Worlds = new[]
-                   {
-                        new { Id = 1121u, Name = "拂晓之间" },
-                        new { Id = 1166u, Name = "龙巢神殿" },
-                        new { Id = 1113u, Name = "旅人栈桥" },
-                        new { Id = 1076u, Name = "白金幻象" },
-                        new { Id = 1176u, Name = "梦羽宝境" },
-                        new { Id = 1171u, Name = "神拳痕"   },
-                        new { Id = 1170u, Name = "潮风亭"   },
-                        new { Id = 1172u, Name = "白银乡"   },
-                   },
-                },
-                new
-                {
-                   Name = "猫小胖",
-                   Id   = 103u,
-                   Worlds = new[]
-                   {
-                        new { Id = 1179u, Name = "琥珀原"   },
-                        new { Id = 1178u, Name = "柔风海湾" },
-                        new { Id = 1177u, Name = "海猫茶屋" },
-                        new { Id = 1169u, Name = "延夏"    },
-                        new { Id = 1106u, Name = "静语庄园" },
-                        new { Id = 1045u, Name = "摩杜纳"   },
-                        new { Id = 1043u, Name = "紫水栈桥" },
-                   },
-                },
-                new
-                {
-                   Name = "豆豆柴",
-                   Id   = 201u,
-                   Worlds = new[]
-                   {
-                        new { Id = 1201u, Name = "红茶川"    },
-                        new { Id = 1186u, Name = "伊修加德"  },
-                        new { Id = 1180u, Name = "太阳海岸"  },
-                        new { Id = 1183u, Name = "银泪湖"    },
-                        new { Id = 1192u, Name = "水晶塔"    },
-                        new { Id = 1202u, Name = "萨雷安"    },
-                        new { Id = 1203u, Name = "加雷马"    },
-                        new { Id = 1200u, Name = "亚马乌罗提" },
-                   },
-                },
-            };
-            //var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
-            var worldExcel = this.Data[Language.English].GetExcelSheet<World>();
-
-            foreach (var dc in chineseWorldDCGroups)
+            var name = this.GetLocalisedStruct<ContentFinderCondition>(cfc.RowId, row => row.Name, 12, true);
+            if (name == null) {
+                continue;
+            }
+            var highEnd = cfc.HighEndDuty ? "true" : "false";
+            var contentType = cfc.ContentType.Value;
+            // Chinese has different status
+            try
             {
-                //var dcToReplaced = dcExcel.GetRow(dc.Id);
+                var cn = Data[Language.ChineseSimplified].GetExcelSheet<ContentFinderCondition>()!
+                    .GetRow(cfc.RowId);
+                highEnd = cn.HighEndDuty ? "true" : "false";
+            }
+            catch (Exception e)
+            {
+                // Console.WriteLine(e);
+            }
 
-                //dcToReplaced.Name = new SeString(dc.Name);
-                //dcToReplaced.Region = 5;
+            var contentKind = contentType.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            if (string.IsNullOrEmpty(contentKind)) {
+                contentKind = $"Other({contentType.RowId})";
+            }
 
-                foreach (var world in dc.Worlds)
+            sb.Append($"        {cfc.RowId} => DutyInfo {{\n");
+            sb.Append($"            name: {name},\n");
+            sb.Append($"            high_end: {highEnd},\n");
+            sb.Append($"            content_kind: ContentKind::{contentKind},\n");
+            sb.Append("        },\n");
+        }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
+    }
+
+    private string GenerateJobs() {
+        var sb = DefaultHeader();
+        sb.Append("use ffxiv_types_cn::jobs::{ClassJob, Class, Job, NonCombatJob};\n\n");
+        sb.Append("lazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref JOBS: HashMap<u32, ClassJob> = maplit::hashmap! {\n");
+
+        foreach (var cj in this.Data[Language.English].GetExcelSheet<ClassJob>()!) {
+            if (cj.RowId == 0) {
+                continue;
+            }
+
+            var name = cj.NameEnglish.ExtractText().Replace(" ", "");
+            if (name.Length <= 0) {
+                continue;
+            }
+
+            var isCombat = cj.Role != 0;
+            var isClass = cj.JobIndex == 0;
+
+            string value;
+            if (isCombat) {
+                value = isClass
+                    ? $"ClassJob::Class(Class::{name})"
+                    : $"ClassJob::Job(Job::{name})";
+            } else {
+                value = $"ClassJob::NonCombat(NonCombatJob::{name})";
+            }
+
+            sb.Append($"        {cj.RowId} => {value},\n");
+        }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
+    }
+
+    private string GenerateRoulettes() {
+        var sb = DefaultHeader(true);
+        sb.Append('\n');
+        sb.Append("#[derive(Debug)]\n");
+        sb.Append("pub struct RouletteInfo {\n");
+        sb.Append("    pub name: LocalisedText,\n");
+        sb.Append("    pub pvp: bool,\n");
+        sb.Append("}\n\n");
+
+        sb.Append("lazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {\n");
+
+        foreach (var cr in this.Data[Language.English].GetExcelSheet<ContentRoulette>()!) {
+            if (cr.RowId == 0) {
+                continue;
+            }
+
+            var name = this.GetLocalisedStruct<ContentRoulette>(cr.RowId, row => row.Name, 12);
+            if (name == null) {
+                continue;
+            }
+
+            var pvp = cr.IsPvP
+                ? "true"
+                : "false";
+
+            sb.Append($"        {cr.RowId} => RouletteInfo {{\n");
+            sb.Append($"            name: {name},\n");
+            sb.Append($"            pvp: {pvp},\n");
+            sb.Append("        },\n");
+        }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
+    }
+    /// <summary>
+    /// 为国服服务器临时修正isPublic & DataCenter数据.
+    /// </summary>
+    private void ChangeWorldForCN()
+    {
+        var chineseWorldDCGroups = new[] {
+            new
+            {
+                Name = "陆行鸟",
+                Id   = 101u,
+                Worlds = new[]
                 {
-                    var worldToUpdated = worldExcel.GetRow(world.Id);
-                    //worldToUpdated.IsPublic = true;
-                    //worldToUpdated.UserType = 10;
-                    //worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
-                }
-            }
+                    new { Id = 1175u, Name = "晨曦王座" },
+                    new { Id = 1174u, Name = "沃仙曦染" },
+                    new { Id = 1173u, Name = "宇宙和音" },
+                    new { Id = 1167u, Name = "红玉海"   },
+                    new { Id = 1060u, Name = "萌芽池"   },
+                    new { Id = 1081u, Name = "神意之地" },
+                    new { Id = 1044u, Name = "幻影群岛" },
+                    new { Id = 1042u, Name = "拉诺西亚" },
+                },
+            },
+            new
+            {
+               Name = "莫古力",
+               Id   = 102u,
+               Worlds = new[]
+               {
+                    new { Id = 1121u, Name = "拂晓之间" },
+                    new { Id = 1166u, Name = "龙巢神殿" },
+                    new { Id = 1113u, Name = "旅人栈桥" },
+                    new { Id = 1076u, Name = "白金幻象" },
+                    new { Id = 1176u, Name = "梦羽宝境" },
+                    new { Id = 1171u, Name = "神拳痕"   },
+                    new { Id = 1170u, Name = "潮风亭"   },
+                    new { Id = 1172u, Name = "白银乡"   },
+               },
+            },
+            new
+            {
+               Name = "猫小胖",
+               Id   = 103u,
+               Worlds = new[]
+               {
+                    new { Id = 1179u, Name = "琥珀原"   },
+                    new { Id = 1178u, Name = "柔风海湾" },
+                    new { Id = 1177u, Name = "海猫茶屋" },
+                    new { Id = 1169u, Name = "延夏"    },
+                    new { Id = 1106u, Name = "静语庄园" },
+                    new { Id = 1045u, Name = "摩杜纳"   },
+                    new { Id = 1043u, Name = "紫水栈桥" },
+               },
+            },
+            new
+            {
+               Name = "豆豆柴",
+               Id   = 201u,
+               Worlds = new[]
+               {
+                    new { Id = 1201u, Name = "红茶川"    },
+                    new { Id = 1186u, Name = "伊修加德"  },
+                    new { Id = 1180u, Name = "太阳海岸"  },
+                    new { Id = 1183u, Name = "银泪湖"    },
+                    new { Id = 1192u, Name = "水晶塔"    },
+                    new { Id = 1202u, Name = "萨雷安"    },
+                    new { Id = 1203u, Name = "加雷马"    },
+                    new { Id = 1200u, Name = "亚马乌罗提" },
+               },
+            },
+        };
+        //var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
+        var worldExcel = this.Data[Language.English].GetExcelSheet<World>();
 
+        foreach (var dc in chineseWorldDCGroups)
+        {
+            //var dcToReplaced = dcExcel.GetRow(dc.Id);
+
+            //dcToReplaced.Name = new SeString(dc.Name);
+            //dcToReplaced.Region = 5;
+
+            foreach (var world in dc.Worlds)
+            {
+                var worldToUpdated = worldExcel.GetRow(world.Id);
+                //worldToUpdated.IsPublic = true;
+                //worldToUpdated.UserType = 10;
+                //worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
+            }
         }
 
+    }
 
-        private string GenerateWorlds() {
-            this.ChangeWorldForCN();
 
-            var sb = DefaultHeader();
-            sb.Append("use ffxiv_types_cn::World;\n\n");
-            sb.Append("lazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
+    private string GenerateWorlds() {
+        this.ChangeWorldForCN();
 
-            foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
-                if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.RowId == 0) {
-                    continue;
-                }
+        var sb = DefaultHeader();
+        sb.Append("use ffxiv_types_cn::World;\n\n");
+        sb.Append("lazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
-                var name = world.Name.ExtractText();
-                if (name.Length <= 0) {
-                    continue;
-                }
-
-                sb.Append($"        {world.RowId} => World::{name},\n");
+        foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
+            if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.RowId == 0) {
+                continue;
             }
 
-            sb.Append("    };\n");
-            sb.Append("}\n");
+            var name = world.Name.ExtractText();
+            if (name.Length <= 0) {
+                continue;
+            }
 
-            return sb.ToString();
+            sb.Append($"        {world.RowId} => World::{name},\n");
         }
 
-        private string GenerateTerritoryNames() {
-            var sb = DefaultHeader(true);
-            sb.Append("\nlazy_static::lazy_static! {\n");
-            sb.Append("    pub static ref TERRITORY_NAMES: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
+        sb.Append("    };\n");
+        sb.Append("}\n");
 
-            foreach (var tt in this.Data[Language.English].GetExcelSheet<TerritoryType>()!) {
-                if (tt.RowId == 0 || tt.PlaceName.RowId == 0) {
-                    continue;
-                }
+        return sb.ToString();
+    }
 
-                var name = this.GetLocalisedStruct<TerritoryType>(
+    private string GenerateTerritoryNames() {
+        var sb = DefaultHeader(true);
+        sb.Append("\nlazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref TERRITORY_NAMES: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
+
+        foreach (var tt in this.Data[Language.English].GetExcelSheet<TerritoryType>()!) {
+            if (tt.RowId == 0 || tt.PlaceName.RowId == 0) {
+                continue;
+            }
+
+            string? name = null;
+            try
+            {
+                name = this.GetLocalisedStruct<TerritoryType>(
                     tt.RowId,
                     row => row.PlaceName.Value!.Name,
                     8
                 );
-                if (name == null) {
-                    continue;
-                }
-
-                sb.Append($"        {tt.RowId} => {name},\n");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"RowId:{tt.RowId}, E:{e}");
+                //throw;
+            }
+            
+            if (name == null) {
+                continue;
             }
 
-            sb.Append("    };\n");
-            sb.Append("}\n");
-
-            return sb.ToString();
+            sb.Append($"        {tt.RowId} => {name},\n");
         }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
+    }
 
     private string GenerateAutoTranslate() {
         var sb = DefaultHeader(true);
