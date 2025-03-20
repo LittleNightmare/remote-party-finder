@@ -98,12 +98,16 @@ pub struct SlotInfo {
 /// - datacenter: 数据中心过滤
 /// - jobs: 职业过滤，支持多个职业ID，用逗号分隔，如"1,2,8"
 /// - jobs[]: 职业过滤，支持数组格式，如jobs[]=8&jobs[]=10&jobs[]=21
+/// - duty: 副本过滤，支持多个副本ID，用逗号分隔，如"1,2,8"
+/// - duty[]: 副本过滤，支持数组格式，如duty[]=8&duty[]=10&duty[]=21
 ///
 /// 职业ID对应关系:
 /// 请参考jobs.rs中的hashmap
 /// 示例:
 /// GET /api/listings?page=1&per_page=20&category=None&world=拉诺西亚&jobs=8,10,21
 /// GET /api/listings?page=1&per_page=20&datacenter=猫小胖&category=HighEndDuty&jobs[]=10&jobs[]=21
+/// GET /api/listings?page=1&per_page=20&duty=1,2,3&jobs=8,10
+/// GET /api/listings?page=1&per_page=20&duty[]=10&duty[]=21
 pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(
         state: Arc<State>, 
@@ -115,6 +119,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         datacenter: Option<String>,
         jobs: Option<String>,
         jobs_array: Vec<String>,
+        duty: Option<String>,
+        duty_array: Vec<String>,
     ) -> std::result::Result<impl Reply, Infallible> {
         let page = page.unwrap_or(1);
         let per_page = per_page.unwrap_or(20).min(100); // 限制每页最大数量为100
@@ -234,16 +240,53 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             ));
         }
         
-        // 构建缓存键 - 使用jobs参数
+        // 处理副本ID列表
+        let mut duty_list = Vec::new();
+        // 处理逗号分隔的格式
+        if let Some(duty_str) = duty.as_deref() {
+            for duty_id in duty_str.split(',').filter_map(|s| s.trim().parse::<u16>().ok()) {
+                duty_list.push(duty_id);
+            }
+        }
+        
+        // 处理数组格式
+        if !duty_array.is_empty() {
+            for duty_id in duty_array.iter().filter_map(|s| s.trim().parse::<u16>().ok()) {
+                duty_list.push(duty_id);
+            }
+        }
+
+        // 如果提供了副本参数但没有有效的副本ID，返回空结果
+        if (duty.is_some() || !duty_array.is_empty()) && duty_list.is_empty() {
+            let pagination = Pagination {
+                total: 0,
+                page,
+                per_page,
+                total_pages: 0,
+            };
+            
+            let response = ApiResponse {
+                data: Vec::<ApiListing>::new(),
+                pagination,
+            };
+            
+            return Ok(warp::reply::with_status(
+                warp::reply::json(&response),
+                StatusCode::OK,
+            ));
+        }
+        
+        // 构建缓存键 - 使用jobs参数和duty参数
         let cache_key = format!(
-            "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}", 
+            "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}_du{}", 
             page, 
             per_page, 
             category.map(|c| c.pf_category().as_str()).unwrap_or(""),
             world.as_deref().map(|w| w.name()).unwrap_or(""), 
             search.as_deref().unwrap_or(""), 
             datacenter.as_deref().unwrap_or(""),
-            job_list.iter().map(|j| j.to_string()).collect::<Vec<String>>().join("_")
+            job_list.iter().map(|j| j.to_string()).collect::<Vec<String>>().join("_"),
+            duty_list.iter().map(|d| d.to_string()).collect::<Vec<String>>().join("_")
         );
         
         // 尝试从缓存获取
@@ -309,6 +352,16 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     }
                 });
             }
+        }
+
+        // 3.5 添加副本ID过滤条件 - 提前过滤
+        if !duty_list.is_empty() {
+            let duty_ids_i32: Vec<i32> = duty_list.iter().map(|&id| id as i32).collect();
+            pipeline.push(doc! {
+                "$match": {
+                    "listing.duty": { "$in": duty_ids_i32 }
+                }
+            });
         }
 
         // 4. 添加职业过滤条件 - 提前过滤
@@ -728,18 +781,24 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             let search = params.get("search").cloned();
             let datacenter = params.get("datacenter").cloned();
             let jobs = params.get("jobs").cloned();
+            let duty = params.get("duty").cloned();
             
             // 收集所有jobs[]参数
             let mut jobs_array = Vec::new();
+            // 收集所有duty[]参数
+            let mut duty_array = Vec::new();
+            
             for (key, value) in params.iter() {
                 if key.starts_with("jobs[") && key.ends_with("]") {
                     jobs_array.push(value.clone());
+                } else if key.starts_with("duty[") && key.ends_with("]") {
+                    duty_array.push(value.clone());
                 }
             }
             
             let state_clone = state.clone();
             async move {
-                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, jobs_array).await
+                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, jobs_array, duty, duty_array).await
             }
         })
         .boxed()
