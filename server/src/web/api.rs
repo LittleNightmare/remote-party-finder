@@ -276,6 +276,12 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             ));
         }
         
+        // 对job_list和duty_list进行排序，确保不同顺序的相同参数可以命中相同的缓存
+        job_list.sort_unstable();
+        job_list.dedup(); // 移除重复项
+        duty_list.sort_unstable();
+        duty_list.dedup(); // 移除重复项
+        
         // 构建缓存键 - 使用jobs参数和duty参数
         let cache_key = format!(
             "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}_du{}", 
