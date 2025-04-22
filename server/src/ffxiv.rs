@@ -445,6 +445,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            1007 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Jade Stoa (Unreal)",
+                    ja: "幻白虎征魂戦",
+                    de: "Traumprüfung - Byakko",
+                    fr: "La Clairière de Jade (irréel)",
+                    zh: "白虎幻巧战",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {

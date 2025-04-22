@@ -24,7 +24,7 @@ pub enum ContentKind {
     Levequests = 10,
     GrandCompany = 11,
     Companions = 12,
-    TribalQuests = 13,
+    SocietyQuests = 13,
     OverallCompletion = 14,
     PlayerCommendation = 15,
     DisciplesoftheLand = 16,
@@ -64,7 +64,7 @@ impl ContentKind {
             10 => Self::Levequests,
             11 => Self::GrandCompany,
             12 => Self::Companions,
-            13 => Self::TribalQuests,
+            13 => Self::SocietyQuests,
             14 => Self::OverallCompletion,
             15 => Self::PlayerCommendation,
             16 => Self::DisciplesoftheLand,
@@ -104,7 +104,7 @@ impl ContentKind {
             Self::Levequests => 10,
             Self::GrandCompany => 11,
             Self::Companions => 12,
-            Self::TribalQuests => 13,
+            Self::SocietyQuests => 13,
             Self::OverallCompletion => 14,
             Self::PlayerCommendation => 15,
             Self::DisciplesoftheLand => 16,
@@ -8277,7 +8277,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M1",
                 ja: "至天の座アルカディア：ライトヘビー級1",
-                de: "Arkadion - Halbschwergewicht R1",
+                de: "Arkadion - Halb­schwer­ge­wicht R1",
                 fr: "Poids mi-lourds CCA - match 1",
                 zh: "阿卡狄亚登天斗技场 轻量级1",
             },
@@ -8288,7 +8288,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M1 (Savage)",
                 ja: "至天の座アルカディア零式：ライトヘビー級1",
-                de: "Arkadion - Halbschwergewicht R1 (episch)",
+                de: "Arkadion - Halb­schwer­ge­wicht R1 (episch)",
                 fr: "Poids mi-lourds CCA - match 1 (sadique)",
                 zh: "阿卡狄亚零式登天斗技场 轻量级1",
             },
@@ -8299,7 +8299,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M2",
                 ja: "至天の座アルカディア：ライトヘビー級2",
-                de: "Arkadion - Halbschwergewicht R2",
+                de: "Arkadion - Halb­schwer­ge­wicht R2",
                 fr: "Poids mi-lourds CCA - match 2",
                 zh: "阿卡狄亚登天斗技场 轻量级2",
             },
@@ -8310,7 +8310,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M2 (Savage)",
                 ja: "至天の座アルカディア零式：ライトヘビー級2",
-                de: "Arkadion - Halbschwergewicht R2 (episch)",
+                de: "Arkadion - Halb­schwer­ge­wicht R2 (episch)",
                 fr: "Poids mi-lourds CCA - match 2 (sadique)",
                 zh: "阿卡狄亚零式登天斗技场 轻量级2",
             },
@@ -8321,7 +8321,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M3",
                 ja: "至天の座アルカディア：ライトヘビー級3",
-                de: "Arkadion - Halbschwergewicht R3",
+                de: "Arkadion - Halb­schwer­ge­wicht R3",
                 fr: "Poids mi-lourds CCA - match 3",
                 zh: "阿卡狄亚登天斗技场 轻量级3",
             },
@@ -8332,7 +8332,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M3 (Savage)",
                 ja: "至天の座アルカディア零式：ライトヘビー級3",
-                de: "Arkadion - Halbschwergewicht R3 (episch)",
+                de: "Arkadion - Halb­schwer­ge­wicht R3 (episch)",
                 fr: "Poids mi-lourds CCA - match 3 (sadique)",
                 zh: "阿卡狄亚零式登天斗技场 轻量级3",
             },
@@ -8343,7 +8343,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M4",
                 ja: "至天の座アルカディア：ライトヘビー級4",
-                de: "Arkadion - Halbschwergewicht R4",
+                de: "Arkadion - Halb­schwer­ge­wicht R4",
                 fr: "Poids mi-lourds CCA - match 4",
                 zh: "阿卡狄亚登天斗技场 轻量级4",
             },
@@ -8354,7 +8354,7 @@ lazy_static::lazy_static! {
             name: LocalisedText {
                 en: "AAC Light-heavyweight M4 (Savage)",
                 ja: "至天の座アルカディア零式：ライトヘビー級4",
-                de: "Arkadion - Halbschwergewicht R4 (episch)",
+                de: "Arkadion - Halb­schwer­ge­wicht R4 (episch)",
                 fr: "Poids mi-lourds CCA - match 4 (sadique)",
                 zh: "阿卡狄亚零式登天斗技场 轻量级4",
             },
@@ -8493,17 +8493,6 @@ lazy_static::lazy_static! {
             high_end: true,
             content_kind: ContentKind::UltimateRaids,
         },
-        1007 => DutyInfo {
-            name: LocalisedText {
-                en: "The Jade Stoa (Unreal)",
-                ja: "幻白虎征魂戦",
-                de: "Traumprüfung - Byakko",
-                fr: "La Clairière de Jade (irréel)",
-                zh: "白虎幻巧战",
-            },
-            high_end: true,
-            content_kind: ContentKind::Trials,
-        },
         1008 => DutyInfo {
             name: LocalisedText {
                 en: "Yuweyawata Field Station",
@@ -8525,6 +8514,17 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::QuestBattles,
+        },
+        1010 => DutyInfo {
+            name: LocalisedText {
+                en: "The Cloud of Darkness (Chaotic)",
+                ja: "滅暗闇の雲激闘戦",
+                de: "Die Wolke der Dunkelheit (chaotisch)",
+                fr: "La Tour de Ténèbres (chaotique)",
+                zh: "暗黑之云诛灭战",
+            },
+            high_end: true,
+            content_kind: ContentKind::ChaoticAllianceRaid,
         },
         1012 => DutyInfo {
             name: LocalisedText {
@@ -8570,6 +8570,17 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Raids,
         },
+        1016 => DutyInfo {
+            name: LocalisedText {
+                en: "Bar the Passage",
+                ja: "決戦、ゾーゴー永結橋",
+                de: "Kampf an Zorgor der Weiten",
+                fr: "Pour s'affranchir de la tyrannie, tout s'appelle vertu",
+                zh: "决战！佐戈永结桥",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
         1017 => DutyInfo {
             name: LocalisedText {
                 en: "The Minstrel's Ballad: Sphene's Burden",
@@ -8577,6 +8588,50 @@ lazy_static::lazy_static! {
                 de: "Gok Tajaal - Ewige Königin",
                 fr: "Interphos (extrême)",
                 zh: "永恒女王忆想歼灭战",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        1027 => DutyInfo {
+            name: LocalisedText {
+                en: "The Underkeep",
+                ja: "王城旧跡 アンダーキープ",
+                de: "Unterfried-Ruinen",
+                fr: "La Gardienne de l'Immémorial",
+                zh: "The Underkeep",
+            },
+            high_end: false,
+            content_kind: ContentKind::Dungeons,
+        },
+        1029 => DutyInfo {
+            name: LocalisedText {
+                en: "Hells' Kier (Unreal)",
+                ja: "幻朱雀征魂戦",
+                de: "Traumprüfung - Suzaku",
+                fr: "Le Nid des Lamentations (irréel)",
+                zh: "Hells' Kier (Unreal)",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+        },
+        1030 => DutyInfo {
+            name: LocalisedText {
+                en: "Recollection",
+                ja: "ゼレニア討滅戦",
+                de: "Zel Tajaal - Zelenia",
+                fr: "Le Sanctuaire du Serment",
+                zh: "Recollection",
+            },
+            high_end: false,
+            content_kind: ContentKind::Trials,
+        },
+        1031 => DutyInfo {
+            name: LocalisedText {
+                en: "Recollection (Extreme)",
+                ja: "極ゼレニア討滅戦",
+                de: "Gok Tajaal - Zelenia",
+                fr: "Le Sanctuaire du Serment (extrême)",
+                zh: "Recollection (Extreme)",
             },
             high_end: true,
             content_kind: ContentKind::Trials,
