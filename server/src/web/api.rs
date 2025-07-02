@@ -334,10 +334,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             if let Some(id) = world_id {
                 pipeline.push(doc! {
                     "$match": {
-                        "$or": [
-                            { "listing.created_world": id },
-                            { "listing.home_world": id }
-                        ]
+                        "listing.created_world": id
                     }
                 });
             }
@@ -351,10 +348,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 let world_ids_i32: Vec<i32> = world_ids.iter().map(|&id| id as i32).collect();
                 pipeline.push(doc! {
                     "$match": {
-                        "$or": [
-                            { "listing.created_world": { "$in": world_ids_i32.clone() } },
-                            { "listing.home_world": { "$in": world_ids_i32 } }
-                        ]
+                        "listing.created_world": { "$in": world_ids_i32 }
                     }
                 });
             }
