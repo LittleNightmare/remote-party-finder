@@ -402,14 +402,23 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         },
                         1000,
                     ]
+                },
+                "minutes_since_update": {
+                    "$divide": [
+                        { "$subtract": ["$$NOW", "$updated_at"] },
+                        60000
+                    ]
                 }
             }
         });
 
-        // 6. 过滤过期招募
+        // 6. 过滤过期招募（基于剩余时间或超过5分钟未更新）
         pipeline.push(doc! {
             "$match": {
-                "time_left": { "$gte": 0 },
+                "$and": [
+                    { "time_left": { "$gte": 0 } },
+                    { "minutes_since_update": { "$lt": 5.0 } }
+                ]
             }
         });
 
@@ -844,6 +853,12 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                             1000,
                         ]
                     },
+                    "minutes_since_update": {
+                        "$divide": [
+                            { "$subtract": ["$$NOW", "$updated_at"] },
+                            60000
+                        ]
+                    },
                     "updated_minute": {
                         "$dateTrunc": {
                             "date": "$updated_at",
@@ -855,7 +870,10 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             },
             doc! {
                 "$match": {
-                    "time_left": { "$gte": 0 },
+                    "$and": [
+                        { "time_left": { "$gte": 0 } },
+                        { "minutes_since_update": { "$lt": 5.0 } }
+                    ]
                 }
             },
             doc! {
@@ -1024,4 +1042,4 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         .and_then(move |id: u32| logic(Arc::clone(&state), id));
 
     warp::get().and(route).boxed()
-} 
+}
