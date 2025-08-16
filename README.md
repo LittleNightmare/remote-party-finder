@@ -7,6 +7,10 @@ Fork了[Anna Clemens](https://git.anna.lgbt/ascclemens/remote-party-finder)的Re
 
 这个仓库是准备为了国服构建的，但我本人对server端的内容真的不熟。希望有人能帮帮我orz
 
+## 关于显示FFXIV的特殊符号
+
+参考这个[issue](https://github.com/LittleNightmare/remote-party-finder/issues/3)，下载对应的字体放在`server/assets`里
+
 ## API
 已经提供了 API，使用方式请见 [API 使用文档](https://github.com/LittleNightmare/remote-party-finder/wiki/API-Usage)。
 
