@@ -456,6 +456,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            1029 => DutyInfo {
+                name: LocalisedText {
+                    en: "Hells' Kier (Unreal)",
+                    ja: "幻朱雀征魂戦",
+                    de: "Traumprüfung - Suzaku",
+                    fr: "Le Nid des Lamentations (irréel)",
+                    zh: "朱雀幻巧战",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {

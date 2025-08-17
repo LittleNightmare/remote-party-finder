@@ -171,5 +171,12 @@ lazy_static::lazy_static! {
             fr: "Carte au trésor en peau de br'aax",
             zh: "陈旧的狞豹革地图",
         },
+        24 => LocalisedText {
+            en: "Gargantuaskin Treasure Map",
+            ja: "古ぼけた地図G18",
+            de: "Gargantualeder-Schatzkarte",
+            fr: "Carte au trésor en peau de gargantua",
+            zh: "Gargantuaskin Treasure Map",
+        },
     };
 }
