@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -6,20 +6,20 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 	<PropertyGroup>
-        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
+        <DalamudLibPath>$(AppData)\XIVLauncherCN\addon\Hooks\dev</DalamudLibPath>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Pidgin" Version="3.2.1" />
+        <PackageReference Include="Lumina" Version="5.4.0" />
+        <PackageReference Include="Pidgin" Version="3.5.0" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="Lumina">
-            <HintPath>$(DalamudLibPath)\Lumina.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
         <Reference Include="Lumina.Excel">
             <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
             <Private>True</Private>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.ObjectPool">
+            <HintPath>$(DalamudLibPath)\Microsoft.Extensions.ObjectPool.dll</HintPath>
         </Reference>
     </ItemGroup>
 

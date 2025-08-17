@@ -32,16 +32,24 @@ internal static class AutoTranslate {
         var noun = String("noun")
             .Select(_ => (ISelectorPart) new NounMarker());
 
-        var selectorItems = OneOf(
-                Try(numPair),
-                singleRow,
-                column,
-                noun
-            )
-            .Separated(Char(','))
+        // Allow optional leading whitespace before each item
+        var whitespace = Token(c => char.IsWhiteSpace(c)).SkipMany();
+        var selectorItemCore = OneOf(
+            Try(numPair),
+            singleRow,
+            column,
+            noun
+        );
+        var selectorItem = whitespace.Then(selectorItemCore);
+
+        // Comma + optional whitespace as separator
+        var separator = Char(',').Then(whitespace);
+
+        var selectorItems = selectorItem
+            .Separated(separator)
             .Labelled("selectorItems");
         var selector = selectorItems
-            .Between(Char('['), Char(']'))
+            .Between(Char('[').Then(whitespace), whitespace.Then(Char(']')))
             .Labelled("selector");
 
         return Map(

@@ -22,7 +22,7 @@ internal class Program {
             @"F:\GitHub\remote-party-finder\server\src\ffxiv",
         };
         var cnGame = @"G:\Game\FFXIV\最终幻想XIV\game\sqpack";
-        var enGame = @"G:\Game\SquareEnix\game\sqpack";
+        var enGame = @"G:\Game\FFXIV\SquareEnix\game\sqpack";
 #endif
         if (args.Length < 2)
         {
@@ -474,14 +474,16 @@ internal class Program {
             //var lookup = row.LookupTable.ExtractText();
             var lookup = row.LookupTable.ToString().Replace("<num(", "").Replace(")>", "");
             if (lookup is not ("" or "@")) {
-                var (sheetName, selector) = parser.ParseOrThrow(lookup);
-                //var sheetType = typeof(Completion)
-                //    .Assembly
-                //    .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
-                //var getSheet = this.Data[Language.English]
-                //    .GetType()
-                //    .GetMethod("GetExcelSheet", Type.EmptyTypes)!
-                //    .MakeGenericMethod(sheetType);
+                // SAFE PARSE: skip entries we cannot parse instead of throwing.
+                var parsed = parser.Parse(lookup);
+                if (!parsed.Success)
+                {
+                    Console.WriteLine($"Failed to parse lookup '{lookup}': {parsed.Error?.Message}" );
+                    // 输出row信息
+                    Console.WriteLine($"RowId: {row.RowId}, Group: {row.Group}, LookupTable: {row.LookupTable}");
+                    continue;
+                }
+                var (sheetName, selector) = parsed.Value;
                 var sheets = this.Data
                 .Select(kv => (kv.Key, new ExcelSheet<RawRow>(kv.Value.Excel.GetRawSheet(sheetName))))
                 .ToDictionary();
@@ -567,7 +569,7 @@ internal class Program {
                         sb.Append(builder);
                     }
                 }
-            }else {
+            } else {
                 var text = this.GetLocalisedStruct<Completion>(row.RowId, row => row.Text, 8);
                 if (text != null) {
                     sb.Append($"        ({row.Group}, {row.RowId}) => {text},\n");
