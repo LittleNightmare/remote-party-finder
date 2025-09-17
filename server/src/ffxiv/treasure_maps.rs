@@ -176,7 +176,7 @@ lazy_static::lazy_static! {
             ja: "古ぼけた地図G18",
             de: "Gargantualeder-Schatzkarte",
             fr: "Carte au trésor en peau de gargantua",
-            zh: "Gargantuaskin Treasure Map",
+            zh: "陈旧的卡冈图亚革地图",
         },
     };
 }
