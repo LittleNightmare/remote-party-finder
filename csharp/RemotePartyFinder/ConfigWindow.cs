@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace RemotePartyFinder;
 
@@ -48,14 +48,14 @@ public class ConfigWindow : Window, IDisposable
         if (!isAdvanced) return;
 
         
-        using (ImRaii.Table("uploadUrls", 3, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Borders))
+        using (ImRaii.Table((ImU8String)"uploadUrls", 3, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Borders))
         {
             ImGui.TableSetupColumn("#", ImGuiTableColumnFlags.WidthFixed);
             ImGui.TableSetupColumn("URL", ImGuiTableColumnFlags.WidthStretch);
             ImGui.TableSetupColumn("Enabled", ImGuiTableColumnFlags.WidthFixed);
             ImGui.TableHeadersRow();
             
-            using var id = ImRaii.PushId("urls");
+            using var id = ImRaii.PushId((ImU8String)"urls");
             foreach (var (uploadUrl, index) in _configuration.UploadUrls.Select((url, index) => (url, index + 1)))
             {
                 id.Push(index);
