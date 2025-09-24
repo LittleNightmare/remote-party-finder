@@ -403,9 +403,9 @@ checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
 name = "ffxiv_types_cn"
-version = "1.10.1"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "df8d3e72d453252f0b1940ebf6fc1dbd8d44f3ad5f90ab9da46d2afac8bf48d3"
+checksum = "81ebb4143f6da864ec8830eb20e57504e69963535fd9e6714a6bc82211f443aa"
 
 [[package]]
 name = "fnv"

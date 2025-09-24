@@ -123,5 +123,10 @@ lazy_static::lazy_static! {
         1201 => World::红茶川,
         1202 => World::萨雷安,
         1203 => World::加雷马,
+        2080 => World::펜리르,
+        2075 => World::카벙클,
+        2078 => World::톤베리,
+        2076 => World::초코보,
+        2077 => World::모그리,
     };
 }
