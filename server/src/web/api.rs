@@ -95,19 +95,16 @@ pub struct SlotInfo {
 /// - category: 分类过滤
 /// - world: 世界过滤
 /// - search: 搜索关键词，会匹配名称和描述
-/// - datacenter: 数据中心过滤
+/// - datacenter: 数据中心过滤，支持多个数据中心，用逗号分隔，如"猫小胖,豆豆柴"
 /// - jobs: 职业过滤，支持多个职业ID，用逗号分隔，如"1,2,8"
-/// - jobs[]: 职业过滤，支持数组格式，如jobs[]=8&jobs[]=10&jobs[]=21
 /// - duty: 副本过滤，支持多个副本ID，用逗号分隔，如"1,2,8"
-/// - duty[]: 副本过滤，支持数组格式，如duty[]=8&duty[]=10&duty[]=21
 ///
 /// 职业ID对应关系:
 /// 请参考jobs.rs中的hashmap
 /// 示例:
 /// GET /api/listings?page=1&per_page=20&category=None&world=拉诺西亚&jobs=8,10,21
-/// GET /api/listings?page=1&per_page=20&datacenter=猫小胖&category=HighEndDuty&jobs[]=10&jobs[]=21
+/// GET /api/listings?page=1&per_page=20&datacenter=猫小胖&category=HighEndDuty&jobs=10,21
 /// GET /api/listings?page=1&per_page=20&duty=1,2,3&jobs=8,10
-/// GET /api/listings?page=1&per_page=20&duty[]=10&duty[]=21
 pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(
         state: Arc<State>, 
@@ -118,9 +115,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         search: Option<String>,
         datacenter: Option<String>,
         jobs: Option<String>,
-        jobs_array: Vec<String>,
         duty: Option<String>,
-        duty_array: Vec<String>,
     ) -> std::result::Result<impl Reply, Infallible> {
         let page = page.unwrap_or(1);
         let per_page = per_page.unwrap_or(20).min(100); // 限制每页最大数量为100
@@ -176,26 +171,37 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             None
         };
 
-        // 验证数据中心是否存在，如果提供了datacenter但找不到匹配的，直接返回空结果
-        if let Some(dc) = &datacenter {
-            if !crate::ffxiv::WORLDS.values().any(|world| world.data_center().name() == dc) {
-                let pagination = Pagination {
-                    total: 0,
-                    page,
-                    per_page,
-                    total_pages: 0,
-                };
-                
-                let response = ApiResponse {
-                    data: Vec::<ApiListing>::new(),
-                    pagination,
-                };
-                
-                return Ok(warp::reply::with_status(
-                    warp::reply::json(&response),
-                    StatusCode::OK,
-                ));
+        // 验证数据中心是否存在
+        let mut datacenter_list = Vec::new();
+        if let Some(dc_str) = datacenter.as_deref() {
+            let all_dcs: std::collections::HashSet<String> = crate::ffxiv::WORLDS.values()
+                .map(|w| w.data_center().name().to_string())
+                .collect();
+            for dc_name in dc_str.split(',').map(|s| s.trim()) {
+                if all_dcs.contains(dc_name) {
+                    datacenter_list.push(dc_name.to_string());
+                }
             }
+        }
+
+        // 如果提供了datacenter参数但没有有效的，返回空结果
+        if datacenter.is_some() && datacenter_list.is_empty() {
+            let pagination = Pagination {
+                total: 0,
+                page,
+                per_page,
+                total_pages: 0,
+            };
+            
+            let response = ApiResponse {
+                data: Vec::<ApiListing>::new(),
+                pagination,
+            };
+            
+            return Ok(warp::reply::with_status(
+                warp::reply::json(&response),
+                StatusCode::OK,
+            ));
         }
 
         // 验证职业ID是否合法
@@ -210,18 +216,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 }
             }
         }
-        
-        // 处理数组格式
-        if !jobs_array.is_empty() {
-            for job_id in jobs_array.iter().filter_map(|s| s.trim().parse::<u32>().ok()) {
-                if job_id <= *max_job_id {  // 检查职业ID是否在有效范围内
-                    job_list.push(job_id);
-                }
-            }
-        }
 
         // 如果提供了职业参数但没有有效的职业ID，返回空结果
-        if (jobs.is_some() || !jobs_array.is_empty()) && job_list.is_empty() {
+        if jobs.is_some() && job_list.is_empty() {
             let pagination = Pagination {
                 total: 0,
                 page,
@@ -248,16 +245,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 duty_list.push(duty_id);
             }
         }
-        
-        // 处理数组格式
-        if !duty_array.is_empty() {
-            for duty_id in duty_array.iter().filter_map(|s| s.trim().parse::<u16>().ok()) {
-                duty_list.push(duty_id);
-            }
-        }
 
         // 如果提供了副本参数但没有有效的副本ID，返回空结果
-        if (duty.is_some() || !duty_array.is_empty()) && duty_list.is_empty() {
+        if duty.is_some() && duty_list.is_empty() {
             let pagination = Pagination {
                 total: 0,
                 page,
@@ -281,6 +271,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         job_list.dedup(); // 移除重复项
         duty_list.sort_unstable();
         duty_list.dedup(); // 移除重复项
+        datacenter_list.sort_unstable();
+        datacenter_list.dedup();
         
         // 构建缓存键 - 使用jobs参数和duty参数
         let cache_key = format!(
@@ -290,7 +282,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             category.map(|c| c.pf_category().as_str()).unwrap_or(""),
             world.as_deref().map(|w| w.name()).unwrap_or(""), 
             search.as_deref().unwrap_or(""), 
-            datacenter.as_deref().unwrap_or(""),
+            datacenter_list.join("_"),
             job_list.iter().map(|j| j.to_string()).collect::<Vec<String>>().join("_"),
             duty_list.iter().map(|d| d.to_string()).collect::<Vec<String>>().join("_")
         );
@@ -338,9 +330,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     }
                 });
             }
-        } else if let Some(dc) = &datacenter {
+        } else if !datacenter_list.is_empty() {
             let world_ids: Vec<u32> = crate::ffxiv::WORLDS.iter()
-                .filter(|(_, world)| world.data_center().name() == dc)
+                .filter(|(_, world)| datacenter_list.contains(&world.data_center().name().to_string()))
                 .map(|(id, _)| *id)
                 .collect();
 
@@ -792,22 +784,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             let jobs = params.get("jobs").cloned();
             let duty = params.get("duty").cloned();
             
-            // 收集所有jobs[]参数
-            let mut jobs_array = Vec::new();
-            // 收集所有duty[]参数
-            let mut duty_array = Vec::new();
-            
-            for (key, value) in params.iter() {
-                if key.starts_with("jobs[") && key.ends_with("]") {
-                    jobs_array.push(value.clone());
-                } else if key.starts_with("duty[") && key.ends_with("]") {
-                    duty_array.push(value.clone());
-                }
-            }
-            
             let state_clone = state.clone();
             async move {
-                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, jobs_array, duty, duty_array).await
+                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, duty).await
             }
         })
         .boxed()
