@@ -76,10 +76,12 @@ internal class Program {
         [Language.French] = "fr",
         [Language.ChineseSimplified] = "zh",
     };
+    
+    Language keyLanguage = Language.ChineseSimplified;
 
     private string? GetLocalisedStruct<T>(uint rowId, Func<T, ReadOnlySeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : struct, IExcelRow<T>
     {
-            var def = this.Data[Language.English].GetExcelSheet<T>()!.GetRow(rowId)!;
+            var def = this.Data[keyLanguage].GetExcelSheet<T>()!.GetRow(rowId)!;
             var defName = nameFunc(def)?.ExtractText();
             if (string.IsNullOrEmpty(defName)) {
                 return null;
@@ -107,11 +109,10 @@ internal class Program {
                     : nameFunc((T)row)?.ExtractText().Replace("\"", "\\\"") ?? defName;
                 
                 if (capitalise) {
-                    if (name.Length == 0)
+                    if (name.Length != 0)
                     {
-                        continue;
+                        name = name[..1].ToUpperInvariant() + name[1..];
                     }
-                    name = name[..1].ToUpperInvariant() + name[1..];
                 }
 
                 for (var i = 0; i < indent + 4; i++) {
@@ -149,6 +150,7 @@ internal class Program {
         sb.Append("#[allow(unused)]\n");
         sb.Append("#[repr(u32)]\n");
         sb.Append("pub enum ContentKind {\n");
+        // 先别用keyLanguage
         foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
             var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
             if (name.Length > 0) {
@@ -192,7 +194,7 @@ internal class Program {
         sb.Append("lazy_static::lazy_static! {\n");
         sb.Append("    pub static ref DUTIES: HashMap<u32, DutyInfo> = maplit::hashmap! {\n");
 
-        foreach (var cfc in this.Data[Language.English].GetExcelSheet<ContentFinderCondition>()!) {
+        foreach (var cfc in this.Data[keyLanguage].GetExcelSheet<ContentFinderCondition>()!) {
             if (cfc.RowId == 0) {
                 continue;
             }
@@ -202,19 +204,28 @@ internal class Program {
                 continue;
             }
             var highEnd = cfc.HighEndDuty ? "true" : "false";
-            var contentType = cfc.ContentType.Value;
-            // Chinese has different status
-            try
+            ContentType contentType;
+            if (keyLanguage == Language.English)
             {
-                var cn = Data[Language.ChineseSimplified].GetExcelSheet<ContentFinderCondition>()!
-                    .GetRow(cfc.RowId);
-                highEnd = cn.HighEndDuty ? "true" : "false";
+                contentType = cfc.ContentType.Value;
+                // Chinese has different status
+                try
+                {
+                    var cn = Data[Language.ChineseSimplified].GetExcelSheet<ContentFinderCondition>()!
+                        .GetRow(cfc.RowId);
+                    highEnd = cn.HighEndDuty ? "true" : "false";
+                }
+                catch (Exception e)
+                {
+                    // Console.WriteLine(e);
+                }
             }
-            catch (Exception e)
+            else
             {
-                // Console.WriteLine(e);
+                contentType = Data[Language.English].GetExcelSheet<ContentFinderCondition>()!.GetRow(cfc.RowId)
+                    .ContentType.Value;
             }
-
+            
             var contentKind = contentType.Name.ExtractText().Replace(" ", "").Replace("&", "");
             if (string.IsNullOrEmpty(contentKind)) {
                 contentKind = $"Other({contentType.RowId})";
@@ -239,7 +250,7 @@ internal class Program {
         sb.Append("lazy_static::lazy_static! {\n");
         sb.Append("    pub static ref JOBS: HashMap<u32, ClassJob> = maplit::hashmap! {\n");
 
-        foreach (var cj in this.Data[Language.English].GetExcelSheet<ClassJob>()!) {
+        foreach (var cj in this.Data[keyLanguage].GetExcelSheet<ClassJob>()!) {
             if (cj.RowId == 0) {
                 continue;
             }
@@ -282,7 +293,7 @@ internal class Program {
         sb.Append("lazy_static::lazy_static! {\n");
         sb.Append("    pub static ref ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {\n");
 
-        foreach (var cr in this.Data[Language.English].GetExcelSheet<ContentRoulette>()!) {
+        foreach (var cr in this.Data[keyLanguage].GetExcelSheet<ContentRoulette>()!) {
             if (cr.RowId == 0) {
                 continue;
             }
@@ -377,8 +388,8 @@ internal class Program {
                },
             },
         };
-        //var dcExcel = this.Data[Language.English].GetExcelSheet<WorldDCGroupType>();
-        var worldExcel = this.Data[Language.English].GetExcelSheet<World>();
+        //var dcExcel = this.Data[keyLanguage].GetExcelSheet<WorldDCGroupType>();
+        var worldExcel = this.Data[keyLanguage].GetExcelSheet<World>();
 
         foreach (var dc in chineseWorldDCGroups)
         {
@@ -392,7 +403,7 @@ internal class Program {
                 var worldToUpdated = worldExcel.GetRow(world.Id);
                 //worldToUpdated.IsPublic = true;
                 //worldToUpdated.UserType = 10;
-                //worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[Language.English], dc.Id, Lumina.Data.Language.ChineseSimplified);
+                //worldToUpdated.DataCenter = new LazyRow<WorldDCGroupType>(this.Data[keyLanguage], dc.Id, Lumina.Data.Language.ChineseSimplified);
             }
         }
 
@@ -407,7 +418,7 @@ internal class Program {
         sb.Append("lazy_static::lazy_static! {\n");
         sb.Append("    pub static ref WORLDS: HashMap<u32, World> = maplit::hashmap! {\n");
 
-        foreach (var world in this.Data[Language.English].GetExcelSheet<World>()!) {
+        foreach (var world in this.Data[keyLanguage].GetExcelSheet<World>()!) {
             if (world.RowId == 0 || !world.IsPublic || world.UserType == 0 || world.DataCenter.RowId == 0) {
                 continue;
             }
@@ -431,7 +442,7 @@ internal class Program {
         sb.Append("\nlazy_static::lazy_static! {\n");
         sb.Append("    pub static ref TERRITORY_NAMES: HashMap<u32, LocalisedText> = maplit::hashmap! {\n");
 
-        foreach (var tt in this.Data[Language.English].GetExcelSheet<TerritoryType>()!) {
+        foreach (var tt in this.Data[keyLanguage].GetExcelSheet<TerritoryType>()!) {
             if (tt.RowId == 0 || tt.PlaceName.RowId == 0) {
                 continue;
             }
@@ -470,7 +481,7 @@ internal class Program {
         sb.Append("    pub static ref AUTO_TRANSLATE: HashMap<(u32, u32), LocalisedText> = maplit::hashmap! {\n");
 
         var parser = AutoTranslate.Parser();
-        foreach (var row in this.Data[Language.English].GetExcelSheet<Completion>()!) {
+        foreach (var row in this.Data[keyLanguage].GetExcelSheet<Completion>()!) {
             //var lookup = row.LookupTable.ExtractText();
             var lookup = row.LookupTable.ToString().Replace("<num(", "").Replace(")>", "");
             if (lookup is not ("" or "@")) {
@@ -525,7 +536,7 @@ internal class Program {
                 var builder = new StringBuilder();
                 foreach (var range in rows) {
                     for (var i = (uint)range.Start.Value; i < range.End.Value; i++) {
-                        if (!sheets[Language.English].HasRow(i)) {
+                        if (!sheets[keyLanguage].HasRow(i)) {
                             continue;
                         }
 
@@ -596,7 +607,7 @@ internal class Program {
             sb.Append("        },\n");
 
             var i = 1;
-            foreach (var row in this.Data[Language.English].GetExcelSheet<TreasureHuntRank>()!) {
+            foreach (var row in this.Data[keyLanguage].GetExcelSheet<TreasureHuntRank>()!) {
                 // IS THIS RIGHT?
                 if (row.TreasureHuntTexture != 0) {
                     continue;
