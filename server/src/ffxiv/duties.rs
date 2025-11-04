@@ -8738,6 +8738,116 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Trials,
         },
+        1032 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第1～10朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1033 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第11～20朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1034 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第21～30朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1035 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第31～40朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1036 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第41～50朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1037 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第51～60朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1038 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第61～70朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1039 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第71～80朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1040 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第81～90朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1041 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "朝圣交错路 第91～100朝圣路",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
         1042 => DutyInfo {
             name: LocalisedText {
                 en: "The Wreath of Snakes (Unreal)",
@@ -8748,6 +8858,28 @@ lazy_static::lazy_static! {
             },
             high_end: true,
             content_kind: ContentKind::Trials,
+        },
+        1043 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "护锁刃龙狩猎战",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1044 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "护锁刃龙上位狩猎战",
+            },
+            high_end: true,
+            content_kind: ContentKind::Other(0),
         },
         1046 => DutyInfo {
             name: LocalisedText {
@@ -8924,6 +9056,28 @@ lazy_static::lazy_static! {
             },
             high_end: true,
             content_kind: ContentKind::Trials,
+        },
+        1063 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "卓异的悲寂深想战",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
+        },
+        1065 => DutyInfo {
+            name: LocalisedText {
+                en: "",
+                ja: "",
+                de: "",
+                fr: "",
+                zh: "卓异的悲寂歼灭战",
+            },
+            high_end: false,
+            content_kind: ContentKind::Other(0),
         },
     };
 }
