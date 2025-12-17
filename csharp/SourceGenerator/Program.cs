@@ -23,6 +23,7 @@ internal class Program {
         };
         var cnGame = @"G:\Game\FFXIV\最终幻想XIV\game\sqpack";
         var enGame = @"G:\Game\FFXIV\SquareEnix\game\sqpack";
+        //var enGame = @"G:\Game\FFXIV\最终幻想XIV\game\sqpack";
 #endif
         if (args.Length < 2)
         {
@@ -77,7 +78,7 @@ internal class Program {
         [Language.ChineseSimplified] = "zh",
     };
     
-    Language keyLanguage = Language.ChineseSimplified;
+    Language keyLanguage = Language.English;
 
     private string? GetLocalisedStruct<T>(uint rowId, Func<T, ReadOnlySeString?> nameFunc, uint indent = 0, bool capitalise = false) where T : struct, IExcelRow<T>
     {
@@ -204,10 +205,20 @@ internal class Program {
                 continue;
             }
             var highEnd = cfc.HighEndDuty ? "true" : "false";
-            ContentType contentType;
+            
+            // Use nullable to handle invalid references
+            ContentType? contentType = null;
+            uint rawContentTypeId;
+
             if (keyLanguage == Language.English)
             {
-                contentType = cfc.ContentType.Value;
+                // Check validity before access
+                if (cfc.ContentType.IsValid)
+                {
+                    contentType = cfc.ContentType.Value;
+                }
+                rawContentTypeId = cfc.ContentType.RowId;
+
                 // Chinese has different status
                 try
                 {
@@ -215,20 +226,27 @@ internal class Program {
                         .GetRow(cfc.RowId);
                     highEnd = cn.HighEndDuty ? "true" : "false";
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    // Console.WriteLine(e);
+                    // Ignore
                 }
             }
             else
             {
-                contentType = Data[Language.English].GetExcelSheet<ContentFinderCondition>()!.GetRow(cfc.RowId)
-                    .ContentType.Value;
+                var enRow = Data[Language.English].GetExcelSheet<ContentFinderCondition>()!.GetRow(cfc.RowId);
+                if (enRow.ContentType.IsValid)
+                {
+                    contentType = enRow.ContentType.Value;
+                }
+                rawContentTypeId = enRow.ContentType.RowId;
             }
             
-            var contentKind = contentType.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            // Safely extract name or default to empty
+            var contentKind = contentType?.Name.ExtractText().Replace(" ", "").Replace("&", "") ?? "";
+            
             if (string.IsNullOrEmpty(contentKind)) {
-                contentKind = $"Other({contentType.RowId})";
+                // Use the raw ID if content type is missing or name is empty
+                contentKind = $"Other({rawContentTypeId})";
             }
 
             sb.Append($"        {cfc.RowId} => DutyInfo {{\n");
@@ -483,7 +501,7 @@ internal class Program {
         var parser = AutoTranslate.Parser();
         foreach (var row in this.Data[keyLanguage].GetExcelSheet<Completion>()!) {
             //var lookup = row.LookupTable.ExtractText();
-            var lookup = row.LookupTable.ToString().Replace("<num(", "").Replace(")>", "");
+            var lookup = row.LookupTable.ToMacroString().Replace("<num(", "").Replace(")>", "");
             if (lookup is not ("" or "@")) {
                 // SAFE PARSE: skip entries we cannot parse instead of throwing.
                 var parsed = parser.Parse(lookup);
