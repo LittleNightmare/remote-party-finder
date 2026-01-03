@@ -147,27 +147,51 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
             Language::French => "Non spécifiée",
             Language::ChineseSimplified => "无",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 1 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 29 => return Cow::from(match lang {
             Language::English => "The Palace of the Dead",
             Language::Japanese => "死者の宮殿",
             Language::German => "Palast der Toten",
             Language::French => "Palais des morts",
             Language::ChineseSimplified => "死者宫殿",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 2 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 30 => return Cow::from(match lang {
             Language::English => "Heaven-on-High",
             Language::Japanese => "アメノミハシラ",
             Language::German => "Himmelssäule",
             Language::French => "Pilier des Cieux",
             Language::ChineseSimplified => "天之御柱",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 3 => return Cow::from(match lang {
+        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 31 => return Cow::from(match lang {
             Language::English => "Eureka Orthos",
             Language::Japanese => "オルト・エウレカ",
             Language::German => "Eureka Orthos",
             Language::French => "Eurêka Orthos",
             Language::ChineseSimplified => "正统优雷卡",
         }),
+        (DutyType::Other, DutyCategory::DeepDungeon) => {
+            let row = match duty {
+                34 => 1065,
+                32 => 0, // Pilgrim's Traverse - handled inline below
+                33 => 1063,
+                _ => 0,
+            };
+            
+            if duty == 32 {
+                return Cow::from(match lang {
+                    Language::English => "Pilgrim's Traverse",
+                    Language::Japanese => "ピルグリム・トラバース",
+                    Language::German => "Pilgers Pfad",
+                    Language::French => "Sanctuaire des pèlerins",
+                    Language::ChineseSimplified => "朝圣交错路",
+                });
+            }
+            
+            if row != 0 {
+                if let Some(info) = crate::ffxiv::duty(row) {
+                    return Cow::from(info.name.text(&lang));
+                }
+            }
+        }
         (DutyType::Normal, _) => {
             if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
                 return Cow::from(info.name.text(&lang));
