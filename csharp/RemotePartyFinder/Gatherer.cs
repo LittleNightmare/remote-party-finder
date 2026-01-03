@@ -51,6 +51,12 @@ internal class Gatherer : IDisposable {
         foreach (var (batch, listings) in this.Batches.ToList()) {
             this.Batches.Remove(batch, out _);
             Task.Run(async () => {
+#if DEBUG
+                foreach (var listing in listings)
+                {
+                    Plugin.Log.Debug($"Name: {listing.Name.TextValue}, Description: {listing.Description.TextValue}, Category: {listing.Category}, RawDuty: {listing.RawDuty}, DutyType: {listing.DutyType}");
+                }
+#endif
                 var uploadable = listings
                     .Select(listing => new UploadableListing(listing))
                     .ToList();
