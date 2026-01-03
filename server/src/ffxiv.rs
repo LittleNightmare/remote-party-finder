@@ -467,6 +467,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            1042 => DutyInfo {
+                name: LocalisedText {
+                    en: "The Wreath of Snakes (Unreal)",
+                    ja: "幻青龍征魂戦",
+                    de: "Traumprüfung - Seiryu",
+                    fr: "L'Îlot des Amertumes (irréel)",
+                    zh: "青龙幻巧战",
+                },
+                high_end: true,
+                content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
