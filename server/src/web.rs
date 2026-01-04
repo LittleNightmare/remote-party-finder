@@ -603,11 +603,7 @@ fn stats_seven_days(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
 fn contribute(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, listing: PartyFinderListing) -> std::result::Result<impl Reply, Infallible> {
-        if listing.seconds_remaining > 60 * 60 {
-            return Ok("invalid listing".to_string());
-        }
-
-        let result = insert_listing(&*state, listing).await;
+        let result = validate_and_insert_listing(&*state, listing).await;
         Ok(format!("{:#?}", result))
     }
 
@@ -624,11 +620,7 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         let mut successful = 0;
 
         for listing in listings {
-            if listing.seconds_remaining > 60 * 60 {
-                continue;
-            }
-
-            let result = insert_listing(&*state, listing).await;
+            let result = validate_and_insert_listing(&*state, listing).await;
             if result.is_ok() {
                 successful += 1;
             } else {
@@ -647,11 +639,15 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     warp::post().and(route).boxed()
 }
 
-async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
-    if listing.created_world < 1_000 || listing.home_world < 1_000 || listing.current_world < 1_000 {
-        anyhow::bail!("invalid listing");
+async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
+    if listing.seconds_remaining > 60 * 60 {
+        anyhow::bail!("invalid listing: remaining time greater than 1 hour");
     }
 
+    insert_listing(state, listing).await
+}
+
+async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
     let opts = UpdateOptions::builder()
         .upsert(true)
         .build();
