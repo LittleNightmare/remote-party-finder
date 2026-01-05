@@ -124,7 +124,31 @@ pub fn roulette(roulette: u32) -> Option<&'static roulettes::RouletteInfo> {
         .or_else(|| old::OLD_ROULETTES.get(&roulette))
 }
 
-pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
+pub fn duty_name<'a>(
+    duty_type: DutyType,
+    category: DutyCategory,
+    duty: u16,
+    lang: Language,
+    player_name: Option<&str>,
+    world: Option<&str>,
+    description: Option<&str>,
+) -> Cow<'a, str> {
+    _duty_name_impl(duty_type, category, duty, lang, player_name, world, description)
+}
+
+pub fn duty_name_simple<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
+    _duty_name_impl(duty_type, category, duty, lang, None, None, None)
+}
+
+fn _duty_name_impl<'a>(
+    duty_type: DutyType,
+    category: DutyCategory,
+    duty: u16,
+    lang: Language,
+    player_name: Option<&str>,
+    world: Option<&str>,
+    description: Option<&str>,
+) -> Cow<'a, str> {
     match (duty_type, category) {
         (DutyType::Other, DutyCategory::Fate) => {
             if let Some(name) = crate::ffxiv::TERRITORY_NAMES.get(&u32::from(duty)) {
@@ -245,7 +269,26 @@ pub fn duty_name<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lan
         _ => {}
     }
 
-    eprintln!("unknown type/category/duty: {:?}/{:?}/{}", duty_type, category, duty);
+    // Build error message with context information
+    let mut error_msg = format!("unknown type/category/duty: {:?}/{:?}/{}", duty_type, category, duty);
+    
+    if let Some(name) = player_name {
+        error_msg.push_str(&format!(" | player: {}", name));
+    }
+    if let Some(w) = world {
+        error_msg.push_str(&format!(" | world: {}", w));
+    }
+    if let Some(desc) = description {
+        // Take first 5 characters or the whole string if shorter
+        let desc_preview = if desc.len() > 5 {
+            &desc[..5]
+        } else {
+            desc
+        };
+        error_msg.push_str(&format!(" | description: {}", desc_preview));
+    }
+    
+    eprintln!("{}", error_msg);
     Cow::from(format!("{:?}", category))
 }
 

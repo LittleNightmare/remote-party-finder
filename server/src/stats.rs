@@ -99,7 +99,7 @@ impl DutyInfo {
             Some(c) => c,
             None => return Cow::from("<unknown>"),
         };
-        crate::ffxiv::duty_name(kind, category, self.info.2, *lang)
+        crate::ffxiv::duty_name_simple(kind, category, self.info.2, *lang)
     }
 }
 

@@ -8,6 +8,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 use sestring::SeString;
 
 use crate::ffxiv::{Language, LocalisedText};
+use crate::sestring_ext::SeStringExt;
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PartyFinderListing {
@@ -49,7 +50,18 @@ impl PartyFinderListing {
     }
 
     pub fn duty_name(&self, lang: &Language) -> Cow<str> {
-        crate::ffxiv::duty_name(self.duty_type, self.category, self.duty, *lang)
+        let player_name = self.name.full_text(lang);
+        let world = self.created_world_string();
+        let description = self.description.full_text(lang);
+        crate::ffxiv::duty_name(
+            self.duty_type,
+            self.category,
+            self.duty,
+            *lang,
+            if player_name.is_empty() { None } else { Some(&player_name) },
+            Some(&world),
+            if description.is_empty() { None } else { Some(&description) },
+        )
     }
 
     pub fn slots(&self) -> Vec<std::result::Result<ClassJob, (String, String)>> {
