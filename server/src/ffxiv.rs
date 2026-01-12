@@ -279,12 +279,8 @@ fn _duty_name_impl<'a>(
         error_msg.push_str(&format!(" | world: {}", w));
     }
     if let Some(desc) = description {
-        // Take first 5 characters or the whole string if shorter
-        let desc_preview = if desc.len() > 5 {
-            &desc[..5]
-        } else {
-            desc
-        };
+        // Take first 5 characters (safe for UTF-8)
+        let desc_preview: String = desc.chars().take(5).collect();
         error_msg.push_str(&format!(" | description: {}", desc_preview));
     }
     
