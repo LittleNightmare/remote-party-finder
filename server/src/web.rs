@@ -132,13 +132,13 @@ impl State {
             .create_index(
                 IndexModel::builder()
                     .keys(mongodb::bson::doc! {
-                        "listing.pf_category": 1,
+                        "listing.category": 1,
                     })
                     .build(),
                 None,
             )
             .await
-            .context("could not create listing.pf_category index")?;
+            .context("could not create listing.category index")?;
             
         state.collection()
             .create_index(
