@@ -628,8 +628,16 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 }
 
 async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
+    // Validate remaining time
     if listing.seconds_remaining > 60 * 60 {
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
+    }
+
+    // Validate duty/category/duty_type combination
+    if !crate::ffxiv::is_valid_duty_combination(listing.duty_type, listing.category, listing.duty) {
+        eprintln!("未插入: 无效的副本数据组合 type={:?} category={:?} duty={}",
+                  listing.duty_type, listing.category, listing.duty);
+        anyhow::bail!("invalid listing: unknown duty combination");
     }
 
     insert_listing(state, listing).await

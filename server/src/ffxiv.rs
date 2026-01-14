@@ -140,6 +140,64 @@ pub fn duty_name_simple<'a>(duty_type: DutyType, category: DutyCategory, duty: u
     _duty_name_impl(duty_type, category, duty, lang, None, None, None)
 }
 
+/// Lightweight validation: Check if duty/category/duty_type combination is valid.
+/// Returns bool without building string output.
+/// Matches _duty_name_impl logic, used for data insertion validation.
+pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, duty: u16) -> bool {
+    match (duty_type, category) {
+        // Fate: always valid (returns "FATEs" if not found)
+        (DutyType::Other, DutyCategory::Fate) => true,
+
+        // TheHunt: always valid
+        (DutyType::Other, DutyCategory::TheHunt) => true,
+
+        // None: duty must be 0
+        (_, DutyCategory::None) if duty == 0 => true,
+
+        // DeepDungeon: duty IDs 29-34
+        (DutyType::Other, DutyCategory::DeepDungeon) => (29..=34).contains(&duty),
+
+        // Normal: duty > 0 (allow unrecorded new duties)
+        (DutyType::Normal, _) => duty > 0,
+
+        // Roulette: duty must exist in ROULETTES
+        (DutyType::Roulette, _) => roulette(u32::from(duty)).is_some(),
+
+        // GoldSaucer: duty 11-26 range
+        (_, DutyCategory::GoldSaucer) if duty == 11 => true,
+        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
+            let row = match duty {
+                12 | 16 => 21 + (duty - 12),
+                13..=15 => 18 + (duty - 13),
+                17..=19 => 22 + (duty - 17),
+                _ => 0
+            };
+            roulette(u32::from(row)).is_some()
+        }
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+            let row = match duty {
+                20 => 195,
+                21 => 756,
+                22 => 199,
+                23 => 645,
+                24 => 650,
+                25 => 768,
+                26 => 769,
+                _ => 0,
+            };
+            crate::ffxiv::duty(row).is_some()
+        }
+
+        // TreasureHunt: duty must exist in TREASURE_MAPS
+        (_, DutyCategory::TreasureHunt) => {
+            crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)).is_some()
+        }
+
+        // Other cases: invalid
+        _ => false,
+    }
+}
+
 fn _duty_name_impl<'a>(
     duty_type: DutyType,
     category: DutyCategory,
