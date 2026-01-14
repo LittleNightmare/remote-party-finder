@@ -30,6 +30,7 @@ use crate::{
     ffxiv::Language,
     listing::PartyFinderListing,
     listing_container::{ListingContainer, QueriedListing},
+    sestring_ext::SeStringExt,
     stats::CachedStatistics,
     template::listings::ListingsTemplate,
     template::stats::StatsTemplate,
@@ -633,11 +634,36 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
     }
 
-    // Validate duty/category/duty_type combination
-    if !crate::ffxiv::is_valid_duty_combination(listing.duty_type, listing.category, listing.duty) {
-        eprintln!("未插入: 无效的副本数据组合 type={:?} category={:?} duty={}",
-                  listing.duty_type, listing.category, listing.duty);
-        anyhow::bail!("invalid listing: unknown duty combination");
+    // Validate duty/category/duty_type combination (fast path, no allocation)
+    match crate::ffxiv::is_valid_duty_combination(listing.duty_type, listing.category, listing.duty) {
+        Ok(()) => {}
+        Err(base_error) => {
+            // Only extract strings when validation fails (lazy evaluation)
+            let player_name = listing.name.full_text(&crate::ffxiv::Language::ChineseSimplified);
+            let player_name = if player_name.is_empty() { None } else { Some(player_name.as_str()) };
+
+            let world = listing.created_world();
+            let world_str = world.map(|w| w.name());
+
+            let description = listing.description.full_text(&crate::ffxiv::Language::ChineseSimplified);
+            let description = if description.is_empty() { None } else { Some(description.as_str()) };
+
+            // Build full error message with context
+            let mut full_error = base_error;
+            if let Some(name) = player_name {
+                full_error.push_str(&format!(" | player: {}", name));
+            }
+            if let Some(w) = world_str {
+                full_error.push_str(&format!(" | world: {}", w));
+            }
+            if let Some(desc) = description {
+                let desc_preview: String = desc.chars().take(5).collect();
+                full_error.push_str(&format!(" | desc: {}", desc_preview));
+            }
+
+            eprintln!("未插入: {}", full_error);
+            anyhow::bail!("invalid listing: {}", full_error);
+        }
     }
 
     insert_listing(state, listing).await

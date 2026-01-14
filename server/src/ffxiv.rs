@@ -124,6 +124,81 @@ pub fn roulette(roulette: u32) -> Option<&'static roulettes::RouletteInfo> {
         .or_else(|| old::OLD_ROULETTES.get(&roulette))
 }
 
+/// Lightweight validation: Check if duty/category/duty_type combination is valid.
+/// Returns Ok(()) if valid, Err(String) with base error message if invalid.
+pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, duty: u16) -> Result<(), String> {
+    match (duty_type, category) {
+        // Fate: always valid
+        (DutyType::Other, DutyCategory::Fate) => Ok(()),
+
+        // TheHunt: always valid
+        (DutyType::Other, DutyCategory::TheHunt) => Ok(()),
+
+        // None: duty must be 0
+        (_, DutyCategory::None) if duty == 0 => Ok(()),
+        (_, DutyCategory::None) => Err(format!("None category requires duty=0, got duty={}", duty)),
+
+        // DeepDungeon: duty IDs 29-34
+        (DutyType::Other, DutyCategory::DeepDungeon) if (29..=34).contains(&duty) => Ok(()),
+        (DutyType::Other, DutyCategory::DeepDungeon) => Err(format!("DeepDungeon requires duty 29-34, got duty={}", duty)),
+
+        // Normal: duty > 0 (allow unrecorded new duties)
+        (DutyType::Normal, _) if duty > 0 => Ok(()),
+        (DutyType::Normal, _) => Err(format!("Normal type requires duty>0, got duty={}", duty)),
+
+        // Roulette: duty must exist in ROULETTES
+        (DutyType::Roulette, _) => {
+            match roulette(u32::from(duty)) {
+                Some(_) => Ok(()),
+                None => Err(format!("Roulette duty {} not found in ROULETTES", duty)),
+            }
+        }
+
+        // GoldSaucer: duty 11-26 range
+        (_, DutyCategory::GoldSaucer) if duty == 11 => Ok(()),
+        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
+            let row = match duty {
+                12 | 16 => 21 + (duty - 12),
+                13..=15 => 18 + (duty - 13),
+                17..=19 => 22 + (duty - 17),
+                _ => 0
+            };
+            match roulette(u32::from(row)) {
+                Some(_) => Ok(()),
+                None => Err(format!("GoldSaucer duty {} (mapped to roulette {}) not found", duty, row)),
+            }
+        }
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+            let row = match duty {
+                20 => 195,
+                21 => 756,
+                22 => 199,
+                23 => 645,
+                24 => 650,
+                25 => 768,
+                26 => 769,
+                _ => 0,
+            };
+            match crate::ffxiv::duty(row) {
+                Some(_) => Ok(()),
+                None => Err(format!("GoldSaucer duty {} (mapped to duty {}) not found", duty, row)),
+            }
+        }
+        (_, DutyCategory::GoldSaucer) => Err(format!("GoldSaucer requires duty 11-26, got duty={}", duty)),
+
+        // TreasureHunt: duty must exist in TREASURE_MAPS
+        (_, DutyCategory::TreasureHunt) => {
+            match crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {
+                Some(_) => Ok(()),
+                None => Err(format!("TreasureHunt duty {} not found in TREASURE_MAPS", duty)),
+            }
+        }
+
+        // Other cases: invalid (use different prefix to distinguish from _duty_name_impl)
+        _ => Err(format!("VALIDATION_FAILED: unknown type/category/duty: {:?}/{:?}/{}", duty_type, category, duty)),
+    }
+}
+
 pub fn duty_name<'a>(
     duty_type: DutyType,
     category: DutyCategory,
@@ -138,64 +213,6 @@ pub fn duty_name<'a>(
 
 pub fn duty_name_simple<'a>(duty_type: DutyType, category: DutyCategory, duty: u16, lang: Language) -> Cow<'a, str> {
     _duty_name_impl(duty_type, category, duty, lang, None, None, None)
-}
-
-/// Lightweight validation: Check if duty/category/duty_type combination is valid.
-/// Returns bool without building string output.
-/// Matches _duty_name_impl logic, used for data insertion validation.
-pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, duty: u16) -> bool {
-    match (duty_type, category) {
-        // Fate: always valid (returns "FATEs" if not found)
-        (DutyType::Other, DutyCategory::Fate) => true,
-
-        // TheHunt: always valid
-        (DutyType::Other, DutyCategory::TheHunt) => true,
-
-        // None: duty must be 0
-        (_, DutyCategory::None) if duty == 0 => true,
-
-        // DeepDungeon: duty IDs 29-34
-        (DutyType::Other, DutyCategory::DeepDungeon) => (29..=34).contains(&duty),
-
-        // Normal: duty > 0 (allow unrecorded new duties)
-        (DutyType::Normal, _) => duty > 0,
-
-        // Roulette: duty must exist in ROULETTES
-        (DutyType::Roulette, _) => roulette(u32::from(duty)).is_some(),
-
-        // GoldSaucer: duty 11-26 range
-        (_, DutyCategory::GoldSaucer) if duty == 11 => true,
-        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
-            let row = match duty {
-                12 | 16 => 21 + (duty - 12),
-                13..=15 => 18 + (duty - 13),
-                17..=19 => 22 + (duty - 17),
-                _ => 0
-            };
-            roulette(u32::from(row)).is_some()
-        }
-        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
-            let row = match duty {
-                20 => 195,
-                21 => 756,
-                22 => 199,
-                23 => 645,
-                24 => 650,
-                25 => 768,
-                26 => 769,
-                _ => 0,
-            };
-            crate::ffxiv::duty(row).is_some()
-        }
-
-        // TreasureHunt: duty must exist in TREASURE_MAPS
-        (_, DutyCategory::TreasureHunt) => {
-            crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)).is_some()
-        }
-
-        // Other cases: invalid
-        _ => false,
-    }
 }
 
 fn _duty_name_impl<'a>(
