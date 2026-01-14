@@ -151,31 +151,7 @@ impl State {
             )
             .await
             .context("could not create listing.created_world index")?;
-            
-        state.collection()
-            .create_index(
-                IndexModel::builder()
-                    .keys(mongodb::bson::doc! {
-                        "listing.home_world": 1,
-                    })
-                    .build(),
-                None,
-            )
-            .await
-            .context("could not create listing.home_world index")?;
-            
-        state.collection()
-            .create_index(
-                IndexModel::builder()
-                    .keys(mongodb::bson::doc! {
-                        "listing.data_centre": 1,
-                    })
-                    .build(),
-                None,
-            )
-            .await
-            .context("could not create listing.data_centre index")?;
-            
+
         state.collection()
             .create_index(
                 IndexModel::builder()
@@ -211,6 +187,18 @@ impl State {
             )
             .await
             .context("could not create listing.slots.accepting_classes index")?;
+
+        state.collection()
+            .create_index(
+                IndexModel::builder()
+                    .keys(mongodb::bson::doc! {
+                        "listing.duty": 1,
+                    })
+                    .build(),
+                None,
+            )
+            .await
+            .context("could not create listing.duty index")?;
 
         let task_state = Arc::clone(&state);
         tokio::task::spawn(async move {
