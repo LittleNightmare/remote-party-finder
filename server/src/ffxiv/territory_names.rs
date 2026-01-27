@@ -7521,6 +7521,13 @@ lazy_static::lazy_static! {
             fr: "Marché des étoiles",
             zh: "星芒市场",
         },
+        1310 => LocalisedText {
+            en: "Oizys",
+            ja: "惑星オイジュス",
+            de: "Oizys",
+            fr: "Oizys",
+            zh: "俄匊斯行星",
+        },
         1311 => LocalisedText {
             en: "Pilgrim's Traverse",
             ja: "ピルグリム・トラバース",

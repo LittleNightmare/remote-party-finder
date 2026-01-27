@@ -5170,18 +5170,25 @@ lazy_static::lazy_static! {
             zh: "宇宙信用点",
         },
         (22, 1666) => LocalisedText {
-            en: "Lunar Credit",
+            en: "lunar credit",
             ja: "ムーンクレジット",
             de: "Mond-Moneten",
             fr: "crédits lunaires",
             zh: "月球信用点",
         },
         (22, 1667) => LocalisedText {
-            en: "Phaenna Credit",
+            en: "Phaenna credit",
             ja: "パエンナクレジット",
             de: "Phaenna-Moneten",
             fr: "crédits de Phaenna",
             zh: "法恩娜信用点",
+        },
+        (22, 1668) => LocalisedText {
+            en: "Oizys credit",
+            ja: "オイジュスクレジット",
+            de: "Oizys-Tacken",
+            fr: "crédits d'Oizys",
+            zh: "俄匊斯信用点",
         },
         (23, 1900) => LocalisedText {
             en: "【Primals】",
@@ -9117,6 +9124,13 @@ lazy_static::lazy_static! {
             fr: "kamuy de la prospérité",
             zh: "商贾神威",
         },
+        (49, 371) => LocalisedText {
+            en: "cosmic countenance",
+            ja: "コスモフェイス",
+            de: "Kosmische Contenance",
+            fr: "sourieur cosmique",
+            zh: "宇宙面像",
+        },
         (49, 372) => LocalisedText {
             en: "demon haul",
             ja: "デモンズ・タブレット",
@@ -9306,12 +9320,40 @@ lazy_static::lazy_static! {
             fr: "Lowrider T1",
             zh: "跳跳车T1",
         },
+        (49, 415) => LocalisedText {
+            en: "volatile gravity vacuum suit",
+            ja: "局地用パワーローダー",
+            de: "Sternenläufer Mk-O",
+            fr: "mécano cosmique localisé",
+            zh: "特定地区专用型强力机兵",
+        },
+        (49, 416) => LocalisedText {
+            en: "cosmic armored weapon",
+            ja: "コスモ・アームドウェポン",
+            de: "Kosmo-Panzerwaffe",
+            fr: "arme blindée cosmique",
+            zh: "宇宙武装重甲",
+        },
         (49, 422) => LocalisedText {
             en: "wings of mist",
             ja: "ウィング・オブ・ミスト",
             de: "Flügel des Nebels",
             fr: "paire d'ailes de brume",
             zh: "浓雾之翼",
+        },
+        (49, 425) => LocalisedText {
+            en: "rapid-fab vacuum suit",
+            ja: "量産型パワーローダー",
+            de: "Sternenläufer Mk-A",
+            fr: "mécano cosmique de série",
+            zh: "量产型强力机兵",
+        },
+        (49, 426) => LocalisedText {
+            en: "alert red warp loader",
+            ja: "レッドホイールローダー",
+            de: "Sternenebner Mk-R",
+            fr: "déblayeuse cosmique rouge",
+            zh: "红色轮式工程车",
         },
         (49, 428) => LocalisedText {
             en: "Turali snowman",
@@ -13036,6 +13078,13 @@ lazy_static::lazy_static! {
             de: "Arkadionring",
             fr: "Ring arcadien",
             zh: "登天格斗场",
+        },
+        (51, 5406) => LocalisedText {
+            en: "Oizys",
+            ja: "惑星オイジュス",
+            de: "Oizys",
+            fr: "Oizys",
+            zh: "俄匊斯行星",
         },
         (51, 5432) => LocalisedText {
             en: "Worqor Chirteh",
@@ -21458,6 +21507,20 @@ lazy_static::lazy_static! {
             fr: "Pluie de verre",
             zh: "玻璃雨",
         },
+        (60, 205) => LocalisedText {
+            en: "Gravitational Flux",
+            ja: "乱重力",
+            de: "Gravitationsanomalie",
+            fr: "Fluctuations gravitationnelles",
+            zh: "重力紊乱",
+        },
+        (60, 206) => LocalisedText {
+            en: "Bubble Bloom",
+            ja: "水泡嵐",
+            de: "Schaumsturm",
+            fr: "Tempête de bulles",
+            zh: "水泡风暴",
+        },
         (61, 1) => LocalisedText {
             en: "Stance",
             ja: "納刀する/抜刀する",
@@ -25552,6 +25615,13 @@ lazy_static::lazy_static! {
             de: "/beschwingtnotieren",
             fr: "/écrireplume",
             zh: "/用羽毛笔记录",
+        },
+        (62, 710) => LocalisedText {
+            en: "/stomp",
+            ja: "/stomp",
+            de: "/stampfen",
+            fr: "/trépigner",
+            zh: "/跳脚",
         },
         (62, 718) => LocalisedText {
             en: "/carrybook",
@@ -32106,6 +32176,13 @@ lazy_static::lazy_static! {
             fr: "castor purgateur",
             zh: "罪河狸",
         },
+        (65, 569) => LocalisedText {
+            en: "Droningway",
+            ja: "ドローニングウェイ",
+            de: "Droningway",
+            fr: "Droningway",
+            zh: "嗡鸣威",
+        },
         (65, 570) => LocalisedText {
             en: "G-Warrior MGSD",
             ja: "MGSD・Gウォリアー",
@@ -34678,7 +34755,7 @@ lazy_static::lazy_static! {
         (72, 46594) => LocalisedText {
             en: "Finisher",
             ja: "ひっさつ",
-            de: "Todesstoß",
+            de: "Finaler Stoß",
             fr: "Coup fatal",
             zh: "必杀",
         },
@@ -34686,7 +34763,7 @@ lazy_static::lazy_static! {
             en: "Defend",
             ja: "ぼうぎょ",
             de: "Abwehr",
-            fr: "Défense",
+            fr: "Défense de fer",
             zh: "防御",
         },
         (72, 46596) => LocalisedText {
