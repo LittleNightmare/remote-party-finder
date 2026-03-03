@@ -7248,7 +7248,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞シラディハ水道",
                 de: "Die kuriose Unterstadt von Sil'dih",
                 fr: "Les canalisations sildiennes annexes - Donjon alternatif",
-                zh: "异闻迷宫 异闻希拉狄哈水道",
+                zh: "异闻希拉狄哈水道",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -7259,7 +7259,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞シラディハ水道 零式",
                 de: "Die kuriose Unterstadt von Sil'dih (episch)",
                 fr: "Les canalisations sildiennes annexes - Donjon alternatif (sadique)",
-                zh: "异闻迷宫 零式异闻希拉狄哈水道",
+                zh: "零式异闻希拉狄哈水道",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -7875,7 +7875,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞六根山",
                 de: "Der kuriose Rokkon",
                 fr: "Le mont Rokkon annexe - Donjon alternatif",
-                zh: "异闻迷宫 异闻六根山",
+                zh: "异闻六根山",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -7886,7 +7886,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞六根山 零式",
                 de: "Der kuriose Rokkon (episch)",
                 fr: "Le mont Rokkon annexe - Donjon alternatif (sadique)",
-                zh: "异闻迷宫 零式异闻六根山",
+                zh: "零式异闻六根山",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -8216,7 +8216,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞アロアロ島",
                 de: "Kurioses Aloalo",
                 fr: "L'île d'Aloalo annexe - Donjon alternatif",
-                zh: "异闻迷宫 异闻阿罗阿罗岛",
+                zh: "异闻阿罗阿罗岛",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -8227,7 +8227,7 @@ lazy_static::lazy_static! {
                 ja: "アナザーダンジョン 異聞アロアロ島 零式",
                 de: "Kurioses Aloalo (episch)",
                 fr: "L'île d'Aloalo annexe - Donjon alternatif (sadique)",
-                zh: "异闻迷宫 零式异闻阿罗阿罗岛",
+                zh: "零式异闻阿罗阿罗岛",
             },
             high_end: false,
             content_kind: ContentKind::VCDungeonFinder,
@@ -9090,6 +9090,17 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::Other(39),
         },
+        1066 => DutyInfo {
+            name: LocalisedText {
+                en: "The Merchant's Tale",
+                ja: "ヴァリアントダンジョン 商客物語",
+                de: "Des Händlers Liebesmüh",
+                fr: "Contes du Camelot - Donjon à embranchements",
+                zh: "多变迷宫 商客奇谭",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
         1067 => DutyInfo {
             name: LocalisedText {
                 en: "Tsukuyomi's Pain (Unreal)",
@@ -9211,6 +9222,17 @@ lazy_static::lazy_static! {
             high_end: true,
             content_kind: ContentKind::Trials,
         },
+        1079 => DutyInfo {
+            name: LocalisedText {
+                en: "Another Merchant's Tale",
+                ja: "アナザーダンジョン 異聞商客物語",
+                de: "Des Händlers kuriose Liebesmüh",
+                fr: "Contes du Camelot annexes - Donjon alternatif",
+                zh: "异闻商客奇谭",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
+        },
         1080 => DutyInfo {
             name: LocalisedText {
                 en: "Worqor Chirteh (Triumph)",
@@ -9254,6 +9276,17 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::GoldSaucer,
+        },
+        1084 => DutyInfo {
+            name: LocalisedText {
+                en: "The Merchant's Tale (Advanced)",
+                ja: "アドバンスド・ヴァリアントダンジョン 商客物語",
+                de: "Des Händlers Liebesmüh (fortgeschritten)",
+                fr: "Contes du Camelot - Donjon à embranchements (avancé)",
+                zh: "深读商客奇谭",
+            },
+            high_end: false,
+            content_kind: ContentKind::VCDungeonFinder,
         },
         1085 => DutyInfo {
             name: LocalisedText {

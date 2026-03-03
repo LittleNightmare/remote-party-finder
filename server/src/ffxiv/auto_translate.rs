@@ -9313,6 +9313,13 @@ lazy_static::lazy_static! {
             fr: "dynamite",
             zh: "炸药怪",
         },
+        (49, 412) => LocalisedText {
+            en: "genie of the lamp",
+            ja: "ランプの精",
+            de: "Geist aus der Lampe",
+            fr: "esprit de la lampe",
+            zh: "神灯",
+        },
         (49, 413) => LocalisedText {
             en: "Lowrider T1RANT",
             ja: "ローライダーT1",
@@ -9354,6 +9361,13 @@ lazy_static::lazy_static! {
             de: "Sternenebner Mk-R",
             fr: "déblayeuse cosmique rouge",
             zh: "红色轮式工程车",
+        },
+        (49, 427) => LocalisedText {
+            en: "royal magicked carpet",
+            ja: "ノーブル・マジックカーペット",
+            de: "Königlich fliegender Teppich",
+            fr: "tapis magique royal",
+            zh: "贵族魔法飞毯",
         },
         (49, 428) => LocalisedText {
             en: "Turali snowman",
@@ -13072,6 +13086,13 @@ lazy_static::lazy_static! {
             fr: "Ring du champion",
             zh: "霸王格斗场",
         },
+        (51, 5372) => LocalisedText {
+            en: "The Merchant's Tale",
+            ja: "商客物語",
+            de: "Des Händlers Liebesmüh",
+            fr: "Contes du Camelot",
+            zh: "商客奇谭",
+        },
         (51, 5405) => LocalisedText {
             en: "Arcadia",
             ja: "リング・オブ・アルカディア",
@@ -13092,6 +13113,13 @@ lazy_static::lazy_static! {
             de: "Worqor Chirteh",
             fr: "Worqor Chirteh",
             zh: "沃刻其特",
+        },
+        (51, 5474) => LocalisedText {
+            en: "Another Merchant's Tale",
+            ja: "異聞商客物語",
+            de: "Des Händlers kuriose Liebesmüh",
+            fr: "Contes du Camelot annexes",
+            zh: "异闻商客奇谭",
         },
         (54, 1) => LocalisedText {
             en: "Halone, the Fury",
@@ -25623,6 +25651,13 @@ lazy_static::lazy_static! {
             fr: "/trépigner",
             zh: "/跳脚",
         },
+        (62, 713) => LocalisedText {
+            en: "/delighted",
+            ja: "/delighted",
+            de: "/hocherfreut",
+            fr: "/fondredeplaisir",
+            zh: "/太感动了",
+        },
         (62, 718) => LocalisedText {
             en: "/carrybook",
             ja: "/carrybook",
@@ -32176,6 +32211,20 @@ lazy_static::lazy_static! {
             fr: "castor purgateur",
             zh: "罪河狸",
         },
+        (65, 567) => LocalisedText {
+            en: "little mermaid",
+            ja: "人魚姫",
+            de: "klein[a] Meerjungfrau",
+            fr: "princesse des sirènes",
+            zh: "人鱼公主",
+        },
+        (65, 568) => LocalisedText {
+            en: "magic lamp",
+            ja: "魔法のランプ",
+            de: "Wunderlampe",
+            fr: "lampe magique",
+            zh: "魔法神灯",
+        },
         (65, 569) => LocalisedText {
             en: "Droningway",
             ja: "ドローニングウェイ",
@@ -32217,6 +32266,13 @@ lazy_static::lazy_static! {
             de: "Nebelkondor",
             fr: "condor mystique",
             zh: "迷雾秃鹰",
+        },
+        (65, 578) => LocalisedText {
+            en: "soothing sea-beast",
+            ja: "柔らかそうな海獣",
+            de: "entspannend[a] Meeresbiest",
+            fr: "lamantin prismatique",
+            zh: "软软的海兽",
         },
         (67, 50) => LocalisedText {
             en: "Royal Authority Combo",
@@ -38259,12 +38315,33 @@ lazy_static::lazy_static! {
             fr: "Poids lourds",
             zh: "重量级",
         },
+        (24, 5187) => LocalisedText {
+            en: "The Merchant's Tale",
+            ja: "商客物語",
+            de: "Des Händlers Liebesmüh",
+            fr: "Contes du Camelot",
+            zh: "商客奇谭",
+        },
+        (24, 5188) => LocalisedText {
+            en: "Another Merchant's Tale",
+            ja: "異聞商客物語",
+            de: "Des Händlers kuriose Liebesmüh",
+            fr: "Contes du Camelot annexes",
+            zh: "异闻商客奇谭",
+        },
         (24, 5190) => LocalisedText {
             en: "Worqor Chirteh (Triumph)",
             ja: "ウォーコー・チーテ (演習戦)",
             de: "Worqor Chirteh (Triumph)",
             fr: "Worqor Chirteh (manœuvre)",
             zh: "沃刻其特（演习战）",
+        },
+        (24, 5191) => LocalisedText {
+            en: "Variant Dungeon (Advanced)",
+            ja: "アドバンスド・ヴァリアントダンジョン",
+            de: "Unstetes Gewölbe (fortgeschritten)",
+            fr: "Donjon à embranchements (avancé)",
+            zh: "异变迷宫",
         },
         (24, 5192) => LocalisedText {
             en: "Tsukuyomi's Pain (Unreal)",

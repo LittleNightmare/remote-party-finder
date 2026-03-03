@@ -7556,6 +7556,27 @@ lazy_static::lazy_static! {
             fr: "Sillage brumeux",
             zh: "雾之迹",
         },
+        1315 => LocalisedText {
+            en: "The Merchant's Tale",
+            ja: "商客物語",
+            de: "Des Händlers Liebesmüh",
+            fr: "Contes du Camelot",
+            zh: "商客奇谭",
+        },
+        1316 => LocalisedText {
+            en: "The Merchant's Tale",
+            ja: "商客物語",
+            de: "Des Händlers Liebesmüh",
+            fr: "Contes du Camelot",
+            zh: "商客奇谭",
+        },
+        1317 => LocalisedText {
+            en: "Another Merchant's Tale",
+            ja: "異聞商客物語",
+            de: "Des Händlers kuriose Liebesmüh",
+            fr: "Contes du Camelot annexes",
+            zh: "异闻商客奇谭",
+        },
         1318 => LocalisedText {
             en: "Castrum Fluminis",
             ja: "カストルム・フルーミニス",
@@ -7671,9 +7692,16 @@ lazy_static::lazy_static! {
         1336 => LocalisedText {
             en: "Lilyswim",
             ja: "睡蓮湖近郊",
-            de: "睡蓮湖近郊",
+            de: "Lilienteich",
             fr: "Alentours du lac aux Nénuphars",
             zh: "睡莲湖附近",
+        },
+        1337 => LocalisedText {
+            en: "The Maiden's Home",
+            ja: "美しい娘の家",
+            de: "Gemächer der jungen Angebeteten",
+            fr: "Appartements de la belle demoiselle",
+            zh: "美丽的姑娘的家",
         },
         1338 => LocalisedText {
             en: "Bentini Depot",
