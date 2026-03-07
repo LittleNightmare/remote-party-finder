@@ -22,6 +22,10 @@ Fork了[Anna Clemens](https://git.anna.lgbt/ascclemens/remote-party-finder)的Re
 ## To Anna
 If you don't wanna see it on Github, please tell me through issue.
 
+## 已知问题
+
+Cloudflare API Shield 的 Schema Validation 在 Free 套餐下存在未文档化的 ~1KB 请求体检查限制，导致较大的 `POST /contribute/multiple` 请求被 403 拒绝。目前已临时关闭 Schema Validation，并在服务端 (`web.rs`) 添加了 `created_world` 范围校验 (1000-1999) 作为替代。详见 [#13](https://github.com/LittleNightmare/remote-party-finder/issues/13)。
+
 ## Contributors
 <a href="https://github.com/LittleNightmare/remote-party-finder/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=LittleNightmare/remote-party-finder" />

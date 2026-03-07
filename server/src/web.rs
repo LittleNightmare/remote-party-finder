@@ -634,6 +634,14 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
     }
 
+    // Validate world ID range (CN servers: 1000-1999)
+    if listing.created_world < 1000 || listing.created_world > 1999 {
+        anyhow::bail!(
+            "invalid listing: created_world {} out of range (expected 1000-1999)",
+            listing.created_world
+        );
+    }
+
     // Validate duty/category/duty_type combination (fast path, no allocation)
     match crate::ffxiv::is_valid_duty_combination(listing.duty_type, listing.category, listing.duty) {
         Ok(()) => {}
