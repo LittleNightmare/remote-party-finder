@@ -33,7 +33,7 @@ jobs:
       - name: Install Rust nightly toolchain
         uses: dtolnay/rust-toolchain@nightly
         with:
-          toolchain: nightly-2024-01-08
+          toolchain: nightly-2024-05-10
           targets: x86_64-unknown-linux-musl
 
       - name: Install musl-tools (musl-gcc)
