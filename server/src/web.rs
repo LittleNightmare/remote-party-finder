@@ -634,10 +634,9 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
     }
 
-    // Validate world ID range (CN servers: 1000-1999)
-    if listing.created_world < 1000 || listing.created_world > 1999 {
+    if !matches!(listing.created_world, 1000..=1999 | 4000..=4999) {
         anyhow::bail!(
-            "invalid listing: created_world {} out of range (expected 1000-1999)",
+            "invalid listing: created_world {} out of range (expected 1000-1999 or 4000-4999)",
             listing.created_world
         );
     }
