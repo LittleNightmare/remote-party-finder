@@ -21,6 +21,9 @@ mod ffxiv;
 #[cfg(test)]
 mod test;
 
+#[cfg(test)]
+mod api_v2_contract;
+
 #[tokio::main]
 async fn main() {
     let mut args: Vec<String> = std::env::args().skip(1).collect();
