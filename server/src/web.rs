@@ -38,6 +38,7 @@ use crate::{
 
 mod stats;
 pub mod api;
+pub mod v2;
 
 use crate::web::api::{ApiResponse, DetailedApiListing, ApiListing};
 
@@ -297,6 +298,7 @@ fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         .or(contribute_multiple(Arc::clone(&state)))
         .or(crate::web::api::listings_api(Arc::clone(&state)))
         .or(crate::web::api::listing_detail_api(Arc::clone(&state)))
+        .or(crate::web::v2::routes(Arc::clone(&state)))
         .or(index())
         .boxed()
 }
