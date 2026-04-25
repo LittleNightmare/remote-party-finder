@@ -7,11 +7,15 @@ name: Build and Publish
       - main
     paths:
       - 'server/**'
+      - 'README.md'
+      - 'docs/**'
   pull_request:
     branches:
       - main
     paths:
       - 'server/**'
+      - 'README.md'
+      - 'docs/**'
 
 jobs:
   build:
@@ -38,6 +42,11 @@ jobs:
 
       - name: Install musl-tools (musl-gcc)
         run: sudo apt-get update && sudo apt-get install -y musl-tools
+
+      - name: Test
+        run: |
+          cd ./server
+          cargo test
 
       - name: Build
         run: |
