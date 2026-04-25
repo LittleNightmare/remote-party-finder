@@ -14,6 +14,18 @@ Fork了[Anna Clemens](https://git.anna.lgbt/ascclemens/remote-party-finder)的Re
 ## API
 已经提供了 API，使用方式请见 [API 使用文档](https://github.com/LittleNightmare/remote-party-finder/wiki/API-Usage)。
 
+### API v2 phase 1
+
+This repo now ships a parallel read API under `/api/v2`.
+
+- v1 stays available. v2 is additive and runs in parallel during migration.
+- Phase 1 exposes only `GET /api/v2/listings` and `GET /api/v2/listings/{id}`.
+- Listing resources are IDs-only for lookup-backed fields such as worlds, categories, duties, jobs, objectives, conditions, loot rules, and slot roles.
+- Phase 1 has no `/api/v2/lookups/*` routes. Clients must resolve labels outside this API.
+- `/api/v2/listings/{id}` is an active-detail lookup alias for the current visible PF listing id. It is not a durable historical identity.
+
+See [`docs/api-v2.md`](docs/api-v2.md) for the phase-1 contract, examples, and migration notes.
+
 ## 前端
 可以查看利用 API 的前端项目：[remote-party-finder-frontend](https://github.com/Cindy-Master/remote-party-finder-frontend)。
 
