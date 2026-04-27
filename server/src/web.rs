@@ -289,7 +289,7 @@ impl State {
     }
 }
 
-fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
+pub(crate) fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     assets()
         .or(listings(Arc::clone(&state)))
         .or(stats(Arc::clone(&state)))
@@ -301,6 +301,24 @@ fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         .or(crate::web::v2::routes(Arc::clone(&state)))
         .or(index())
         .boxed()
+}
+
+#[cfg(test)]
+pub(crate) async fn state_for_router_tests() -> Arc<State> {
+    let mongo = MongoClient::with_uri_str("mongodb://127.0.0.1:27017")
+        .await
+        .expect("router tests should construct a Mongo client without touching the network");
+
+    Arc::new(State {
+        mongo,
+        stats: Default::default(),
+        listings_cache: RwLock::new(ListingsCache {
+            entries: HashMap::new(),
+        }),
+        detail_cache: RwLock::new(DetailCache {
+            entries: HashMap::new(),
+        }),
+    })
 }
 
 fn assets() -> BoxedFilter<(impl Reply, )> {

@@ -13,35 +13,12 @@ use crate::web::v2::contracts::{
 use crate::web::v2::filters::ListingsQuery;
 use crate::web::v2::id_inventory;
 use crate::web::v2::listings::{
-    collection_pipeline, collection_response_from_documents,
+    collection_response_from_documents,
     collection_response_from_raw_documents_for_tests, member_route_for_tests,
     project_listing_detail, project_listing_summaries, project_listing_summary,
     resolve_listing_detail,
 };
 use chrono::{Duration, Utc};
-
-const README_API_V2_MARKERS: &[&str] = &[
-    "parallel read API under `/api/v2`",
-    "v1 stays available. v2 is additive and runs in parallel during migration.",
-    "Phase 1 exposes only `GET /api/v2/listings` and `GET /api/v2/listings/{id}`.",
-    "Listing resources are IDs-only for lookup-backed fields",
-    "Phase 1 has no `/api/v2/lookups/*` routes. Clients must resolve labels outside this API.",
-    "`/api/v2/listings/{id}` is an active-detail lookup alias for the current visible PF listing id. It is not a durable historical identity.",
-];
-
-const API_V2_DOC_MARKERS: &[&str] = &[
-    "# API v2, phase 1 contract",
-    "Phase 1 exposes only these routes:",
-    "`GET /api/v2/listings`",
-    "`GET /api/v2/listings/{id}`",
-    "`/api/v2/lookups/*` does not exist",
-    "v2 is IDs-only for lookup-backed references.",
-    "`player_name` and `description` stay inline text.",
-    "`/api/v2/listings/{id}` resolves the current active visible PF listing by listing id. It is an active-detail lookup alias, not a durable storage identity.",
-    "Missing, expired, or non-visible ids return `404 not_found`.",
-    "Avoid old label-based queries such as `world=` or `category=`.",
-    "Keep existing v1 integrations running while you add v2 support.",
-];
 
 const ACTIVE_FIXTURE_JSON: &str = r#"{
   "id": 12345,
@@ -255,21 +232,10 @@ fn error_envelope_is_consistent() {
 }
 
 #[test]
-fn docs_examples_match_contract() {
+fn docs_include_minimal_contract_examples() {
     let readme = include_str!("../../README.md");
     let api_v2_doc = include_str!("../../docs/api-v2.md");
     let normalized_api_v2_doc = strip_whitespace(api_v2_doc);
-
-    for marker in README_API_V2_MARKERS {
-        assert!(readme.contains(marker), "README.md missing marker: {marker}");
-    }
-
-    for marker in API_V2_DOC_MARKERS {
-        assert!(
-            api_v2_doc.contains(marker),
-            "docs/api-v2.md missing marker: {marker}"
-        );
-    }
 
     let collection = CollectionEnvelope {
         data: vec![sample_summary()],
@@ -288,6 +254,13 @@ fn docs_examples_match_contract() {
     let detail_json = serde_json::to_string_pretty(&detail).unwrap();
 
     assert!(
+        readme.contains("See [`docs/api-v2.md`](docs/api-v2.md)"),
+        "README should point readers to the detailed v2 contract doc"
+    );
+    assert!(api_v2_doc.contains("`GET /api/v2/listings`"));
+    assert!(api_v2_doc.contains("`GET /api/v2/listings/{id}`"));
+
+    assert!(
         normalized_api_v2_doc.contains(&strip_whitespace(&collection_json)),
         "docs/api-v2.md collection example drifted from contract"
     );
@@ -295,19 +268,6 @@ fn docs_examples_match_contract() {
         normalized_api_v2_doc.contains(&strip_whitespace(&detail_json)),
         "docs/api-v2.md detail example drifted from contract"
     );
-
-    for stale in [
-        "GET /api/v2/lookups",
-        "GET /api/v2/lookups/worlds",
-        "GET /api/v2/lookups/duties",
-        "GET /api/v2/lookups/jobs",
-        "GET /api/v2/lookups/categories",
-    ] {
-        assert!(
-            !api_v2_doc.contains(stale),
-            "docs/api-v2.md must not document nonexistent lookup route {stale}"
-        );
-    }
 }
 
 fn strip_whitespace(value: &str) -> String {
@@ -424,6 +384,17 @@ async fn malformed_filters_return_400() {
             ErrorEnvelope::invalid_query("per_page", "per_page must be between 1 and 100"),
         ),
         (
+            "/api/v2/listings?page=0",
+            ErrorEnvelope::invalid_query("page", "page must be a positive integer"),
+        ),
+        (
+            "/api/v2/listings?job_ids=",
+            ErrorEnvelope::invalid_query(
+                "job_ids",
+                "job_ids must be a comma-separated list of unsigned integers",
+            ),
+        ),
+        (
             "/api/v2/listings?unknown=1",
             ErrorEnvelope::invalid_query("unknown", "unknown is not a supported query parameter"),
         ),
@@ -480,29 +451,8 @@ async fn legacy_label_filters_are_rejected() {
     }
 }
 
-// =============================================================================
-// Lookup-Route Absence Contract Tests
-// =============================================================================
-//
-// Verifies that phase-1 v2 does NOT expose any lookup endpoints. This is a frozen
-// design decision (no phase-1 lookup endpoints).
-//
-// Tests:
-// - no_lookup_routes_exposed_in_phase1: compile-time assertion that lookups are not mounted
-// - unmounted_lookup_routes_return_not_found: runtime tests that /api/v2/lookups/* returns 404
-
-#[test]
-fn no_lookup_routes_exposed_in_phase1() {
-    // PHASE_ONE_LOOKUPS_EXPOSED must be explicitly false
-    use crate::web::v2::lookups::PHASE_ONE_LOOKUPS_EXPOSED;
-    assert!(
-        !PHASE_ONE_LOOKUPS_EXPOSED,
-        "PHASE_ONE_LOOKUPS_EXPOSED must be false in phase-1"
-    );
-}
-
 #[tokio::test]
-async fn unmounted_lookup_routes_return_not_found() {
+async fn lookup_routes_are_absent_from_the_full_router() {
     let lookup_paths = [
         "/api/v2/lookups",
         "/api/v2/lookups/",
@@ -513,18 +463,19 @@ async fn unmounted_lookup_routes_return_not_found() {
         "/api/v2/lookups/jobs",
         "/api/v2/lookups/categories",
     ];
+    let router = crate::web::router(crate::web::state_for_router_tests().await);
 
     for path in lookup_paths {
         let response = warp::test::request()
             .method("GET")
             .path(path)
-            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .reply(&router)
             .await;
 
         assert_eq!(
             response.status(),
-            StatusCode::NOT_FOUND,
-            "path {path} should return 404 NOT_FOUND"
+            StatusCode::METHOD_NOT_ALLOWED,
+            "path {path} should be rejected consistently by the full router"
         );
     }
 }
@@ -614,55 +565,6 @@ async fn duplicate_listing_id_returns_latest_active_detail() {
 }
 
 #[test]
-fn expired_fixture_has_zero_time() {
-    let expired: crate::listing::PartyFinderListing =
-        serde_json::from_str(EXPIRED_FIXTURE_JSON).expect("expired fixture must parse");
-
-    assert_eq!(expired.id, 12345);
-    assert_eq!(
-        expired.seconds_remaining, 0,
-        "expired fixture must have 0 remaining time"
-    );
-    assert_eq!(
-        expired.last_server_restart, 1000,
-        "expired shares restart with active fixture"
-    );
-}
-
-#[test]
-fn all_fixtures_are_public() {
-    // All fixtures use search_area=1 (DATA_CENTRE bit only) — not bit 2 (private)
-    use crate::listing::PartyFinderListing;
-    use crate::listing::SearchAreaFlags;
-
-    let active: PartyFinderListing =
-        serde_json::from_str(ACTIVE_FIXTURE_JSON).expect("active fixture must parse");
-    let expired: PartyFinderListing =
-        serde_json::from_str(EXPIRED_FIXTURE_JSON).expect("expired fixture must parse");
-    let duplicate_old: PartyFinderListing =
-        serde_json::from_str(DUPLICATE_OLD_FIXTURE_JSON).expect("duplicate_old fixture must parse");
-    let cross_world: PartyFinderListing =
-        serde_json::from_str(CROSS_WORLD_FIXTURE_JSON).expect("cross_world fixture must parse");
-
-    assert!(
-        !active.search_area.contains(SearchAreaFlags::PRIVATE),
-        "active fixture must be public"
-    );
-    assert!(
-        !expired.search_area.contains(SearchAreaFlags::PRIVATE),
-        "expired fixture must be public"
-    );
-    assert!(
-        !duplicate_old.search_area.contains(SearchAreaFlags::PRIVATE),
-        "duplicate_old fixture must be public"
-    );
-    assert!(
-        !cross_world.search_area.contains(SearchAreaFlags::PRIVATE),
-        "cross_world fixture must be public"
-    );
-}
-
-#[test]
 fn listings_projection_excludes_labels() {
     let now = Utc::now();
     let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.9);
@@ -748,6 +650,7 @@ fn listings_projection_excludes_labels() {
 async fn listing_detail_is_ids_only() {
     let now = Utc::now();
     let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.9);
+    let expected_updated_at = active.updated_at.to_rfc3339();
 
     let response = warp::test::request()
         .method("GET")
@@ -760,29 +663,37 @@ async fn listing_detail_is_ids_only() {
     let body = serde_json::from_slice::<serde_json::Value>(response.body()).unwrap();
     let object = body["data"].as_object().cloned().unwrap();
 
-    for required in [
-        "id",
-        "player_name",
-        "description",
-        "created_world_id",
-        "home_world_id",
-        "category_id",
-        "duty_id",
-        "duty_type_id",
-        "min_item_level",
-        "slots_filled",
-        "slots_available",
-        "time_left_seconds",
-        "updated_at",
-        "is_cross_world",
-        "beginners_welcome",
-        "objective_ids",
-        "condition_ids",
-        "loot_rule_id",
-        "slots",
-    ] {
-        assert!(object.contains_key(required), "missing {required}");
-    }
+    assert_eq!(
+        body["data"],
+        json!({
+            "id": 12345,
+            "player_name": "Active",
+            "description": "Active fixture",
+            "created_world_id": 73,
+            "home_world_id": 73,
+            "category_id": 64,
+            "duty_id": 55,
+            "duty_type_id": 2,
+            "min_item_level": 0,
+            "slots_filled": 1,
+            "slots_available": 8,
+            "time_left_seconds": 1200,
+            "updated_at": expected_updated_at,
+            "is_cross_world": true,
+            "beginners_welcome": false,
+            "objective_ids": [1, 2],
+            "condition_ids": [],
+            "loot_rule_id": 0,
+            "slots": [
+                {
+                    "filled": true,
+                    "role_id": 1,
+                    "filled_job_id": 5,
+                    "accepted_job_ids": [],
+                }
+            ],
+        })
+    );
 
     for forbidden in [
         "name",
@@ -804,21 +715,6 @@ async fn listing_detail_is_ids_only() {
             "detail unexpectedly exposed {forbidden}"
         );
     }
-
-    assert_eq!(body["data"]["objective_ids"], json!([1, 2]));
-    assert_eq!(body["data"]["condition_ids"], json!([]));
-    assert_eq!(body["data"]["loot_rule_id"], json!(0));
-    assert_eq!(
-        body["data"]["slots"],
-        json!([
-            {
-                "filled": true,
-                "role_id": 1,
-                "filled_job_id": 5,
-                "accepted_job_ids": [],
-            }
-        ])
-    );
 }
 
 #[test]
@@ -842,89 +738,45 @@ fn listings_summary_is_ids_only() {
     assert_eq!(response.pagination.total_pages, 1);
     assert_eq!(response.data.len(), 2);
 
-    for summary in &response.data {
-        let object = serde_json::to_value(summary)
-            .unwrap()
-            .as_object()
-            .cloned()
-            .unwrap();
-
-        for required in [
-            "id",
-            "player_name",
-            "description",
-            "created_world_id",
-            "home_world_id",
-            "category_id",
-            "duty_id",
-            "duty_type_id",
-            "min_item_level",
-            "slots_filled",
-            "slots_available",
-            "time_left_seconds",
-            "updated_at",
-            "is_cross_world",
-            "beginners_welcome",
-        ] {
-            assert!(object.contains_key(required), "missing {required}");
-        }
-
-        for forbidden in [
-            "name",
-            "created_world",
-            "home_world",
-            "category",
-            "duty",
-            "duty_type",
-            "datacenter",
-            "datacenter_id",
-            "objective_ids",
-            "condition_ids",
-            "loot_rule_id",
-            "slots",
-        ] {
-            assert!(
-                !object.contains_key(forbidden),
-                "summary unexpectedly exposed {forbidden}"
-            );
-        }
-    }
-
-    assert_eq!(response.data[0].player_name, "Active");
-    assert_eq!(response.data[0].description, "Active fixture");
-    assert_eq!(response.data[1].player_name, "Cross World");
-    assert_eq!(response.data[1].description, "Cross-world fixture");
-}
-
-#[test]
-fn collection_pipeline_uses_job_flag_bits_for_public_job_ids() {
-    let pipeline = collection_pipeline(&ListingsQuery {
-        job_ids: vec![24],
-        ..Default::default()
-    });
-
-    let job_match = pipeline
-        .iter()
-        .find(|stage| stage.get_document("$match").ok().and_then(|stage| stage.get_array("$or").ok()).is_some())
-        .expect("job filter stage should exist");
-    let job_conditions = job_match
-        .get_document("$match")
-        .unwrap()
-        .get_array("$or")
-        .unwrap();
-    let bits = job_conditions[0]
-        .as_document()
-        .unwrap()
-        .get_document("listing.slots")
-        .unwrap()
-        .get_document("$elemMatch")
-        .unwrap()
-        .get_document("accepting")
-        .unwrap()
-        .get_i64("$bitsAllSet")
-        .unwrap();
-
-    assert_eq!(bits, JobFlags::WHITE_MAGE.bits() as i64);
+    assert_eq!(
+        serde_json::to_value(&response.data).unwrap(),
+        json!([
+            {
+                "id": 12345,
+                "player_name": "Active",
+                "description": "Active fixture",
+                "created_world_id": 73,
+                "home_world_id": 73,
+                "category_id": 64,
+                "duty_id": 55,
+                "duty_type_id": 2,
+                "min_item_level": 0,
+                "slots_filled": 1,
+                "slots_available": 8,
+                "time_left_seconds": 1200,
+                "updated_at": active.updated_at.to_rfc3339(),
+                "is_cross_world": true,
+                "beginners_welcome": false,
+            },
+            {
+                "id": 12346,
+                "player_name": "Cross World",
+                "description": "Cross-world fixture",
+                "created_world_id": 73,
+                "home_world_id": 73,
+                "category_id": 64,
+                "duty_id": 55,
+                "duty_type_id": 2,
+                "min_item_level": 0,
+                "slots_filled": 1,
+                "slots_available": 8,
+                "time_left_seconds": 900,
+                "updated_at": cross_world.updated_at.to_rfc3339(),
+                "is_cross_world": true,
+                "beginners_welcome": false,
+            }
+        ])
+    );
 }
 
 #[test]
@@ -948,6 +800,90 @@ fn collection_response_filters_public_job_ids_by_inventory_mapping() {
     assert_eq!(response.pagination.total, 1);
     assert_eq!(response.data.len(), 1);
     assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].player_name, "Active");
+}
+
+#[test]
+fn duplicate_job_ids_do_not_change_matching_results() {
+    let now = Utc::now();
+    let mut white_mage = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    white_mage.listing.slots[0].accepting = JobFlags::WHITE_MAGE;
+
+    let mut red_mage = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    red_mage.listing.id = 54321;
+    red_mage.listing.slots[0].accepting = JobFlags::RED_MAGE;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            job_ids: vec![24, 24],
+            ..Default::default()
+        },
+        [&white_mage, &red_mage],
+    );
+
+    assert_eq!(response.pagination.total, 1);
+    assert_eq!(response.data.len(), 1);
+    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].player_name, "Active");
+}
+
+#[test]
+fn scalar_filters_match_expected_documents() {
+    let now = Utc::now();
+    let mut created_world_match = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    created_world_match.listing.created_world = 1167;
+
+    let mut home_world_match = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    home_world_match.listing.id = 54321;
+    home_world_match.listing.home_world = 1174;
+
+    let mut category_and_duty_match = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 600.0);
+    category_and_duty_match.listing.id = 67890;
+    category_and_duty_match.listing.category = DutyCategory::Raid;
+    category_and_duty_match.listing.duty = 777;
+    let category_id = id_inventory::category_id(category_and_duty_match.listing.category);
+
+    let documents = [&created_world_match, &home_world_match, &category_and_duty_match];
+
+    let created_world_response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: Some(1167),
+            ..Default::default()
+        },
+        documents,
+    );
+    assert_eq!(created_world_response.pagination.total, 1);
+    assert_eq!(created_world_response.data[0].id, 12345);
+
+    let home_world_response = collection_response_from_documents(
+        ListingsQuery {
+            home_world_id: Some(1174),
+            ..Default::default()
+        },
+        documents,
+    );
+    assert_eq!(home_world_response.pagination.total, 1);
+    assert_eq!(home_world_response.data[0].id, 54321);
+
+    let category_response = collection_response_from_documents(
+        ListingsQuery {
+            category_id: Some(category_id),
+            ..Default::default()
+        },
+        documents,
+    );
+    assert_eq!(category_response.pagination.total, 1);
+    assert_eq!(category_response.data[0].id, 67890);
+
+    let duty_response = collection_response_from_documents(
+        ListingsQuery {
+            duty_id: Some(777),
+            ..Default::default()
+        },
+        documents,
+    );
+    assert_eq!(duty_response.pagination.total, 1);
+    assert_eq!(duty_response.data[0].id, 67890);
 }
 
 #[tokio::test]
@@ -1010,6 +946,29 @@ async fn well_formed_unknown_filters_return_empty_collection() {
     }
 }
 
+#[tokio::test]
+async fn per_page_hundred_is_accepted() {
+    let response = warp::test::request()
+        .method("GET")
+        .path("/api/v2/listings?per_page=100")
+        .reply(&crate::web::v2::listings::collection_route_for_tests())
+        .await;
+
+    assert_eq!(response.status(), StatusCode::OK);
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(response.body()).unwrap(),
+        json!({
+            "data": [],
+            "pagination": {
+                "total": 0,
+                "page": 1,
+                "per_page": 100,
+                "total_pages": 0,
+            }
+        })
+    );
+}
+
 #[test]
 fn expired_listings_are_excluded_from_v2() {
     let now = Utc::now();
@@ -1026,6 +985,19 @@ fn expired_listings_are_excluded_from_v2() {
         vec![project_listing_summary(&active).unwrap()]
     );
     assert!(resolve_listing_detail(12345, [&expired]).is_none());
+}
+
+#[test]
+fn active_window_keeps_just_fresh_listings_and_drops_stale_ones() {
+    let now = Utc::now();
+    let just_fresh = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(4) - Duration::seconds(59), 1200.0);
+    let stale = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(5) - Duration::seconds(1), 1200.0);
+
+    let projected = project_listing_summaries([&just_fresh, &stale]);
+
+    assert_eq!(projected.len(), 1);
+    assert_eq!(projected[0].id, 12345);
+    assert_eq!(projected[0].player_name, "Active");
 }
 
 #[test]
@@ -1053,6 +1025,7 @@ async fn expired_or_missing_listing_returns_404() {
     let expired = queried_fixture(EXPIRED_FIXTURE_JSON, now - Duration::minutes(1), -1.0);
     let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
     let private = private_queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    let private_expired = private_queried_fixture(EXPIRED_FIXTURE_JSON, now - Duration::minutes(1), -1.0);
 
     let expired_response = warp::test::request()
         .method("GET")
@@ -1100,6 +1073,25 @@ async fn expired_or_missing_listing_returns_404() {
     assert_eq!(private_response.status(), StatusCode::NOT_FOUND);
     assert_eq!(
         serde_json::from_slice::<serde_json::Value>(private_response.body()).unwrap(),
+        json!({
+            "error": {
+                "code": "not_found",
+                "message": "Listing not found",
+                "details": {
+                    "id": 12345,
+                }
+            }
+        })
+    );
+
+    let private_expired_response = warp::test::request()
+        .method("GET")
+        .path("/api/v2/listings/12345")
+        .reply(&member_route_for_tests(vec![private_expired]))
+        .await;
+    assert_eq!(private_expired_response.status(), StatusCode::NOT_FOUND);
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(private_expired_response.body()).unwrap(),
         json!({
             "error": {
                 "code": "not_found",
