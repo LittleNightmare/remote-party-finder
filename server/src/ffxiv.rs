@@ -616,6 +616,17 @@ mod old {
                 high_end: true,
                 content_kind: ContentKind::Trials,
             },
+            1067 => DutyInfo {
+            name: LocalisedText {
+                en: "Tsukuyomi's Pain (Unreal)",
+                ja: "幻ツクヨミ討滅戦",
+                de: "Traumprüfung - Tsukuyomi",
+                fr: "Castrum Fluminis (irréel)",
+                zh: "月读幻巧战",
+            },
+            high_end: true,
+            content_kind: ContentKind::Trials,
+            },
         };
 
         pub static ref OLD_ROULETTES: HashMap<u32, RouletteInfo> = maplit::hashmap! {
