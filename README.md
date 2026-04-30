@@ -12,7 +12,10 @@ Fork了[Anna Clemens](https://git.anna.lgbt/ascclemens/remote-party-finder)的Re
 参考这个[issue](https://github.com/LittleNightmare/remote-party-finder/issues/3)，下载对应的字体放在`server/assets`里
 
 ## API
-已经提供了 API，使用方式请见 [API 使用文档](https://github.com/LittleNightmare/remote-party-finder/wiki/API-Usage)。
+已经提供了 API，使用方式请见仓库内文档：
+
+- [Legacy / v1 API](docs/api-v1.md)
+- [API v2 phase 1](docs/api-v2.md)
 
 ### API v2 phase 1
 
