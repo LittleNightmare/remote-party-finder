@@ -277,20 +277,43 @@ pub(crate) fn collection_pipeline(query: &ListingsQuery) -> Vec<Document> {
         }
     }];
 
-    if let Some(created_world_id) = query.created_world_id {
-        pipeline.push(doc! {
-            "$match": {
-                "listing.created_world": created_world_id as i32,
-            }
-        });
+    // Precedence: world-id > datacenter > region
+    // If a higher-priority filter is active and well-formed, lower-priority filters are masked
+
+    let world_id_active = world_id_filter_is_active(query);
+    let datacenter_active = datacenter_filter_is_active(query);
+
+    // World-id filters (highest priority)
+    if !query.created_world_id.is_empty() {
+        let valid_created_world_ids: Vec<i32> = query
+            .created_world_id
+            .iter()
+            .filter(|id| id_inventory::world_ids().contains(id))
+            .map(|id| *id as i32)
+            .collect();
+        if !valid_created_world_ids.is_empty() {
+            pipeline.push(doc! {
+                "$match": {
+                    "listing.created_world": { "$in": valid_created_world_ids },
+                }
+            });
+        }
     }
 
-    if let Some(home_world_id) = query.home_world_id {
-        pipeline.push(doc! {
-            "$match": {
-                "listing.home_world": home_world_id as i32,
-            }
-        });
+    if !query.home_world_id.is_empty() {
+        let valid_home_world_ids: Vec<i32> = query
+            .home_world_id
+            .iter()
+            .filter(|id| id_inventory::world_ids().contains(id))
+            .map(|id| *id as i32)
+            .collect();
+        if !valid_home_world_ids.is_empty() {
+            pipeline.push(doc! {
+                "$match": {
+                    "listing.home_world": { "$in": valid_home_world_ids },
+                }
+            });
+        }
     }
 
     if let Some(category_id) = query.category_id {
@@ -332,6 +355,38 @@ pub(crate) fn collection_pipeline(query: &ListingsQuery) -> Vec<Document> {
                 "$or": job_conditions,
             }
         });
+    }
+
+    // Datacenter filter (middle priority - masked by world-id, masks region)
+    // Only apply if no world-id filter is active
+    if !world_id_active {
+        if let Some(datacenter_query) = &query.datacenter {
+            let datacenter_names = split_csv_names(datacenter_query);
+            let valid_created_world_ids = matching_created_world_ids_for_datacenters(&datacenter_names);
+            if !valid_created_world_ids.is_empty() {
+                pipeline.push(doc! {
+                    "$match": {
+                        "listing.created_world": { "$in": valid_created_world_ids },
+                    }
+                });
+            }
+        }
+
+        // Region filter (lowest priority - masked by world-id and datacenter)
+        // Only apply if no world-id and no datacenter filter is active
+        if !datacenter_active {
+            if let Some(region_query) = &query.region {
+                let region_names = split_csv_names(region_query);
+                let valid_created_world_ids = matching_created_world_ids_for_regions(&region_names);
+                if !valid_created_world_ids.is_empty() {
+                    pipeline.push(doc! {
+                        "$match": {
+                            "listing.created_world": { "$in": valid_created_world_ids },
+                        }
+                    });
+                }
+            }
+        }
     }
 
     pipeline.extend([
@@ -461,16 +516,88 @@ fn total_pages(total: usize, per_page: usize) -> usize {
     }
 }
 
+fn world_id_filter_is_active(query: &ListingsQuery) -> bool {
+    !query.created_world_id.is_empty() || !query.home_world_id.is_empty()
+}
+
+fn datacenter_filter_is_active(query: &ListingsQuery) -> bool {
+    query.datacenter.is_some()
+}
+
+fn region_filter_is_active(query: &ListingsQuery) -> bool {
+    query.region.is_some()
+}
+
 fn query_demands_empty_collection(query: &ListingsQuery) -> bool {
-    query
-        .created_world_id
-        .is_some_and(|world_id| !id_inventory::world_ids().contains(&world_id))
-        || query
+    // Precedence: world-id > datacenter > region
+    // If a higher-priority filter is active and well-formed, lower-priority filters are masked
+
+    let world_id_active = world_id_filter_is_active(query);
+    let datacenter_active = datacenter_filter_is_active(query);
+    let region_active = region_filter_is_active(query);
+
+    // Check world-id filters (highest priority)
+    if world_id_active {
+        let created_world_has_valid = query
+            .created_world_id
+            .iter()
+            .any(|world_id| id_inventory::world_ids().contains(world_id));
+        let created_world_all_unknown = !query.created_world_id.is_empty() && !created_world_has_valid;
+
+        let home_world_has_valid = query
             .home_world_id
-            .is_some_and(|world_id| !id_inventory::world_ids().contains(&world_id))
-        || query
-            .category_id
-            .is_some_and(|category_id| !id_inventory::CATEGORY_IDS.contains(&category_id))
+            .iter()
+            .any(|world_id| id_inventory::world_ids().contains(world_id));
+        let home_world_all_unknown = !query.home_world_id.is_empty() && !home_world_has_valid;
+
+        return created_world_all_unknown
+            || home_world_all_unknown
+            || query.category_id
+                .is_some_and(|category_id| !id_inventory::CATEGORY_IDS.contains(&category_id))
+            || query.duty_id.is_some_and(|duty_id| duty_id > u16::MAX as u32)
+            || query
+                .job_ids
+                .iter()
+                .any(|job_id| !id_inventory::job_ids().contains(job_id));
+    }
+
+    // Check datacenter filter (middle priority - masks region)
+    if datacenter_active {
+        let datacenter_all_unknown = query.datacenter.as_ref().is_some_and(|query| {
+            let names = split_csv_names(query);
+            !names.is_empty() && matching_created_world_ids_for_datacenters(&names).is_empty()
+        });
+
+        return datacenter_all_unknown
+            || query.category_id
+                .is_some_and(|category_id| !id_inventory::CATEGORY_IDS.contains(&category_id))
+            || query.duty_id.is_some_and(|duty_id| duty_id > u16::MAX as u32)
+            || query
+                .job_ids
+                .iter()
+                .any(|job_id| !id_inventory::job_ids().contains(job_id));
+    }
+
+    // Check region filter (lowest priority)
+    if region_active {
+        let region_all_unknown = query.region.as_ref().is_some_and(|query| {
+            let names = split_csv_names(query);
+            !names.is_empty() && matching_created_world_ids_for_regions(&names).is_empty()
+        });
+
+        return region_all_unknown
+            || query.category_id
+                .is_some_and(|category_id| !id_inventory::CATEGORY_IDS.contains(&category_id))
+            || query.duty_id.is_some_and(|duty_id| duty_id > u16::MAX as u32)
+            || query
+                .job_ids
+                .iter()
+                .any(|job_id| !id_inventory::job_ids().contains(job_id));
+    }
+
+    // No world-id/datacenter/region filter active - check other filters
+    query.category_id
+        .is_some_and(|category_id| !id_inventory::CATEGORY_IDS.contains(&category_id))
         || query.duty_id.is_some_and(|duty_id| duty_id > u16::MAX as u32)
         || query
             .job_ids
@@ -484,20 +611,123 @@ fn matches_query(document: &QueriedListing, query: &ListingsQuery) -> bool {
         None => return false,
     };
 
-    query
-        .created_world_id
-        .is_none_or(|world_id| id_inventory::world_id(listing.created_world) == world_id)
-        && query
-            .home_world_id
-            .is_none_or(|world_id| id_inventory::world_id(listing.home_world) == world_id)
-        && query
-            .category_id
-            .is_none_or(|category_id| id_inventory::category_id(listing.category) == category_id)
-        && query
-            .duty_id
-            .is_none_or(|duty_id| id_inventory::duty_id(listing.duty) == duty_id)
+    // Precedence: world-id > datacenter > region
+    // If a higher-priority filter is active, lower-priority filters are masked
+
+    // Check world-id filters first (highest priority)
+    let world_id_active = world_id_filter_is_active(query);
+    let world_id_matches = if !query.created_world_id.is_empty() && !query.home_world_id.is_empty() {
+        query.created_world_id.iter().any(|world_id| id_inventory::world_id(listing.created_world) == *world_id)
+            && query.home_world_id.iter().any(|world_id| id_inventory::world_id(listing.home_world) == *world_id)
+    } else if !query.created_world_id.is_empty() {
+        query.created_world_id.iter().any(|world_id| id_inventory::world_id(listing.created_world) == *world_id)
+    } else if !query.home_world_id.is_empty() {
+        query.home_world_id.iter().any(|world_id| id_inventory::world_id(listing.home_world) == *world_id)
+    } else {
+        true
+    };
+
+    if !world_id_matches {
+        return false;
+    }
+
+    // Check datacenter filter (only if no world-id filter is active)
+    let datacenter_active = datacenter_filter_is_active(query);
+    let datacenter_matches = if !world_id_active {
+        query.datacenter.as_ref().is_none_or(|datacenter_query| {
+            let datacenter_names = split_csv_names(datacenter_query);
+            datacenter_names.is_empty()
+                || listing
+                    .data_centre_name()
+                    .is_some_and(|name| datacenter_names.iter().any(|query_name| query_name == name))
+        })
+    } else {
+        true
+    };
+
+    if !datacenter_matches {
+        return false;
+    }
+
+    // Check region filter (only if no world-id and no well-formed datacenter filter is active)
+    let region_matches = if !world_id_active && !datacenter_active {
+        query.region.as_ref().is_none_or(|region_query| {
+            let region_names = split_csv_names(region_query);
+            region_names.is_empty()
+                || created_world_region_name(listing)
+                    .is_some_and(|name| region_names.iter().any(|query_name| query_name == name))
+        })
+    } else {
+        true
+    };
+
+    if !region_matches {
+        return false;
+    }
+
+    query.category_id.is_none_or(|category_id| id_inventory::category_id(listing.category) == category_id)
+        && query.duty_id.is_none_or(|duty_id| id_inventory::duty_id(listing.duty) == duty_id)
         && matches_job_ids(listing, &query.job_ids)
         && matches_search(listing, query.search.as_deref())
+}
+
+fn split_csv_names(value: &str) -> Vec<String> {
+    value
+        .split(',')
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .map(ToOwned::to_owned)
+        .collect()
+}
+
+fn matching_created_world_ids_for_datacenters(datacenter_names: &[String]) -> Vec<i32> {
+    crate::ffxiv::WORLDS
+        .iter()
+        .filter(|(_, world)| datacenter_names.iter().any(|query_name| *query_name == world.data_center().name()))
+        .map(|(world_id, _)| *world_id as i32)
+        .collect()
+}
+
+fn matching_created_world_ids_for_regions(region_names: &[String]) -> Vec<i32> {
+    crate::ffxiv::WORLDS
+        .iter()
+        .filter(|(_, world)| {
+            region_names
+                .iter()
+                .any(|query_name| *query_name == data_center_region_name(world.data_center()))
+        })
+        .map(|(world_id, _)| *world_id as i32)
+        .collect()
+}
+
+fn created_world_region_name(listing: &PartyFinderListing) -> Option<&'static str> {
+    crate::ffxiv::WORLDS
+        .get(&u32::from(listing.created_world))
+        .map(|world| data_center_region_name(world.data_center()))
+}
+
+fn data_center_region_name(data_center: ffxiv_types_cn::DataCenter) -> &'static str {
+    use ffxiv_types_cn::DataCenter;
+
+    match data_center {
+        DataCenter::Aether
+        | DataCenter::Crystal
+        | DataCenter::Dynamis
+        | DataCenter::Primal => "North-America",
+        DataCenter::Chaos | DataCenter::Light => "Europe",
+        DataCenter::Elemental
+        | DataCenter::Gaia
+        | DataCenter::Mana
+        | DataCenter::Meteor
+        | DataCenter::Shadow => "Japan",
+        DataCenter::Materia => "Oceania",
+        DataCenter::陆行鸟
+        | DataCenter::莫古力
+        | DataCenter::猫小胖
+        | DataCenter::豆豆柴 => "中国",
+        DataCenter::한국 => "한국",
+        DataCenter::陸行鳥 => "繁中服",
+    }
 }
 
 fn matches_job_ids(listing: &PartyFinderListing, job_ids: &[u32]) -> bool {
@@ -565,7 +795,7 @@ pub(crate) fn project_listing_summaries<'a>(
 pub(crate) fn project_listing_summary(document: &QueriedListing) -> Option<ListingSummary> {
     let listing = visible_listing(document)?;
 
-    Some(ListingSummary {
+Some(ListingSummary {
         id: listing.id,
         player_name: listing
             .name
@@ -617,7 +847,7 @@ pub(crate) fn resolve_listing_detail<'a>(
 pub(crate) fn project_listing_detail(document: &QueriedListing) -> Option<ListingDetail> {
     let listing = visible_listing(document)?;
 
-    Some(ListingDetail {
+Some(ListingDetail {
         id: listing.id,
         player_name: listing
             .name

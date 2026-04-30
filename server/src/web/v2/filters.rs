@@ -13,6 +13,8 @@ const SUPPORTED_QUERY_FIELDS: &[&str] = &[
     "per_page",
     "created_world_id",
     "home_world_id",
+    "datacenter",
+    "region",
     "category_id",
     "duty_id",
     "job_ids",
@@ -30,15 +32,16 @@ const LEGACY_LABEL_FIELDS: &[(&str, &str)] = &[
     ),
     ("duty", "duty is not supported in v2; use duty_id"),
     ("jobs", "jobs is not supported in v2; use job_ids"),
-    ("datacenter", "datacenter is not supported in phase-1 v2"),
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ListingsQuery {
     pub page: usize,
     pub per_page: usize,
-    pub created_world_id: Option<u32>,
-    pub home_world_id: Option<u32>,
+    pub created_world_id: Vec<u32>,
+    pub home_world_id: Vec<u32>,
+    pub datacenter: Option<String>,
+    pub region: Option<String>,
     pub category_id: Option<u32>,
     pub duty_id: Option<u32>,
     pub job_ids: Vec<u32>,
@@ -50,8 +53,10 @@ impl Default for ListingsQuery {
         Self {
             page: DEFAULT_PAGE,
             per_page: DEFAULT_PER_PAGE,
-            created_world_id: None,
-            home_world_id: None,
+            created_world_id: Vec::new(),
+            home_world_id: Vec::new(),
+            datacenter: None,
+            region: None,
             category_id: None,
             duty_id: None,
             job_ids: Vec::new(),
@@ -92,8 +97,12 @@ pub fn parse_listings_query(
         query.per_page = parse_per_page(value)?;
     }
 
-    query.created_world_id = parse_optional_u32(params, "created_world_id")?;
-    query.home_world_id = parse_optional_u32(params, "home_world_id")?;
+    query.created_world_id = parse_csv_u32s(params, "created_world_id")?;
+    query.home_world_id = parse_csv_u32s(params, "home_world_id")?;
+
+    query.datacenter = parse_csv_names(params, "datacenter")?;
+    query.region = parse_csv_names(params, "region")?;
+
     query.category_id = parse_optional_u32(params, "category_id")?;
     query.duty_id = parse_optional_u32(params, "duty_id")?;
 
@@ -161,30 +170,80 @@ fn parse_optional_u32(
 }
 
 fn parse_job_ids(value: &str) -> Result<Vec<u32>, ErrorEnvelope> {
+    parse_csv_u32s_impl(value, "job_ids")
+}
+
+fn parse_csv_u32s(
+    params: &HashMap<String, String>,
+    field: &'static str,
+) -> Result<Vec<u32>, ErrorEnvelope> {
+    let value = match params.get(field) {
+        Some(v) => v,
+        None => return Ok(Vec::new()),
+    };
+
     if value.is_empty() {
         return Err(ErrorEnvelope::invalid_query(
-            "job_ids",
-            "job_ids must be a comma-separated list of unsigned integers",
+            field,
+            format!("{field} must be a comma-separated list of unsigned integers"),
         ));
     }
 
+    parse_csv_u32s_impl(value, field)
+}
+
+fn parse_csv_u32s_impl(value: &str, field: &str) -> Result<Vec<u32>, ErrorEnvelope> {
     value
         .split(',')
         .map(|segment| {
             let trimmed = segment.trim();
             if trimmed.is_empty() {
                 return Err(ErrorEnvelope::invalid_query(
-                    "job_ids",
-                    "job_ids must be a comma-separated list of unsigned integers",
+                    field,
+                    format!("{field} must be a comma-separated list of unsigned integers"),
                 ));
             }
 
             trimmed.parse::<u32>().map_err(|_| {
                 ErrorEnvelope::invalid_query(
-                    "job_ids",
-                    "job_ids must be a comma-separated list of unsigned integers",
+                    field,
+                    format!("{field} must be a comma-separated list of unsigned integers"),
                 )
             })
         })
         .collect()
+}
+
+fn parse_csv_names(
+    params: &HashMap<String, String>,
+    field: &'static str,
+) -> Result<Option<String>, ErrorEnvelope> {
+    let value = match params.get(field) {
+        Some(v) => v,
+        None => return Ok(None),
+    };
+
+    if value.is_empty() {
+        return Err(ErrorEnvelope::invalid_query(
+            field,
+            format!("{field} must be a comma-separated list of names"),
+        ));
+    }
+
+    let names = value
+        .split(',')
+        .map(str::trim)
+        .map(|segment| {
+            if segment.is_empty() {
+                Err(ErrorEnvelope::invalid_query(
+                    field,
+                    format!("{field} must be a comma-separated list of names"),
+                ))
+            } else {
+                Ok(segment.to_owned())
+            }
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    Ok(Some(names.join(",")))
 }
