@@ -9,14 +9,14 @@ Phase 1 exposes only these routes:
 - `GET /api/v2/listings`
 - `GET /api/v2/listings/{id}`
 
-Phase 1 does not expose lookup routes. `/api/v2/lookups/*` does not exist. World names, duty names, category labels, job labels, and other lookup-backed text must be resolved outside this API.
+Phase 1 does not expose lookup routes. `/api/v2/lookups/*` does not exist. World names, duty names, category labels, job labels, and other lookup-backed text must be resolved outside this API. Listing resources expose only IDs-backed fields.
 
 ## Contract rules
 
 - v1 stays available. Do not treat v1 as deprecated or removed.
-- v2 is IDs-only for lookup-backed references.
+- v2 keeps all references as IDs; no inline convenience labels like `datacenter` are included.
 - `player_name` and `description` stay inline text.
-- Unknown but well-formed filter ids return `200` with an empty `data` array.
+- Unknown but well-formed filter ids or metadata names return `200` with an empty `data` array.
 - Unsupported legacy label filters return `400 invalid_query`.
 - `/api/v2/listings/{id}` resolves the current active visible PF listing by listing id. It is an active-detail lookup alias, not a durable storage identity.
 - Missing, expired, or non-visible ids return `404 not_found`.
@@ -30,9 +30,19 @@ Supported query parameters in phase 1:
 - `search`
 - `created_world_id`
 - `home_world_id`
+- `datacenter`
+- `region`
 - `category_id`
 - `duty_id`
 - `job_ids`
+
+Filter semantics:
+
+- `created_world_id` and `home_world_id` accept comma-separated IDs with OR semantics within each field.
+- `datacenter` and `region` accept comma-separated names with OR semantics within each field.
+- Different active fields combine with AND semantics after precedence is applied.
+- Precedence: any well-formed `created_world_id` or `home_world_id` masks `datacenter` and `region`; otherwise a well-formed `datacenter` masks `region`.
+- Only single-key CSV syntax is supported. Repeated query keys are not part of this contract.
 
 Summary item shape:
 
@@ -92,7 +102,15 @@ Example requests:
 
 - `GET /api/v2/listings`
 - `GET /api/v2/listings?search=clear&job_ids=24,28`
-- `GET /api/v2/listings?created_world_id=1167&category_id=64`
+- `GET /api/v2/listings?created_world_id=1167,1174&category_id=64`
+- `GET /api/v2/listings?home_world_id=73,1174`
+- `GET /api/v2/listings?datacenter=Aether,Primal`
+- `GET /api/v2/listings?region=North-America,Japan`
+
+Precedence examples:
+
+- `GET /api/v2/listings?created_world_id=73&datacenter=Aether,Primal&region=North-America` behaves exactly like `GET /api/v2/listings?created_world_id=73`.
+- `GET /api/v2/listings?datacenter=Aether&region=North-America` behaves exactly like `GET /api/v2/listings?datacenter=Aether`.
 
 Avoid old label-based queries such as `world=` or `category=`. Use numeric ids instead.
 

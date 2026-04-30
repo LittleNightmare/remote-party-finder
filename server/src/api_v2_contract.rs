@@ -259,6 +259,8 @@ fn docs_include_minimal_contract_examples() {
     );
     assert!(api_v2_doc.contains("`GET /api/v2/listings`"));
     assert!(api_v2_doc.contains("`GET /api/v2/listings/{id}`"));
+    assert!(api_v2_doc.contains("`GET /api/v2/listings?datacenter=Aether,Primal`"));
+    assert!(api_v2_doc.contains("`GET /api/v2/listings?region=North-America,Japan`"));
 
     assert!(
         normalized_api_v2_doc.contains(&strip_whitespace(&collection_json)),
@@ -268,6 +270,11 @@ fn docs_include_minimal_contract_examples() {
         normalized_api_v2_doc.contains(&strip_whitespace(&detail_json)),
         "docs/api-v2.md detail example drifted from contract"
     );
+}
+
+#[test]
+fn docs_examples_match_v2_contract() {
+    docs_include_minimal_contract_examples();
 }
 
 fn strip_whitespace(value: &str) -> String {
@@ -397,6 +404,48 @@ async fn malformed_filters_return_400() {
         (
             "/api/v2/listings?unknown=1",
             ErrorEnvelope::invalid_query("unknown", "unknown is not a supported query parameter"),
+        ),
+        (
+            "/api/v2/listings?created_world_id=",
+            ErrorEnvelope::invalid_query(
+                "created_world_id",
+                "created_world_id must be a comma-separated list of unsigned integers",
+            ),
+        ),
+        (
+            "/api/v2/listings?home_world_id=",
+            ErrorEnvelope::invalid_query(
+                "home_world_id",
+                "home_world_id must be a comma-separated list of unsigned integers",
+            ),
+        ),
+        (
+            "/api/v2/listings?created_world_id=73,",
+            ErrorEnvelope::invalid_query(
+                "created_world_id",
+                "created_world_id must be a comma-separated list of unsigned integers",
+            ),
+        ),
+        (
+            "/api/v2/listings?home_world_id=73,abc",
+            ErrorEnvelope::invalid_query(
+                "home_world_id",
+                "home_world_id must be a comma-separated list of unsigned integers",
+            ),
+        ),
+        (
+            "/api/v2/listings?datacenter=",
+            ErrorEnvelope::invalid_query(
+                "datacenter",
+                "datacenter must be a comma-separated list of names",
+            ),
+        ),
+        (
+            "/api/v2/listings?region=",
+            ErrorEnvelope::invalid_query(
+                "region",
+                "region must be a comma-separated list of names",
+            ),
         ),
     ];
 
@@ -565,13 +614,13 @@ async fn duplicate_listing_id_returns_latest_active_detail() {
 }
 
 #[test]
-fn listings_projection_excludes_labels() {
+fn listings_projection_excludes_legacy_labels() {
     let now = Utc::now();
     let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.9);
     let summary = project_listing_summary(&active).expect("active listing should project");
     let detail = project_listing_detail(&active).expect("active detail should project");
 
-    assert_eq!(
+assert_eq!(
         summary,
         ListingSummary {
             id: 12345,
@@ -636,7 +685,6 @@ fn listings_projection_excludes_labels() {
             "category",
             "duty",
             "duty_type",
-            "datacenter",
         ] {
             assert!(
                 !object.contains_key(forbidden),
@@ -663,7 +711,7 @@ async fn listing_detail_is_ids_only() {
     let body = serde_json::from_slice::<serde_json::Value>(response.body()).unwrap();
     let object = body["data"].as_object().cloned().unwrap();
 
-    assert_eq!(
+assert_eq!(
         body["data"],
         json!({
             "id": 12345,
@@ -696,6 +744,11 @@ async fn listing_detail_is_ids_only() {
     );
 
     for forbidden in [
+        "datacenter",
+        "region",
+        "world",
+        "datacenter_id",
+        "region_id",
         "name",
         "created_world",
         "home_world",
@@ -705,7 +758,6 @@ async fn listing_detail_is_ids_only() {
         "objective",
         "conditions",
         "loot_rules",
-        "datacenter",
         "role",
         "job",
         "job_id",
@@ -777,6 +829,69 @@ fn listings_summary_is_ids_only() {
             }
         ])
     );
+
+    for payload in serde_json::to_value(&response.data)
+        .unwrap()
+        .as_array()
+        .unwrap()
+    {
+        let object = payload.as_object().unwrap();
+        for forbidden in ["datacenter", "region", "world", "datacenter_id", "region_id"] {
+            assert!(
+                !object.contains_key(forbidden),
+                "summary unexpectedly exposed {forbidden}"
+            );
+        }
+    }
+}
+
+#[test]
+fn listing_summary_omits_datacenter_and_region() {
+    let now = Utc::now();
+    let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    let summary = project_listing_summary(&active).expect("active listing should project");
+    let object = serde_json::to_value(&summary).unwrap();
+    let object = object.as_object().unwrap();
+
+    assert!(object.contains_key("created_world_id"));
+    assert!(object.contains_key("home_world_id"));
+    assert!(!object.contains_key("datacenter"));
+    assert!(!object.contains_key("region"));
+}
+
+#[test]
+fn listing_detail_omits_datacenter_and_region() {
+    let now = Utc::now();
+    let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    let detail = project_listing_detail(&active).expect("active detail should project");
+    let object = serde_json::to_value(&detail).unwrap();
+    let object = object.as_object().unwrap();
+
+    assert!(object.contains_key("created_world_id"));
+    assert!(object.contains_key("home_world_id"));
+    assert!(!object.contains_key("datacenter"));
+    assert!(!object.contains_key("region"));
+}
+
+#[test]
+fn listings_do_not_expose_world_name_or_lookup_ids() {
+    let now = Utc::now();
+    let active = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    let summary = project_listing_summary(&active).expect("active listing should project");
+    let detail = project_listing_detail(&active).expect("active detail should project");
+
+    for payload in [
+        serde_json::to_value(&summary).unwrap(),
+        serde_json::to_value(&detail).unwrap(),
+    ] {
+        let object = payload.as_object().unwrap();
+        for forbidden in ["world", "datacenter_id", "region_id"] {
+            assert!(
+                !object.contains_key(forbidden),
+                "payload unexpectedly exposed {forbidden}"
+            );
+        }
+    }
 }
 
 #[test]
@@ -843,11 +958,11 @@ fn scalar_filters_match_expected_documents() {
     category_and_duty_match.listing.duty = 777;
     let category_id = id_inventory::category_id(category_and_duty_match.listing.category);
 
-    let documents = [&created_world_match, &home_world_match, &category_and_duty_match];
+let documents = [&created_world_match, &home_world_match, &category_and_duty_match];
 
     let created_world_response = collection_response_from_documents(
         ListingsQuery {
-            created_world_id: Some(1167),
+            created_world_id: vec![1167],
             ..Default::default()
         },
         documents,
@@ -857,7 +972,7 @@ fn scalar_filters_match_expected_documents() {
 
     let home_world_response = collection_response_from_documents(
         ListingsQuery {
-            home_world_id: Some(1174),
+            home_world_id: vec![1174],
             ..Default::default()
         },
         documents,
@@ -884,6 +999,253 @@ fn scalar_filters_match_expected_documents() {
     );
     assert_eq!(duty_response.pagination.total, 1);
     assert_eq!(duty_response.data[0].id, 67890);
+}
+
+#[test]
+fn created_world_id_supports_comma_separated_or() {
+    let now = Utc::now();
+    let created_world_73 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut created_world_1167 = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    created_world_1167.listing.id = 54321;
+    created_world_1167.listing.created_world = 1167;
+
+    let mut created_world_1174 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 600.0);
+    created_world_1174.listing.id = 67890;
+    created_world_1174.listing.created_world = 1174;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![73, 1167],
+            ..Default::default()
+        },
+        [&created_world_73, &created_world_1167, &created_world_1174],
+    );
+
+    assert_eq!(response.pagination.total, 2);
+    assert_eq!(response.data.len(), 2);
+    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[1].id, 54321);
+}
+
+#[test]
+fn home_world_id_supports_comma_separated_or() {
+    let now = Utc::now();
+    let home_world_73 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut home_world_1174 = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    home_world_1174.listing.id = 54321;
+    home_world_1174.listing.home_world = 1174;
+
+    let mut home_world_1167 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 600.0);
+    home_world_1167.listing.id = 67890;
+    home_world_1167.listing.home_world = 1167;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            home_world_id: vec![73, 1174],
+            ..Default::default()
+        },
+        [&home_world_73, &home_world_1174, &home_world_1167],
+    );
+
+    assert_eq!(response.pagination.total, 2);
+    assert_eq!(response.data.len(), 2);
+    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[1].id, 54321);
+}
+
+#[test]
+fn created_and_home_world_filters_intersect_across_fields() {
+    let now = Utc::now();
+
+    let mut intersection = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    intersection.listing.created_world = 73;
+    intersection.listing.home_world = 1174;
+
+    let mut created_only = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    created_only.listing.id = 54321;
+    created_only.listing.created_world = 73;
+    created_only.listing.home_world = 1167;
+
+    let mut home_only = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 600.0);
+    home_only.listing.id = 67890;
+    home_only.listing.created_world = 1167;
+    home_only.listing.home_world = 1174;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![73, 1167],
+            home_world_id: vec![1174],
+            ..Default::default()
+        },
+        [&intersection, &created_only, &home_only],
+    );
+
+    assert_eq!(response.pagination.total, 2);
+    assert_eq!(response.data.len(), 2);
+    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[1].id, 67890);
+}
+
+#[test]
+fn duplicate_world_ids_do_not_change_results() {
+    let now = Utc::now();
+    let created_world_73 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut created_world_1167 = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    created_world_1167.listing.id = 54321;
+    created_world_1167.listing.created_world = 1167;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![73, 73],
+            ..Default::default()
+        },
+        [&created_world_73, &created_world_1167],
+    );
+
+    assert_eq!(response.pagination.total, 1);
+    assert_eq!(response.data.len(), 1);
+    assert_eq!(response.data[0].id, 12345);
+}
+
+#[test]
+fn mixed_validity_world_id_lists_ignore_unknown_members() {
+    let now = Utc::now();
+    let created_world_73 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut created_world_1167 = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    created_world_1167.listing.id = 54321;
+    created_world_1167.listing.created_world = 1167;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![73, 999999],
+            ..Default::default()
+        },
+        [&created_world_73, &created_world_1167],
+    );
+
+    assert_eq!(response.pagination.total, 1);
+    assert_eq!(response.data.len(), 1);
+    assert_eq!(response.data[0].id, 12345);
+}
+
+#[test]
+fn datacenter_supports_comma_separated_or() {
+    let now = Utc::now();
+    let first = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut second = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    second.listing.id = 54321;
+    second.listing.created_world = 1167;
+
+    let first_datacenter = first.listing.data_centre_name().unwrap().to_string();
+    let second_datacenter = second.listing.data_centre_name().unwrap().to_string();
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            datacenter: Some(format!("{first_datacenter},{second_datacenter}")),
+            ..Default::default()
+        },
+        [&first, &second],
+    );
+
+    assert_eq!(response.pagination.total, 2);
+    assert_eq!(response.data.len(), 2);
+}
+
+#[test]
+fn region_supports_comma_separated_or() {
+    let now = Utc::now();
+    let first = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut second = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    second.listing.id = 54321;
+    second.listing.created_world = 1167;
+
+    let first_region = if first.listing.data_centre_name() == Some("Aether") {
+        "North-America"
+    } else {
+        "中国"
+    }
+    .to_string();
+    let second_region = if second.listing.data_centre_name() == Some("Aether") {
+        "North-America"
+    } else {
+        "中国"
+    }
+    .to_string();
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            region: Some(format!("{first_region},{second_region}")),
+            ..Default::default()
+        },
+        [&first, &second],
+    );
+
+    assert_eq!(response.pagination.total, 2);
+    assert_eq!(response.data.len(), 2);
+}
+
+#[tokio::test]
+async fn unknown_datacenter_names_return_empty_collection() {
+    let response = warp::test::request()
+        .method("GET")
+        .path("/api/v2/listings?datacenter=NoSuchDatacenter")
+        .reply(&crate::web::v2::listings::collection_route_for_tests())
+        .await;
+
+    assert_eq!(response.status(), StatusCode::OK);
+    let body = serde_json::from_slice::<serde_json::Value>(response.body()).unwrap();
+    assert_eq!(body["pagination"]["total"], json!(0));
+}
+
+#[tokio::test]
+async fn unknown_region_names_return_empty_collection() {
+    let response = warp::test::request()
+        .method("GET")
+        .path("/api/v2/listings?region=NoSuchRegion")
+        .reply(&crate::web::v2::listings::collection_route_for_tests())
+        .await;
+
+    assert_eq!(response.status(), StatusCode::OK);
+    let body = serde_json::from_slice::<serde_json::Value>(response.body()).unwrap();
+    assert_eq!(body["pagination"]["total"], json!(0));
+}
+
+#[test]
+fn mixed_validity_datacenter_and_region_lists_use_valid_subset() {
+    let now = Utc::now();
+    let first = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let first_datacenter = first.listing.data_centre_name().unwrap().to_string();
+    let first_region = if first.listing.data_centre_name() == Some("Aether") {
+        "North-America"
+    } else {
+        "中国"
+    }
+    .to_string();
+
+    let datacenter_response = collection_response_from_documents(
+        ListingsQuery {
+            datacenter: Some(format!("{first_datacenter},NoSuchDatacenter")),
+            ..Default::default()
+        },
+        [&first],
+    );
+    assert_eq!(datacenter_response.pagination.total, 1);
+
+    let region_response = collection_response_from_documents(
+        ListingsQuery {
+            region: Some(format!("{first_region},NoSuchRegion")),
+            ..Default::default()
+        },
+        [&first],
+    );
+    assert_eq!(region_response.pagination.total, 1);
 }
 
 #[tokio::test]
@@ -1104,6 +1466,106 @@ async fn expired_or_missing_listing_returns_404() {
     );
 }
 
+/// Thin acceptance wrapper — world= continues to be rejected.
+#[tokio::test]
+async fn world_query_remains_unsupported() {
+    let response = warp::test::request()
+        .method("GET")
+        .path("/api/v2/listings?world=%E7%8C%AB%E5%B0%8F%E8%83%96")
+        .reply(&crate::web::v2::listings::collection_route_for_tests())
+        .await;
+
+    assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(response.body()).unwrap(),
+        serde_json::to_value(ErrorEnvelope::invalid_query(
+            "world",
+            "world is not supported in v2; use created_world_id or home_world_id",
+        ))
+        .unwrap(),
+    );
+}
+
+/// Thin acceptance wrapper for the empty / non-numeric segment cases.
+#[tokio::test]
+async fn created_world_id_rejects_empty_or_non_numeric_segments() {
+    for path in [
+        "/api/v2/listings?created_world_id=",
+        "/api/v2/listings?created_world_id=73,",
+        "/api/v2/listings?created_world_id=73,abc",
+    ] {
+        let response = warp::test::request()
+            .method("GET")
+            .path(path)
+            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .await;
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST, "path: {path}");
+    }
+}
+
+/// Thin acceptance wrapper for the empty / non-numeric segment cases.
+#[tokio::test]
+async fn home_world_id_rejects_empty_or_non_numeric_segments() {
+    for path in [
+        "/api/v2/listings?home_world_id=",
+        "/api/v2/listings?home_world_id=73,",
+        "/api/v2/listings?home_world_id=73,abc",
+    ] {
+        let response = warp::test::request()
+            .method("GET")
+            .path(path)
+            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .await;
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST, "path: {path}");
+    }
+}
+
+#[tokio::test]
+async fn datacenter_rejects_empty_segments() {
+    for path in ["/api/v2/listings?datacenter=", "/api/v2/listings?datacenter=Aether,"] {
+        let response = warp::test::request()
+            .method("GET")
+            .path(path)
+            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .await;
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST, "path: {path}");
+        assert_eq!(
+            serde_json::from_slice::<serde_json::Value>(response.body()).unwrap(),
+            serde_json::to_value(ErrorEnvelope::invalid_query(
+                "datacenter",
+                "datacenter must be a comma-separated list of names",
+            ))
+            .unwrap(),
+            "path: {path}",
+        );
+    }
+}
+
+#[tokio::test]
+async fn region_rejects_empty_segments() {
+    for path in ["/api/v2/listings?region=", "/api/v2/listings?region=Japan,"] {
+        let response = warp::test::request()
+            .method("GET")
+            .path(path)
+            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .await;
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST, "path: {path}");
+        assert_eq!(
+            serde_json::from_slice::<serde_json::Value>(response.body()).unwrap(),
+            serde_json::to_value(ErrorEnvelope::invalid_query(
+                "region",
+                "region must be a comma-separated list of names",
+            ))
+            .unwrap(),
+            "path: {path}",
+        );
+    }
+}
+
 fn queried_fixture(
     fixture_json: &str,
     updated_at: chrono::DateTime<Utc>,
@@ -1128,4 +1590,228 @@ fn private_queried_fixture(
     let mut fixture = queried_fixture(fixture_json, updated_at, time_left);
     fixture.listing.search_area = crate::listing::SearchAreaFlags::PRIVATE;
     fixture
+}
+
+// Task 4: Precedence and validation-order behavior tests
+
+#[test]
+fn world_id_filters_mask_datacenter_and_region() {
+    let now = Utc::now();
+    let listing_in_datacenter = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let datacenter_name = listing_in_datacenter.listing.data_centre_name().unwrap().to_string();
+    let region_name = "North-America";
+
+    // With only datacenter filter - should return the listing
+    let datacenter_response = collection_response_from_documents(
+        ListingsQuery {
+            datacenter: Some(datacenter_name.clone()),
+            ..Default::default()
+        },
+        [&listing_in_datacenter],
+    );
+    assert_eq!(datacenter_response.pagination.total, 1, "datacenter filter alone should match");
+
+    // With only region filter - should return the listing
+    let region_response = collection_response_from_documents(
+        ListingsQuery {
+            region: Some(region_name.to_string()),
+            ..Default::default()
+        },
+        [&listing_in_datacenter],
+    );
+    assert_eq!(region_response.pagination.total, 1, "region filter alone should match");
+
+    // With world-id + datacenter - datacenter should be masked, listing should NOT match
+    let world_plus_dc_response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![999999], // Unknown world - no matches
+            datacenter: Some(datacenter_name.clone()),
+            ..Default::default()
+        },
+        [&listing_in_datacenter],
+    );
+    assert_eq!(
+        world_plus_dc_response.pagination.total, 0,
+        "world-id filter should mask datacenter"
+    );
+
+    // With world-id + region - region should be masked, listing should NOT match
+    let world_plus_region_response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![999999],
+            region: Some(region_name.to_string()),
+            ..Default::default()
+        },
+        [&listing_in_datacenter],
+    );
+    assert_eq!(
+        world_plus_region_response.pagination.total, 0,
+        "world-id filter should mask region"
+    );
+
+    // With valid world-id + datacenter - datacenter should be masked, but world-id should match
+    let valid_world_plus_dc_response = collection_response_from_documents(
+        ListingsQuery {
+            created_world_id: vec![73], // This listing's created_world
+            datacenter: Some("NoSuchDatacenter".to_string()),
+            ..Default::default()
+        },
+        [&listing_in_datacenter],
+    );
+    assert_eq!(
+        valid_world_plus_dc_response.pagination.total, 1,
+        "valid world-id should match even with invalid datacenter (masked)"
+    );
+}
+
+#[test]
+fn datacenter_masks_region() {
+    let now = Utc::now();
+    let listing_in_aether = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    // With only region filter - should return the listing
+    let region_response = collection_response_from_documents(
+        ListingsQuery {
+            region: Some("North-America".to_string()),
+            ..Default::default()
+        },
+        [&listing_in_aether],
+    );
+    assert_eq!(region_response.pagination.total, 1, "region filter alone should match");
+
+    let dc_unknown_region_match_response = collection_response_from_documents(
+        ListingsQuery {
+            datacenter: Some("NoSuchDatacenter".to_string()),
+            region: Some("North-America".to_string()),
+            ..Default::default()
+        },
+        [&listing_in_aether],
+    );
+    assert_eq!(
+        dc_unknown_region_match_response.pagination.total, 0,
+        "unknown datacenter should still mask region and yield no matches"
+    );
+
+    // With valid datacenter + region - well-formed datacenter masks region
+    // Datacenter matches, so listing should be returned (region is masked)
+    let datacenter_name = listing_in_aether.listing.data_centre_name().unwrap().to_string();
+    let dc_matches_region_response = collection_response_from_documents(
+        ListingsQuery {
+            datacenter: Some(datacenter_name),
+            region: Some("Europe".to_string()), // Different region
+            ..Default::default()
+        },
+        [&listing_in_aether],
+    );
+    assert_eq!(
+        dc_matches_region_response.pagination.total, 1,
+        "valid datacenter should match even when region doesn't (region is masked)"
+    );
+}
+
+#[tokio::test]
+async fn malformed_masked_filters_still_return_invalid_query() {
+    // Validation happens first - malformed filters return 400 even if they would be masked
+    let cases = [
+        (
+            "/api/v2/listings?created_world_id=73&datacenter=",
+            "empty datacenter should return 400 even when world-id is valid",
+        ),
+        (
+            "/api/v2/listings?created_world_id=73&region=",
+            "empty region should return 400 even when world-id is valid",
+        ),
+        (
+            "/api/v2/listings?home_world_id=73&datacenter=",
+            "empty datacenter should return 400 even when home_world-id is valid",
+        ),
+        (
+            "/api/v2/listings?datacenter=Gaia&region=",
+            "empty region should return 400 even when datacenter is valid",
+        ),
+    ];
+
+    for (path, description) in cases {
+        let response = warp::test::request()
+            .method("GET")
+            .path(path)
+            .reply(&crate::web::v2::listings::collection_route_for_tests())
+            .await;
+
+        assert_eq!(
+            response.status(),
+            StatusCode::BAD_REQUEST,
+            "{description}: path {path}"
+        );
+    }
+}
+
+#[test]
+fn pipeline_and_in_memory_precedence_semantics_match() {
+    let now = Utc::now();
+    let listing_73 = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+
+    let mut listing_1167 = queried_fixture(CROSS_WORLD_FIXTURE_JSON, now - Duration::minutes(1), 900.0);
+    listing_1167.listing.id = 54321;
+    listing_1167.listing.created_world = 1167;
+
+    // Test 1: world-id masks datacenter and region
+    let test_cases = [
+        // (query, expected_ids)
+        (
+            ListingsQuery {
+                created_world_id: vec![73],
+                datacenter: Some("Gaia".to_string()),
+                ..Default::default()
+            },
+            vec![12345], // Only listing 73 matches, datacenter masked
+        ),
+        (
+            ListingsQuery {
+                created_world_id: vec![73],
+                region: Some("Europe".to_string()),
+                ..Default::default()
+            },
+            vec![12345], // Only listing 73 matches, region masked
+        ),
+        // Test 2: datacenter masks region
+        (
+            ListingsQuery {
+                datacenter: Some("Aether".to_string()),
+                region: Some("Europe".to_string()),
+                ..Default::default()
+            },
+            vec![12345], // Only listing 73 (Aether), region masked
+        ),
+        // Test 3: No precedence - all active
+        (
+            ListingsQuery {
+                datacenter: Some("Aether".to_string()),
+                ..Default::default()
+            },
+            vec![12345], // Listing 73 is in Aether
+        ),
+        (
+            ListingsQuery {
+                region: Some("North-America".to_string()),
+                ..Default::default()
+            },
+            vec![12345], // Listing 73 is in North America (Aether)
+        ),
+    ];
+
+    for (query, expected_ids) in test_cases {
+        let response = collection_response_from_documents(
+            query.clone(),
+            [&listing_73, &listing_1167],
+        );
+
+        let actual_ids: Vec<u32> = response.data.iter().map(|l| l.id).collect();
+        assert_eq!(
+            actual_ids, expected_ids,
+            "query: created_world_id={:?}, datacenter={:?}, region={:?}",
+            query.created_world_id, query.datacenter, query.region
+        );
+    }
 }
