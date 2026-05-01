@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>1.0.18.1</Version>
+        <Version>1.0.18.2</Version>
         <TargetFramework>net10.0-windows</TargetFramework>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="14.0.1" />
+        <PackageReference Include="DalamudPackager" Version="15.0.0" />
     </ItemGroup>
 	<Target Name="PackagePlugin" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
 		<DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" MakeZip="true" />
