@@ -1,6 +1,4 @@
-use std::{
-    any::Any, convert::Infallible, fmt::Debug, i128::MAX, sync::Arc
-};
+use std::{collections::HashSet, convert::Infallible, sync::Arc};
 
 use chrono::Utc;
 use mongodb::bson::{doc, to_bson};
@@ -14,9 +12,8 @@ use warp::{
 };
 
 use crate::{
-    ffxiv::{self, Language}, listing::{DutyCategory, PartyFinderCategory}, listing_container::QueriedListing, sestring_ext::SeStringExt, web::State
+    ffxiv::Language, listing::{DutyCategory, JobFlags}, listing_container::QueriedListing, sestring_ext::SeStringExt, web::State
 };
-use ffxiv_types_cn::World;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ApiResponse<T> {
@@ -87,6 +84,111 @@ pub struct SlotInfo {
     pub job_id: Vec<u32>,
 }
 
+fn accepted_slot_bits_for_job_ids(job_ids: &[u32]) -> Vec<u64> {
+    job_ids
+        .iter()
+        .filter_map(|&job_id| JobFlags::accepted_slot_bit_for_job_id(job_id))
+        .collect()
+}
+
+fn canonical_job_id_for_code(code: &str) -> Option<u32> {
+    let accepted_slot_bit = JobFlags::accepted_slot_bit_for_job_code(code)?;
+
+    crate::ffxiv::JOBS.iter().find_map(|(&job_id, job)| {
+        (job.code() == code
+            && JobFlags::accepted_slot_bit_for_job_id(job_id) == Some(accepted_slot_bit))
+            .then_some(job_id)
+    })
+}
+
+fn canonical_job_ids_for_codes(codes: &str) -> Vec<u32> {
+    let mut seen = HashSet::new();
+
+    codes
+        .split_whitespace()
+        .filter_map(canonical_job_id_for_code)
+        .filter(|job_id| seen.insert(*job_id))
+        .collect()
+}
+
+// Slot job-code strings are public v1 contract data, so keep canonical ID coverage current
+// through Beastmaster instead of treating PCT as the last renderable job token.
+
+fn slot_matches_any_accepted_slot_bit(
+    slot: &crate::listing::PartyFinderSlot,
+    accepted_slot_bits: &[u64],
+) -> bool {
+    accepted_slot_bits
+        .iter()
+        .any(|accepted_slot_bit| u64::from(slot.accepting.bits()) & accepted_slot_bit != 0)
+}
+
+fn build_job_match_conditions(accepted_slot_bits: &[u64]) -> Vec<mongodb::bson::Document> {
+    accepted_slot_bits
+        .iter()
+        .map(|&accepted_slot_bit| {
+            let accepted_slot_bit =
+                i64::try_from(accepted_slot_bit).expect("accepted slot bit must fit Mongo bit query");
+
+            doc! {
+                "listing.slots": {
+                    "$elemMatch": {
+                        "accepting": {
+                            "$bitsAllSet": accepted_slot_bit
+                        }
+                    }
+                }
+            }
+        })
+        .collect()
+}
+
+fn slot_info_from_listing_slot(
+    slot_result: &std::result::Result<ffxiv_types_cn::jobs::ClassJob, (String, String)>,
+) -> SlotInfo {
+    match slot_result {
+        Ok(job) => SlotInfo {
+            filled: true,
+            role: job.role().map(|r| r.to_string()),
+            role_id: match job.role() {
+                Some(ffxiv_types_cn::Role::Tank) => 1,
+                Some(ffxiv_types_cn::Role::Healer) => 2,
+                Some(ffxiv_types_cn::Role::Dps) => 3,
+                None => 0,
+            },
+            job: Some(job.code().to_string()),
+            job_id: canonical_job_ids_for_codes(job.code()),
+        },
+        Err((role_class, job_code)) => SlotInfo {
+            filled: false,
+            role: if role_class.contains("tank") {
+                Some("Tank".to_string())
+            } else if role_class.contains("healer") {
+                Some("Healer".to_string())
+            } else if role_class.contains("dps") {
+                Some("DPS".to_string())
+            } else {
+                None
+            },
+            role_id: if role_class.contains("tank") {
+                1
+            } else if role_class.contains("healer") {
+                2
+            } else if role_class.contains("dps") {
+                3
+            } else {
+                0
+            },
+            job: if job_code.is_empty() {
+                None
+            } else {
+                Some(job_code.clone())
+            },
+            job_id: canonical_job_ids_for_codes(job_code),
+        },
+    }
+}
+
 /// 获取招募列表的API
 /// 
 /// 支持以下查询参数:
@@ -96,15 +198,16 @@ pub struct SlotInfo {
 /// - world: 世界过滤
 /// - search: 搜索关键词，会匹配名称和描述
 /// - datacenter: 数据中心过滤，支持多个数据中心，用逗号分隔，如"猫小胖,豆豆柴"
-/// - jobs: 职业过滤，支持多个职业ID，用逗号分隔，如"1,2,8"
+/// - jobs: 职业过滤，支持多个职业ID，用逗号分隔，如"1,2,43"
 /// - duty: 副本过滤，支持多个副本ID，用逗号分隔，如"1,2,8"
 ///
 /// 职业ID对应关系:
-/// 请参考jobs.rs中的hashmap
+/// 请参考jobs.rs中的hashmap，Beastmaster 对外使用 `BST` / `43`
 /// 示例:
 /// GET /api/listings?page=1&per_page=20&category=None&world=拉诺西亚&jobs=8,10,21
 /// GET /api/listings?page=1&per_page=20&datacenter=猫小胖&category=HighEndDuty&jobs=10,21
 /// GET /api/listings?page=1&per_page=20&duty=1,2,3&jobs=8,10
+/// GET /api/listings?page=1&per_page=20&jobs=43
 pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(
         state: Arc<State>, 
@@ -206,12 +309,10 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
         // 验证职业ID是否合法
         let mut job_list = Vec::new();
-        // 从jobs.rs中hashmap中获取最大职业ID
-        let max_job_id = crate::ffxiv::JOBS.keys().max().unwrap_or(&0);
         // 处理逗号分隔的格式
         if let Some(jobs_str) = jobs.as_deref() {
             for job_id in jobs_str.split(',').filter_map(|s| s.trim().parse::<u32>().ok()) {
-                if job_id <= *max_job_id {  // 检查职业ID是否在有效范围内
+                if JobFlags::accepted_slot_bit_for_job_id(job_id).is_some() {
                     job_list.push(job_id);
                 }
             }
@@ -273,6 +374,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         duty_list.dedup(); // 移除重复项
         datacenter_list.sort_unstable();
         datacenter_list.dedup();
+        let accepted_slot_bits = accepted_slot_bits_for_job_ids(&job_list);
         
         // 构建缓存键 - 使用jobs参数和duty参数
         let cache_key = format!(
@@ -357,21 +459,9 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         }
 
         // 4. 添加职业过滤条件 - 提前过滤
-        if !job_list.is_empty() {
-            let mut job_conditions = Vec::new();
-            for &job_id in &job_list {
-                let job_bit = 1u32 << job_id;
-                job_conditions.push(doc! {
-                    "listing.slots": {
-                        "$elemMatch": {
-                            "accepting": {
-                                "$bitsAllSet": job_bit
-                            }
-                        }
-                    }
-                });
-            }
-            
+        if !accepted_slot_bits.is_empty() {
+            let job_conditions = build_job_match_conditions(&accepted_slot_bits);
+
             if !job_conditions.is_empty() {
                 pipeline.push(doc! {
                     "$match": {
@@ -619,23 +709,11 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         if name.contains(&search_lower) || description.contains(&search_lower) {
                             // 如果有职业过滤，再次检查（以防MongoDB查询不完整）
                             if !job_list.is_empty() {
-                                let mut has_job = false;
-                                
-                                // 检查slots的accepting字段
-                                for slot in &listing.slots {
-                                    for &job_id in &job_list {
-                                        // 检查位掩码是否包含该职业
-                                        let job_bit = 1u32 << job_id;
-                                        if slot.accepting.bits() & job_bit != 0 {
-                                            has_job = true;
-                                            break;
-                                        }
-                                    }
-                                    if has_job {
-                                        break;
-                                    }
-                                }
-                                
+                                let has_job = listing
+                                    .slots
+                                    .iter()
+                                    .any(|slot| slot_matches_any_accepted_slot_bit(slot, &accepted_slot_bits));
+
                                 if has_job {
                                     filtered_containers.push(container);
                                 }
@@ -649,22 +727,10 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     if !job_list.is_empty() {
                         for container in containers {
                             let listing = &container.listing;
-                            let mut has_job = false;
-                            
-                            // 检查slots的accepting字段
-                            for slot in &listing.slots {
-                                for &job_id in &job_list {
-                                    // 检查位掩码是否包含该职业
-                                    let job_bit = 1u32 << job_id;
-                                    if slot.accepting.bits() & job_bit != 0 {
-                                        has_job = true;
-                                        break;
-                                    }
-                                }
-                                if has_job {
-                                    break;
-                                }
-                            }
+                            let has_job = listing
+                                .slots
+                                .iter()
+                                .any(|slot| slot_matches_any_accepted_slot_bit(slot, &accepted_slot_bits));
                             
                             if has_job {
                                 filtered_containers.push(container);
@@ -897,67 +963,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         // 构建槽位信息 - 使用迭代器而不是collect以提高性能
                         let mut slots = Vec::with_capacity(listing.slots().len());
                         for (_i, slot_result) in listing.slots().iter().enumerate() {
-                            let slot_info = match slot_result {
-                                Ok(job) => {
-                                    // 从 JOBS HashMap 中找到对应的 job_id
-                                    let job_id = crate::ffxiv::JOBS.iter()
-                                        .find(|(_, &j)| j == *job)
-                                        .map(|(id, _)| *id)
-                                        .unwrap_or(0);
-                                    
-                                    SlotInfo {
-                                        filled: true,
-                                        role: job.role().map(|r| r.to_string()),
-                                        role_id: match job.role() {
-                                            Some(ffxiv_types_cn::Role::Tank) => 1,
-                                            Some(ffxiv_types_cn::Role::Healer) => 2,
-                                            Some(ffxiv_types_cn::Role::Dps) => 3,
-                                            None => 0,
-                                        },
-                                        job: Some(job.code().to_string()),
-                                        job_id: vec![job_id],
-                                    }
-                                },
-                                Err((role_class, job_code)) => {
-                                    // 解析多个职业代码
-                                    let job_ids: Vec<u32> = if !job_code.is_empty() {
-                                        job_code.split_whitespace()
-                                            .filter_map(|code| {
-                                                crate::ffxiv::JOBS.iter()
-                                                    .find(|(_, job)| job.code() == code)
-                                                    .map(|(id, _)| *id)
-                                            })
-                                            .collect()
-                                    } else {
-                                        Vec::new()
-                                    };
-
-                                    SlotInfo {
-                                        filled: false,
-                                        role: if role_class.contains("tank") {
-                                            Some("Tank".to_string())
-                                        } else if role_class.contains("healer") {
-                                            Some("Healer".to_string())
-                                        } else if role_class.contains("dps") {
-                                            Some("DPS".to_string())
-                                        } else {
-                                            None
-                                        },
-                                        role_id: if role_class.contains("tank") {
-                                            1
-                                        } else if role_class.contains("healer") {
-                                            2
-                                        } else if role_class.contains("dps") {
-                                            3
-                                        } else {
-                                            0
-                                        },
-                                        job: if job_code.is_empty() { None } else { Some(job_code.clone()) },
-                                        job_id: job_ids,
-                                    }
-                                },
-                            };
-                            slots.push(slot_info);
+                            slots.push(slot_info_from_listing_slot(slot_result));
                         }
                         
                         // 构建详细信息
@@ -1048,6 +1054,8 @@ pub(crate) async fn listing_detail_api_with_cache(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ffxiv_types_cn::jobs::{ClassJob, Job};
+    use mongodb::bson::doc;
     use warp::http::StatusCode;
 
     #[tokio::test]
@@ -1091,7 +1099,36 @@ mod tests {
         assert_eq!(response.status(), StatusCode::OK);
         
         let body: serde_json::Value = serde_json::from_slice(response.body()).unwrap();
-        
+
         assert_eq!(body["id"], wide_id, "v1 should return exact widened numeric ID");
+    }
+
+    #[test]
+    fn beastmaster_jobs_query_uses_canonical_slot_bit() {
+        assert_eq!(accepted_slot_bits_for_job_ids(&[43]), vec![1u64 << 32]);
+
+        let job_conditions = build_job_match_conditions(&accepted_slot_bits_for_job_ids(&[43]));
+
+        assert_eq!(
+            job_conditions,
+            vec![doc! {
+                "listing.slots": {
+                    "$elemMatch": {
+                        "accepting": {
+                            "$bitsAllSet": 4_294_967_296i64,
+                        }
+                    }
+                }
+            }]
+        );
+    }
+
+    #[test]
+    fn detail_slot_serializes_beastmaster_as_bst_and_43() {
+        let slot_info = slot_info_from_listing_slot(&Ok(ClassJob::Job(Job::Beastmaster)));
+
+        assert!(slot_info.filled);
+        assert_eq!(slot_info.job.as_deref(), Some("BST"));
+        assert_eq!(slot_info.job_id, vec![43]);
     }
 }
