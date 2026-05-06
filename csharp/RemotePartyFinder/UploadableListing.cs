@@ -10,7 +10,7 @@ namespace RemotePartyFinder;
 [Serializable]
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 internal class UploadableListing {
-    public uint Id { get; }
+    public ulong Id { get; }
     public uint ContentIdLower { get; } // to retain backwards compatibility with old listings (stats), we stick to the lower bits
     public byte[] Name { get; }
     public byte[] Description { get; }
@@ -25,7 +25,7 @@ internal class UploadableListing {
     public ushort MinItemLevel { get; }
     public byte NumParties { get; }
     public byte SlotsAvailable { get; }
-    public uint LastServerRestart { get; }
+    public int LastServerRestart { get; }
     public ObjectiveFlags Objective { get; }
     public ConditionFlags Conditions { get; }
     public DutyFinderSettingsFlags DutyFinderSettings { get; }

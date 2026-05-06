@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
 use bitflags::bitflags;
-use ffxiv_types_cn::jobs::{ClassJob, Class, Job};
+use ffxiv_types_cn::jobs::{Class, ClassJob, Job};
 use ffxiv_types_cn::{Role, World};
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
@@ -12,7 +12,8 @@ use crate::sestring_ext::SeStringExt;
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PartyFinderListing {
-    pub id: u32,
+    pub id: u64,
+    // Truncated lower bits from the game payload; not the canonical listing identity.
     pub content_id_lower: u32,
     #[serde(with = "crate::base64_sestring")]
     pub name: SeString,
@@ -29,7 +30,7 @@ pub struct PartyFinderListing {
     pub min_item_level: u16,
     pub num_parties: u8,
     pub slots_available: u8,
-    pub last_server_restart: u32,
+    pub last_server_restart: i64,
     pub objective: ObjectiveFlags,
     pub conditions: ConditionFlags,
     pub duty_finder_settings: DutyFinderSettingsFlags,
@@ -58,9 +59,17 @@ impl PartyFinderListing {
             self.category,
             self.duty,
             *lang,
-            if player_name.is_empty() { None } else { Some(&player_name) },
+            if player_name.is_empty() {
+                None
+            } else {
+                Some(&player_name)
+            },
             Some(&world),
-            if description.is_empty() { None } else { Some(&description) },
+            if description.is_empty() {
+                None
+            } else {
+                Some(&description)
+            },
         )
     }
 
@@ -71,12 +80,12 @@ impl PartyFinderListing {
                 break;
             }
 
-            let cj = match crate::ffxiv::JOBS.get(&u32::from(self.jobs_present[i])).copied() {
+            let cj = match crate::ffxiv::JOBS
+                .get(&u32::from(self.jobs_present[i]))
+                .copied()
+            {
                 Some(cj) => Ok(cj),
-                None => Err((
-                    self.slots[i].html_classes(),
-                    self.slots[i].codes(),
-                )),
+                None => Err((self.slots[i].html_classes(), self.slots[i].codes())),
             };
             slots.push(cj);
         }
@@ -85,7 +94,9 @@ impl PartyFinderListing {
     }
 
     pub fn created_world(&self) -> Option<World> {
-        crate::ffxiv::WORLDS.get(&u32::from(self.created_world)).copied()
+        crate::ffxiv::WORLDS
+            .get(&u32::from(self.created_world))
+            .copied()
     }
 
     pub fn created_world_string(&self) -> Cow<str> {
@@ -95,7 +106,9 @@ impl PartyFinderListing {
     }
 
     pub fn home_world(&self) -> Option<World> {
-        crate::ffxiv::WORLDS.get(&u32::from(self.home_world)).copied()
+        crate::ffxiv::WORLDS
+            .get(&u32::from(self.home_world))
+            .copied()
     }
 
     pub fn home_world_string(&self) -> Cow<str> {
@@ -127,7 +140,10 @@ impl PartyFinderListing {
             flags.push("[Duty Complete]");
         }
 
-        if self.conditions.contains(ConditionFlags::DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED) {
+        if self
+            .conditions
+            .contains(ConditionFlags::DUTY_COMPLETE_WEEKLY_REWARD_UNCLAIMED)
+        {
             flags.push("[Duty Complete (Weekly Reward Unclaimed)]")
         }
 
@@ -135,7 +151,10 @@ impl PartyFinderListing {
             flags.push("[Duty Incomplete]");
         }
 
-        if self.search_area.contains(SearchAreaFlags::ONE_PLAYER_PER_JOB) {
+        if self
+            .search_area
+            .contains(SearchAreaFlags::ONE_PLAYER_PER_JOB)
+        {
             flags.push("[One Player per Job]");
         }
 
@@ -143,7 +162,8 @@ impl PartyFinderListing {
     }
 
     pub fn data_centre_name(&self) -> Option<&'static str> {
-        crate::ffxiv::WORLDS.get(&u32::from(self.created_world))
+        crate::ffxiv::WORLDS
+            .get(&u32::from(self.created_world))
             .map(|w| w.data_center().name())
     }
 
@@ -206,7 +226,8 @@ impl PartyFinderSlot {
     }
 
     pub fn codes(&self) -> String {
-        self.accepting.classjobs()
+        self.accepting
+            .classjobs()
             .iter()
             .map(|cj| cj.code())
             .intersperse(" ")
@@ -298,7 +319,9 @@ impl DutyCategory {
             DutyCategory::GatheringForays => PartyFinderCategory::GatheringForays,
             DutyCategory::DeepDungeon => PartyFinderCategory::DeepDungeons,
             DutyCategory::FieldOperation => PartyFinderCategory::FieldOperations,
-            DutyCategory::VariantAndCriterionDungeon => PartyFinderCategory::VariantAndCriterionDungeonFinder,
+            DutyCategory::VariantAndCriterionDungeon => {
+                PartyFinderCategory::VariantAndCriterionDungeonFinder
+            }
         }
     }
 }

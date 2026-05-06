@@ -20,8 +20,12 @@ use crate::web::v2::listings::{
 };
 use chrono::{Duration, Utc};
 
+const WIDE_LISTING_ID: u64 = 4_294_967_296;
+const WIDE_LISTING_ID_STR: &str = "4294967296";
+const WIDE_CROSS_WORLD_LISTING_ID_STR: &str = "4294967297";
+
 const ACTIVE_FIXTURE_JSON: &str = r#"{
-  "id": 12345,
+  "id": 4294967296,
   "content_id_lower": 456,
   "name": "QWN0aXZl",
   "description": "QWN0aXZlIGZpeHR1cmU=",
@@ -47,7 +51,7 @@ const ACTIVE_FIXTURE_JSON: &str = r#"{
 }"#;
 
 const DUPLICATE_OLD_FIXTURE_JSON: &str = r#"{
-  "id": 12345,
+  "id": 4294967296,
   "content_id_lower": 457,
   "name": "RHVwbGljYXRl",
   "description": "T2xkIGR1cGxpY2F0ZSBmaXh0dXJl",
@@ -73,7 +77,7 @@ const DUPLICATE_OLD_FIXTURE_JSON: &str = r#"{
 }"#;
 
 const CROSS_WORLD_FIXTURE_JSON: &str = r#"{
-  "id": 12346,
+  "id": 4294967297,
   "content_id_lower": 458,
   "name": "Q3Jvc3MgV29ybGQ=",
   "description": "Q3Jvc3Mtd29ybGQgZml4dHVyZQ==",
@@ -99,7 +103,7 @@ const CROSS_WORLD_FIXTURE_JSON: &str = r#"{
 }"#;
 
 const EXPIRED_FIXTURE_JSON: &str = r#"{
-  "id": 12345,
+  "id": 4294967296,
   "content_id_lower": 459,
   "name": "RXhwaXJlZA==",
   "description": "RXhwaXJlZCBmaXh0dXJl",
@@ -141,7 +145,7 @@ fn success_envelopes_are_consistent() {
         json!({
             "data": [
                 {
-                    "id": 900001,
+                    "id": "900001",
                     "player_name": "Alice",
                     "description": "Need clear",
                     "created_world_id": 1167,
@@ -175,7 +179,7 @@ fn success_envelopes_are_consistent() {
         serde_json::to_value(&member).unwrap(),
         json!({
             "data": {
-                "id": 900001,
+                "id": "900001",
                 "player_name": "Alice",
                 "description": "Need clear",
                 "created_world_id": 1167,
@@ -531,7 +535,7 @@ async fn lookup_routes_are_absent_from_the_full_router() {
 
 fn sample_summary() -> ListingSummary {
     ListingSummary {
-        id: 900001,
+        id: "900001".into(),
         player_name: "Alice".into(),
         description: "Need clear".into(),
         created_world_id: 1167,
@@ -551,7 +555,7 @@ fn sample_summary() -> ListingSummary {
 
 fn sample_detail() -> ListingDetail {
     ListingDetail {
-        id: 900001,
+        id: "900001".into(),
         player_name: "Alice".into(),
         description: "Need clear".into(),
         created_world_id: 1167,
@@ -600,14 +604,14 @@ async fn duplicate_listing_id_returns_latest_active_detail() {
 
     let response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/12345")
+        .path("/api/v2/listings/4294967296")
         .reply(&member_route_for_tests(vec![expired, duplicate_old, active]))
         .await;
 
     assert_eq!(response.status(), StatusCode::OK);
 
     let body = serde_json::from_slice::<serde_json::Value>(response.body()).unwrap();
-    assert_eq!(body["data"]["id"], json!(12345));
+    assert_eq!(body["data"]["id"], json!(WIDE_LISTING_ID_STR));
     assert_eq!(body["data"]["player_name"], json!("Duplicate"));
     assert_eq!(body["data"]["time_left_seconds"], json!(900));
     assert_eq!(body["data"]["updated_at"], json!(expected_updated_at));
@@ -620,10 +624,10 @@ fn listings_projection_excludes_legacy_labels() {
     let summary = project_listing_summary(&active).expect("active listing should project");
     let detail = project_listing_detail(&active).expect("active detail should project");
 
-assert_eq!(
+    assert_eq!(
         summary,
         ListingSummary {
-            id: 12345,
+            id: WIDE_LISTING_ID_STR.into(),
             player_name: "Active".into(),
             description: "Active fixture".into(),
             created_world_id: 73,
@@ -644,7 +648,7 @@ assert_eq!(
     assert_eq!(
         detail,
         ListingDetail {
-            id: 12345,
+            id: WIDE_LISTING_ID_STR.into(),
             player_name: "Active".into(),
             description: "Active fixture".into(),
             created_world_id: 73,
@@ -702,7 +706,7 @@ async fn listing_detail_is_ids_only() {
 
     let response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/12345")
+        .path("/api/v2/listings/4294967296")
         .reply(&member_route_for_tests(vec![active]))
         .await;
 
@@ -714,7 +718,7 @@ async fn listing_detail_is_ids_only() {
 assert_eq!(
         body["data"],
         json!({
-            "id": 12345,
+            "id": WIDE_LISTING_ID_STR,
             "player_name": "Active",
             "description": "Active fixture",
             "created_world_id": 73,
@@ -742,6 +746,7 @@ assert_eq!(
             ],
         })
     );
+    assert!(body["data"]["id"].is_string());
 
     for forbidden in [
         "datacenter",
@@ -794,7 +799,7 @@ fn listings_summary_is_ids_only() {
         serde_json::to_value(&response.data).unwrap(),
         json!([
             {
-                "id": 12345,
+                "id": WIDE_LISTING_ID_STR,
                 "player_name": "Active",
                 "description": "Active fixture",
                 "created_world_id": 73,
@@ -811,7 +816,7 @@ fn listings_summary_is_ids_only() {
                 "beginners_welcome": false,
             },
             {
-                "id": 12346,
+                "id": WIDE_CROSS_WORLD_LISTING_ID_STR,
                 "player_name": "Cross World",
                 "description": "Cross-world fixture",
                 "created_world_id": 73,
@@ -829,6 +834,7 @@ fn listings_summary_is_ids_only() {
             }
         ])
     );
+    assert!(response.data.iter().all(|listing| serde_json::to_value(listing).unwrap()["id"].is_string()));
 
     for payload in serde_json::to_value(&response.data)
         .unwrap()
@@ -914,7 +920,7 @@ fn collection_response_filters_public_job_ids_by_inventory_mapping() {
 
     assert_eq!(response.pagination.total, 1);
     assert_eq!(response.data.len(), 1);
-    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
     assert_eq!(response.data[0].player_name, "Active");
 }
 
@@ -938,7 +944,7 @@ fn duplicate_job_ids_do_not_change_matching_results() {
 
     assert_eq!(response.pagination.total, 1);
     assert_eq!(response.data.len(), 1);
-    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
     assert_eq!(response.data[0].player_name, "Active");
 }
 
@@ -968,7 +974,7 @@ let documents = [&created_world_match, &home_world_match, &category_and_duty_mat
         documents,
     );
     assert_eq!(created_world_response.pagination.total, 1);
-    assert_eq!(created_world_response.data[0].id, 12345);
+    assert_eq!(created_world_response.data[0].id, WIDE_LISTING_ID_STR);
 
     let home_world_response = collection_response_from_documents(
         ListingsQuery {
@@ -978,7 +984,7 @@ let documents = [&created_world_match, &home_world_match, &category_and_duty_mat
         documents,
     );
     assert_eq!(home_world_response.pagination.total, 1);
-    assert_eq!(home_world_response.data[0].id, 54321);
+    assert_eq!(home_world_response.data[0].id, "54321");
 
     let category_response = collection_response_from_documents(
         ListingsQuery {
@@ -988,7 +994,7 @@ let documents = [&created_world_match, &home_world_match, &category_and_duty_mat
         documents,
     );
     assert_eq!(category_response.pagination.total, 1);
-    assert_eq!(category_response.data[0].id, 67890);
+    assert_eq!(category_response.data[0].id, "67890");
 
     let duty_response = collection_response_from_documents(
         ListingsQuery {
@@ -998,7 +1004,7 @@ let documents = [&created_world_match, &home_world_match, &category_and_duty_mat
         documents,
     );
     assert_eq!(duty_response.pagination.total, 1);
-    assert_eq!(duty_response.data[0].id, 67890);
+    assert_eq!(duty_response.data[0].id, "67890");
 }
 
 #[test]
@@ -1024,8 +1030,8 @@ fn created_world_id_supports_comma_separated_or() {
 
     assert_eq!(response.pagination.total, 2);
     assert_eq!(response.data.len(), 2);
-    assert_eq!(response.data[0].id, 12345);
-    assert_eq!(response.data[1].id, 54321);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
+    assert_eq!(response.data[1].id, "54321");
 }
 
 #[test]
@@ -1051,8 +1057,8 @@ fn home_world_id_supports_comma_separated_or() {
 
     assert_eq!(response.pagination.total, 2);
     assert_eq!(response.data.len(), 2);
-    assert_eq!(response.data[0].id, 12345);
-    assert_eq!(response.data[1].id, 54321);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
+    assert_eq!(response.data[1].id, "54321");
 }
 
 #[test]
@@ -1084,8 +1090,8 @@ fn created_and_home_world_filters_intersect_across_fields() {
 
     assert_eq!(response.pagination.total, 2);
     assert_eq!(response.data.len(), 2);
-    assert_eq!(response.data[0].id, 12345);
-    assert_eq!(response.data[1].id, 67890);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
+    assert_eq!(response.data[1].id, "67890");
 }
 
 #[test]
@@ -1107,7 +1113,7 @@ fn duplicate_world_ids_do_not_change_results() {
 
     assert_eq!(response.pagination.total, 1);
     assert_eq!(response.data.len(), 1);
-    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
 }
 
 #[test]
@@ -1129,7 +1135,7 @@ fn mixed_validity_world_id_lists_ignore_unknown_members() {
 
     assert_eq!(response.pagination.total, 1);
     assert_eq!(response.data.len(), 1);
-    assert_eq!(response.data[0].id, 12345);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
 }
 
 #[test]
@@ -1253,7 +1259,7 @@ async fn collection_decode_failure_returns_internal_error() {
     let response = collection_response_from_raw_documents_for_tests(
         ListingsQuery::default(),
         vec![doc! {
-            "listing": { "id": 12345 },
+            "listing": { "id": WIDE_LISTING_ID as i64 },
             "updated_at": chrono::Utc::now(),
         }],
     );
@@ -1346,7 +1352,7 @@ fn expired_listings_are_excluded_from_v2() {
         project_listing_summaries([&expired, &active]),
         vec![project_listing_summary(&active).unwrap()]
     );
-    assert!(resolve_listing_detail(12345, [&expired]).is_none());
+    assert!(resolve_listing_detail(WIDE_LISTING_ID, [&expired]).is_none());
 }
 
 #[test]
@@ -1358,7 +1364,7 @@ fn active_window_keeps_just_fresh_listings_and_drops_stale_ones() {
     let projected = project_listing_summaries([&just_fresh, &stale]);
 
     assert_eq!(projected.len(), 1);
-    assert_eq!(projected[0].id, 12345);
+    assert_eq!(projected[0].id, WIDE_LISTING_ID_STR);
     assert_eq!(projected[0].player_name, "Active");
 }
 
@@ -1373,7 +1379,7 @@ fn detail_projection_prefers_latest_active_duplicate_id() {
     );
     let expired = queried_fixture(EXPIRED_FIXTURE_JSON, now - Duration::minutes(1), -1.0);
 
-    let detail = resolve_listing_detail(12345, [&expired, &duplicate_old, &active])
+    let detail = resolve_listing_detail(WIDE_LISTING_ID, [&expired, &duplicate_old, &active])
         .expect("latest active duplicate should resolve");
 
     assert_eq!(detail.player_name, "Duplicate");
@@ -1391,7 +1397,7 @@ async fn expired_or_missing_listing_returns_404() {
 
     let expired_response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/12345")
+        .path("/api/v2/listings/4294967296")
         .reply(&member_route_for_tests(vec![expired]))
         .await;
     assert_eq!(expired_response.status(), StatusCode::NOT_FOUND);
@@ -1402,7 +1408,7 @@ async fn expired_or_missing_listing_returns_404() {
                 "code": "not_found",
                 "message": "Listing not found",
                 "details": {
-                    "id": 12345,
+                    "id": WIDE_LISTING_ID_STR,
                 }
             }
         })
@@ -1410,7 +1416,7 @@ async fn expired_or_missing_listing_returns_404() {
 
     let missing_response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/99999")
+        .path("/api/v2/listings/4294967298")
         .reply(&member_route_for_tests(vec![active]))
         .await;
     assert_eq!(missing_response.status(), StatusCode::NOT_FOUND);
@@ -1421,7 +1427,7 @@ async fn expired_or_missing_listing_returns_404() {
                 "code": "not_found",
                 "message": "Listing not found",
                 "details": {
-                    "id": 99999,
+                    "id": "4294967298",
                 }
             }
         })
@@ -1429,7 +1435,7 @@ async fn expired_or_missing_listing_returns_404() {
 
     let private_response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/12345")
+        .path("/api/v2/listings/4294967296")
         .reply(&member_route_for_tests(vec![private]))
         .await;
     assert_eq!(private_response.status(), StatusCode::NOT_FOUND);
@@ -1440,7 +1446,7 @@ async fn expired_or_missing_listing_returns_404() {
                 "code": "not_found",
                 "message": "Listing not found",
                 "details": {
-                    "id": 12345,
+                    "id": WIDE_LISTING_ID_STR,
                 }
             }
         })
@@ -1448,7 +1454,7 @@ async fn expired_or_missing_listing_returns_404() {
 
     let private_expired_response = warp::test::request()
         .method("GET")
-        .path("/api/v2/listings/12345")
+        .path("/api/v2/listings/4294967296")
         .reply(&member_route_for_tests(vec![private_expired]))
         .await;
     assert_eq!(private_expired_response.status(), StatusCode::NOT_FOUND);
@@ -1459,7 +1465,7 @@ async fn expired_or_missing_listing_returns_404() {
                 "code": "not_found",
                 "message": "Listing not found",
                 "details": {
-                    "id": 12345,
+                    "id": WIDE_LISTING_ID_STR,
                 }
             }
         })
@@ -1563,6 +1569,24 @@ async fn region_rejects_empty_segments() {
             .unwrap(),
             "path: {path}",
         );
+    }
+}
+
+#[tokio::test]
+async fn v2_member_route_rejects_malformed_id_with_400_invalid_id() {
+    let malformed_ids = ["abc", "12.34", "-1", "99999999999999999999"];
+    
+    for id in malformed_ids {
+        let response = warp::test::request()
+            .method("GET")
+            .path(&format!("/api/v2/listings/{}", id))
+            .reply(&member_route_for_tests(vec![]))
+            .await;
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST, "id: {id}");
+        let body: serde_json::Value = serde_json::from_slice(response.body()).unwrap();
+        assert_eq!(body["error"]["code"], "invalid_id", "id: {id}");
+        assert_eq!(body["error"]["message"], "Invalid listing ID format", "id: {id}");
     }
 }
 
@@ -1756,16 +1780,14 @@ fn pipeline_and_in_memory_precedence_semantics_match() {
     listing_1167.listing.id = 54321;
     listing_1167.listing.created_world = 1167;
 
-    // Test 1: world-id masks datacenter and region
     let test_cases = [
-        // (query, expected_ids)
         (
             ListingsQuery {
                 created_world_id: vec![73],
                 datacenter: Some("Gaia".to_string()),
                 ..Default::default()
             },
-            vec![12345], // Only listing 73 matches, datacenter masked
+            vec![WIDE_LISTING_ID_STR.to_string()],
         ),
         (
             ListingsQuery {
@@ -1773,31 +1795,29 @@ fn pipeline_and_in_memory_precedence_semantics_match() {
                 region: Some("Europe".to_string()),
                 ..Default::default()
             },
-            vec![12345], // Only listing 73 matches, region masked
+            vec![WIDE_LISTING_ID_STR.to_string()],
         ),
-        // Test 2: datacenter masks region
         (
             ListingsQuery {
                 datacenter: Some("Aether".to_string()),
                 region: Some("Europe".to_string()),
                 ..Default::default()
             },
-            vec![12345], // Only listing 73 (Aether), region masked
+            vec![WIDE_LISTING_ID_STR.to_string()],
         ),
-        // Test 3: No precedence - all active
         (
             ListingsQuery {
                 datacenter: Some("Aether".to_string()),
                 ..Default::default()
             },
-            vec![12345], // Listing 73 is in Aether
+            vec![WIDE_LISTING_ID_STR.to_string()],
         ),
         (
             ListingsQuery {
                 region: Some("North-America".to_string()),
                 ..Default::default()
             },
-            vec![12345], // Listing 73 is in North America (Aether)
+            vec![WIDE_LISTING_ID_STR.to_string()],
         ),
     ];
 
@@ -1807,7 +1827,7 @@ fn pipeline_and_in_memory_precedence_semantics_match() {
             [&listing_73, &listing_1167],
         );
 
-        let actual_ids: Vec<u32> = response.data.iter().map(|l| l.id).collect();
+        let actual_ids: Vec<String> = response.data.iter().map(|l| l.id.clone()).collect();
         assert_eq!(
             actual_ids, expected_ids,
             "query: created_world_id={:?}, datacenter={:?}, region={:?}",

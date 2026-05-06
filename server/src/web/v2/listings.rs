@@ -1,7 +1,7 @@
 use std::{collections::HashMap, convert::Infallible, sync::Arc};
 
 use chrono::{Duration, Utc};
-use mongodb::bson::{doc, Document};
+use mongodb::bson::{doc, to_bson, Document};
 use serde_json::{Map, Value};
 use tokio_stream::StreamExt;
 use warp::{filters::BoxedFilter, http::StatusCode, reply::Response, Filter, Reply};
@@ -47,7 +47,7 @@ fn collection_route(state: Arc<State>) -> BoxedFilter<(Response,)> {
 }
 
 fn member_route(state: Arc<State>) -> BoxedFilter<(Response,)> {
-    warp::path!("api" / "v2" / "listings" / u32)
+    warp::path!("api" / "v2" / "listings" / String)
         .and(warp::path::end())
         .and(warp::get())
         .and(warp::any().map(move || state.clone()))
@@ -101,7 +101,7 @@ pub(crate) fn member_route_for_tests(
 ) -> BoxedFilter<(Response,)> {
     let documents = Arc::new(documents);
 
-    warp::path!("api" / "v2" / "listings" / u32)
+    warp::path!("api" / "v2" / "listings" / String)
         .and(warp::path::end())
         .and(warp::get())
         .and(warp::any().map(move || Arc::clone(&documents)))
@@ -109,19 +109,49 @@ pub(crate) fn member_route_for_tests(
         .boxed()
 }
 
-async fn member(id: u32, state: Arc<State>) -> Result<Response, Infallible> {
+async fn member(id: String, state: Arc<State>) -> Result<Response, Infallible> {
+    let id: u64 = match id.parse() {
+        Ok(id) => id,
+        Err(_) => return Ok(warp::reply::with_status(
+            warp::reply::json(&ErrorEnvelope::new(
+                "invalid_id",
+                "Invalid listing ID format",
+                Map::new(),
+            )),
+            StatusCode::BAD_REQUEST,
+        ).into_response()),
+    };
     Ok(member_response(id, state).await)
 }
 
 async fn member_from_documents(
-    id: u32,
+    id: String,
     documents: Arc<Vec<QueriedListing>>,
 ) -> Result<Response, Infallible> {
+    let id: u64 = match id.parse() {
+        Ok(id) => id,
+        Err(_) => return Ok(warp::reply::with_status(
+            warp::reply::json(&ErrorEnvelope::new(
+                "invalid_id",
+                "Invalid listing ID format",
+                Map::new(),
+            )),
+            StatusCode::BAD_REQUEST,
+        ).into_response()),
+    };
     Ok(member_response_from_documents(id, documents.iter()))
 }
 
-async fn member_response(id: u32, state: Arc<State>) -> Response {
-    let aggregation = state.collection().aggregate(member_pipeline(id), None).await;
+async fn member_response(id: u64, state: Arc<State>) -> Response {
+    let pipeline = match member_pipeline(id) {
+        Ok(pipeline) => pipeline,
+        Err(error) => {
+            eprintln!("{error:#?}");
+            return internal_error_reply().into_response();
+        }
+    };
+
+    let aggregation = state.collection().aggregate(pipeline, None).await;
 
     match aggregation {
         Ok(mut cursor) => {
@@ -152,12 +182,14 @@ async fn member_response(id: u32, state: Arc<State>) -> Response {
     }
 }
 
-fn member_pipeline(id: u32) -> Vec<Document> {
-    vec![
+fn member_pipeline(id: u64) -> mongodb::bson::ser::Result<Vec<Document>> {
+    let listing_id = to_bson(&id)?;
+
+    Ok(vec![
         doc! {
             "$match": {
                 "updated_at": { "$gte": Utc::now() - RECENT_LISTING_WINDOW },
-                "listing.id": id,
+                "listing.id": listing_id,
                 "listing.search_area": { "$bitsAllClear": SearchAreaFlags::PRIVATE.bits() as i32 },
             }
         },
@@ -194,11 +226,11 @@ fn member_pipeline(id: u32) -> Vec<Document> {
                 "updated_at": -1,
             }
         },
-    ]
+    ])
 }
 
 pub(crate) fn member_response_from_documents<'a>(
-    id: u32,
+    id: u64,
     documents: impl IntoIterator<Item = &'a QueriedListing>,
 ) -> Response {
     match resolve_listing_detail(id, documents) {
@@ -207,9 +239,9 @@ pub(crate) fn member_response_from_documents<'a>(
     }
 }
 
-fn not_found_reply(id: u32) -> impl Reply {
+fn not_found_reply(id: u64) -> impl Reply {
     let mut details = Map::new();
-    details.insert("id".into(), Value::from(id));
+    details.insert("id".into(), Value::from(id.to_string()));
 
     warp::reply::with_status(
         warp::reply::json(&ErrorEnvelope::new(
@@ -796,7 +828,7 @@ pub(crate) fn project_listing_summary(document: &QueriedListing) -> Option<Listi
     let listing = visible_listing(document)?;
 
 Some(ListingSummary {
-        id: listing.id,
+        id: listing.id.to_string(),
         player_name: listing
             .name
             .full_text(&crate::ffxiv::Language::ChineseSimplified)
@@ -821,7 +853,7 @@ Some(ListingSummary {
 }
 
 pub(crate) fn resolve_listing_detail<'a>(
-    id: u32,
+    id: u64,
     documents: impl IntoIterator<Item = &'a QueriedListing>,
 ) -> Option<ListingDetail> {
     let mut selected: Option<&QueriedListing> = None;
@@ -848,7 +880,7 @@ pub(crate) fn project_listing_detail(document: &QueriedListing) -> Option<Listin
     let listing = visible_listing(document)?;
 
 Some(ListingDetail {
-        id: listing.id,
+        id: listing.id.to_string(),
         player_name: listing
             .name
             .full_text(&crate::ffxiv::Language::ChineseSimplified)

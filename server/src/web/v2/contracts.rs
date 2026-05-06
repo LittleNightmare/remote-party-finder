@@ -66,7 +66,7 @@ impl ErrorEnvelope {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ListingSummary {
-    pub id: u32,
+    pub id: String,
     pub player_name: String,
     pub description: String,
     pub created_world_id: u32,
@@ -85,7 +85,7 @@ pub struct ListingSummary {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ListingDetail {
-    pub id: u32,
+    pub id: String,
     pub player_name: String,
     pub description: String,
     pub created_world_id: u32,

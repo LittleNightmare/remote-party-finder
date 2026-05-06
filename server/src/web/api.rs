@@ -3,7 +3,7 @@ use std::{
 };
 
 use chrono::Utc;
-use mongodb::bson::doc;
+use mongodb::bson::{doc, to_bson};
 use serde::{Serialize, Deserialize};
 use tokio_stream::StreamExt;
 use warp::{
@@ -34,7 +34,7 @@ pub struct Pagination {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ApiListing {
-    id: u32,
+    id: u64,
     name: String,
     description: String,
     created_world: String,
@@ -55,7 +55,7 @@ pub struct ApiListing {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DetailedApiListing {
-    pub id: u32,
+    pub id: u64,
     pub name: String,
     pub description: String,
     pub created_world: String,
@@ -796,7 +796,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(
         state: Arc<State>,
-        id: u32,
+        id: u64,
     ) -> std::result::Result<impl Reply, Infallible> {
         // 尝试从缓存获取
         if let Some(cached) = state.get_detail_cache(id).await {
@@ -810,11 +810,23 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
         
         // 简化查询 - 合并多个$match阶段
+        let listing_id = match to_bson(&id) {
+            Ok(listing_id) => listing_id,
+            Err(error) => {
+                eprintln!("序列化招募ID错误: {:#?}", error);
+                return Ok(warp::reply::with_status(
+                    warp::reply::json(&serde_json::json!({
+                        "error": "数据库查询错误"
+                    })),
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                ));
+            }
+        };
         let pipeline = vec![
             doc! {
                 "$match": {
                     "updated_at": { "$gte": two_hours_ago },
-                    "listing.id": id,
+                    "listing.id": listing_id,
                     // 过滤私有PF
                     "listing.search_area": { "$bitsAllClear": 2 },
                 }
@@ -1016,9 +1028,70 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
     let route = warp::path("api")
         .and(warp::path("listing"))
-        .and(warp::path::param::<u32>())
+        .and(warp::path::param::<u64>())
         .and(warp::path::end())
-        .and_then(move |id: u32| logic(Arc::clone(&state), id));
+        .and_then(move |id: u64| logic(Arc::clone(&state), id));
 
     warp::get().and(route).boxed()
+}
+
+#[cfg(test)]
+pub(crate) async fn listing_detail_api_with_cache(
+    state: Arc<State>,
+    id: u64,
+    detail: DetailedApiListing,
+) -> Arc<State> {
+    state.set_detail_cache(id, detail, 60).await;
+    state
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use warp::http::StatusCode;
+
+    #[tokio::test]
+    async fn v1_detail_returns_exact_wide_numeric_id_via_cache() {
+        let state = crate::web::state_for_router_tests().await;
+        
+        let wide_id: u64 = 4_294_967_296;
+        let detail = DetailedApiListing {
+            id: wide_id,
+            name: "TestPlayer".into(),
+            description: "Test description".into(),
+            created_world: "拉诺西亚".into(),
+            home_world: "拉诺西亚".into(),
+            category: "HighEndDuty".into(),
+            duty: "亚历山大零式".into(),
+            min_item_level: 710,
+            slots_filled: 4,
+            slots_available: 8,
+            time_left: 1200.0,
+            updated_at: "2026-05-02T12:00:00Z".into(),
+            is_cross_world: true,
+            beginners_welcome: false,
+            duty_type: "Normal".into(),
+            objective: "DutyCompletion".into(),
+            conditions: "DutyComplete".into(),
+            loot_rules: "Lootmaster".into(),
+            slots: vec![],
+            datacenter: Some("猫小胖".into()),
+        };
+        
+        let state = listing_detail_api_with_cache(state, wide_id, detail).await;
+        
+        let route = listing_detail_api(state);
+        
+        let response = warp::test::request()
+            .method("GET")
+            .path(&format!("/api/listing/{}", wide_id))
+            .reply(&route)
+            .await;
+        
+        assert_eq!(response.status(), StatusCode::OK);
+        
+        let body: serde_json::Value = serde_json::from_slice(response.body()).unwrap();
+        
+        assert_eq!(body["id"], wide_id, "v1 should return exact widened numeric ID");
+    }
 }

@@ -9,14 +9,14 @@ use std::{
 use anyhow::{Context, Result};
 use chrono::{DateTime, Utc};
 use mongodb::{
-    bson::doc,
+    bson::{doc, to_bson, Document},
     Client as MongoClient,
     Collection,
     IndexModel,
     options::{IndexOptions, UpdateOptions},
     results::UpdateResult,
 };
-use tokio::sync::{RwLock, Mutex};
+use tokio::sync::RwLock;
 use tokio_stream::StreamExt;
 use warp::{
     Filter,
@@ -69,7 +69,48 @@ struct ListingsCache {
 }
 
 struct DetailCache {
-    entries: HashMap<u32, CacheEntry<DetailedApiListing>>,
+    entries: HashMap<u64, CacheEntry<DetailedApiListing>>,
+}
+
+const LISTING_ID_FIELD: &str = "listing.id";
+const LISTING_LAST_SERVER_RESTART_FIELD: &str = "listing.last_server_restart";
+const LISTING_CREATED_WORLD_FIELD: &str = "listing.created_world";
+const ACTIVE_LISTING_WINDOW_HOURS: i64 = 2;
+
+fn listing_identity_index_keys() -> Document {
+    let mut keys = Document::new();
+    keys.insert(LISTING_ID_FIELD, 1);
+    keys.insert(LISTING_LAST_SERVER_RESTART_FIELD, 1);
+    keys.insert(LISTING_CREATED_WORLD_FIELD, 1);
+    keys
+}
+
+fn listing_id_index_keys() -> Document {
+    let mut keys = Document::new();
+    keys.insert(LISTING_ID_FIELD, 1);
+    keys
+}
+
+fn listing_identity_filter(listing: &PartyFinderListing) -> Result<Document> {
+    let mut filter = Document::new();
+    filter.insert(LISTING_ID_FIELD, to_bson(&listing.id).context("could not serialize listing.id for upsert filter")?);
+    filter.insert(
+        LISTING_LAST_SERVER_RESTART_FIELD,
+        to_bson(&listing.last_server_restart)
+            .context("could not serialize listing.last_server_restart for upsert filter")?,
+    );
+    filter.insert(
+        LISTING_CREATED_WORLD_FIELD,
+        to_bson(&listing.created_world)
+            .context("could not serialize listing.created_world for upsert filter")?,
+    );
+    Ok(filter)
+}
+
+fn active_listing_cutoff(now: DateTime<Utc>) -> DateTime<Utc> {
+    // Legacy coexistence is bounded to the active-listing window; once a truncated historical row
+    // ages out of this window, active reads stop surfacing it.
+    now - chrono::Duration::hours(ACTIVE_LISTING_WINDOW_HOURS)
 }
 
 impl State {
@@ -92,11 +133,7 @@ impl State {
         state.collection()
             .create_index(
                 IndexModel::builder()
-                    .keys(mongodb::bson::doc! {
-                        "listing.id": 1,
-                        "listing.last_server_restart": 1,
-                        "listing.created_world": 1,
-                    })
+                    .keys(listing_identity_index_keys())
                     .options(IndexOptions::builder()
                         .unique(true)
                         .build())
@@ -121,9 +158,7 @@ impl State {
         state.collection()
             .create_index(
                 IndexModel::builder()
-                    .keys(mongodb::bson::doc! {
-                        "listing.id": 1,
-                    })
+                    .keys(listing_id_index_keys())
                     .build(),
                 None,
             )
@@ -272,7 +307,7 @@ impl State {
         cache.entries.insert(cache_key, CacheEntry { data, expires_at });
     }
     
-    pub async fn get_detail_cache(&self, id: u32) -> Option<DetailedApiListing> {
+    pub async fn get_detail_cache(&self, id: u64) -> Option<DetailedApiListing> {
         let cache = self.detail_cache.read().await;
         if let Some(entry) = cache.entries.get(&id) {
             if entry.expires_at > Utc::now() {
@@ -282,7 +317,7 @@ impl State {
         None
     }
     
-    pub async fn set_detail_cache(&self, id: u32, data: DetailedApiListing, ttl_seconds: i64) {
+    pub async fn set_detail_cache(&self, id: u64, data: DetailedApiListing, ttl_seconds: i64) {
         let mut cache = self.detail_cache.write().await;
         let expires_at = Utc::now() + chrono::Duration::seconds(ttl_seconds);
         cache.entries.insert(id, CacheEntry { data, expires_at });
@@ -443,7 +478,7 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, codes: Option<String>) -> std::result::Result<impl Reply, Infallible> {
         let lang = Language::from_codes(codes.as_deref());
 
-        let two_hours_ago = Utc::now() - chrono::Duration::hours(2);
+        let two_hours_ago = active_listing_cutoff(Utc::now());
         let res = state
             .collection()
             .aggregate(
@@ -654,6 +689,15 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
     }
 
+    if listing.last_server_restart < i64::from(i32::MIN)
+        || listing.last_server_restart > i64::from(i32::MAX)
+    {
+        anyhow::bail!(
+            "invalid listing: last_server_restart {} out of range (expected signed 32-bit integer)",
+            listing.last_server_restart
+        );
+    }
+
     if !matches!(listing.created_world, 1000..=1999 | 4000..=4999) {
         anyhow::bail!(
             "invalid listing: created_world {} out of range (expected 1000-1999 or 4000-4999)",
@@ -701,15 +745,15 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<Up
         .upsert(true)
         .build();
     let bson_value = mongodb::bson::to_bson(&listing).unwrap();
+    // Canonical writes always upsert on the widened `(listing.id, last_server_restart,
+    // created_world)` identity only. Pre-migration truncated-id rows remain legacy data; the
+    // server does not reconstruct guessed wide ids from `content_id_lower` or any other surrogate.
+    let filter = listing_identity_filter(&listing)?;
     let now = Utc::now();
     state
         .collection()
         .update_one(
-            doc! {
-                    "listing.id": listing.id,
-                    "listing.last_server_restart": listing.last_server_restart,
-                    "listing.created_world": listing.created_world as u32,
-                },
+            filter,
             doc! {
                     "$currentDate": {
                         "updated_at": true,
@@ -725,4 +769,233 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<Up
         )
         .await
         .context("could not insert record")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const WIDE_LISTING_ID: u64 = 4_294_967_296;
+
+    const LISTING_FIXTURE: &str = r###"
+{
+  "id": 4294967419,
+  "content_id_lower": 456,
+  "name": "VGVzdCBOYW1l",
+  "description": "VGhpcyBpcyBteSB0ZXN0IGRlc2NyaXB0aW9uLg==",
+  "created_world": 1001,
+  "home_world": 1001,
+  "current_world": 1001,
+  "category": 0,
+  "duty": 55,
+  "duty_type": 2,
+  "beginners_welcome": false,
+  "seconds_remaining": 3300,
+  "min_item_level": 0,
+  "num_parties": 1,
+  "slots_available": 7,
+  "last_server_restart": 1234567890,
+  "objective": 3,
+  "conditions": 1,
+  "duty_finder_settings": 0,
+  "loot_rules": 0,
+  "search_area": 1,
+  "slots": [
+    {
+      "accepting": 167772160
+    }
+  ],
+  "jobs_present": [
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}"###;
+
+    fn fixture_listing() -> PartyFinderListing {
+        serde_json::from_str(LISTING_FIXTURE).expect("listing fixture must deserialize")
+    }
+
+    fn wide_listing_fixture(content_id_lower: u32) -> PartyFinderListing {
+        let mut listing = fixture_listing();
+        listing.id = WIDE_LISTING_ID;
+        listing.content_id_lower = content_id_lower;
+        listing
+    }
+
+    fn valid_upload_listing() -> PartyFinderListing {
+        let mut listing = fixture_listing();
+        listing.duty = 0;
+        listing
+    }
+
+    fn detail_cache_fixture() -> DetailedApiListing {
+        DetailedApiListing {
+            id: WIDE_LISTING_ID,
+            name: "Wide Test Name".to_string(),
+            description: "Wide test description".to_string(),
+            created_world: "Test World".to_string(),
+            home_world: "Test World".to_string(),
+            category: "None".to_string(),
+            duty: "Test Duty".to_string(),
+            min_item_level: 0,
+            slots_filled: 0,
+            slots_available: 8,
+            time_left: 42.0,
+            updated_at: "2026-05-03T00:00:00Z".to_string(),
+            is_cross_world: false,
+            beginners_welcome: false,
+            duty_type: "Normal".to_string(),
+            objective: "Practice".to_string(),
+            conditions: "None".to_string(),
+            loot_rules: "None".to_string(),
+            slots: vec![crate::web::api::SlotInfo {
+                filled: false,
+                role: None,
+                role_id: 0,
+                job: None,
+                job_id: vec![],
+            }],
+            datacenter: Some("Test DC".to_string()),
+        }
+    }
+
+    #[test]
+    fn listing_identity_filter_keeps_legacy_rows_non_reconstructable() {
+        let listing = fixture_listing();
+
+        let filter = listing_identity_filter(&listing).expect("filter must serialize");
+
+        assert_eq!(filter.len(), 3);
+        assert_eq!(filter.get(LISTING_ID_FIELD), Some(&to_bson(&listing.id).unwrap()));
+        assert_eq!(
+            filter.get(LISTING_LAST_SERVER_RESTART_FIELD),
+            Some(&to_bson(&listing.last_server_restart).unwrap()),
+        );
+        assert_eq!(
+            filter.get(LISTING_CREATED_WORLD_FIELD),
+            Some(&to_bson(&listing.created_world).unwrap()),
+        );
+        assert!(!filter.contains_key("listing.content_id_lower"));
+    }
+
+    #[test]
+    fn active_listing_cutoff_bounds_temporary_legacy_row_coexistence_window() {
+        let now = Utc::now();
+
+        assert_eq!(
+            active_listing_cutoff(now),
+            now - chrono::Duration::hours(ACTIVE_LISTING_WINDOW_HOURS),
+        );
+    }
+
+    #[tokio::test]
+    async fn detail_cache_round_trips_wide_key_exactly() {
+        let state = state_for_router_tests().await;
+        let listing = detail_cache_fixture();
+
+        state.set_detail_cache(WIDE_LISTING_ID, listing.clone(), 60).await;
+
+        let cached = state
+            .get_detail_cache(WIDE_LISTING_ID)
+            .await
+            .expect("wide cache key must round-trip exactly");
+        assert_eq!(
+            serde_json::to_value(cached).expect("cached listing must serialize"),
+            serde_json::to_value(listing).expect("fixture must serialize"),
+        );
+        assert!(state.get_detail_cache(WIDE_LISTING_ID - 1).await.is_none());
+    }
+
+#[test]
+    fn listing_identity_index_keys_has_three_canonical_fields() {
+        let keys = listing_identity_index_keys();
+        assert_eq!(keys.len(), 3);
+        assert!(keys.contains_key(LISTING_ID_FIELD));
+        assert!(keys.contains_key(LISTING_LAST_SERVER_RESTART_FIELD));
+        assert!(keys.contains_key(LISTING_CREATED_WORLD_FIELD));
+    }
+
+    #[test]
+    fn listing_id_index_keys_has_single_field() {
+        let keys = listing_id_index_keys();
+        assert_eq!(keys.len(), 1);
+        assert!(keys.contains_key(LISTING_ID_FIELD));
+    }
+
+    #[test]
+    fn canonical_upsert_filter_is_independent_of_non_key_fields() {
+        let first = wide_listing_fixture(456);
+        let mut second = wide_listing_fixture(789);
+        second.seconds_remaining = first.seconds_remaining - 1;
+
+        let first_filter = listing_identity_filter(&first).expect("first filter must build");
+        let second_filter = listing_identity_filter(&second).expect("second filter must build");
+
+        assert_eq!(first_filter, second_filter);
+        assert_eq!(first_filter.len(), 3);
+        assert!(!first_filter.contains_key("listing.content_id_lower"));
+    }
+
+    #[tokio::test]
+    async fn contribute_multiple_accepts_wide_duplicate_payload_before_insert_io_failure() {
+        let state = state_for_router_tests().await;
+        let route = contribute_multiple(Arc::clone(&state));
+        let payload = vec![wide_listing_fixture(456), wide_listing_fixture(789)];
+
+        let response = warp::test::request()
+            .method("POST")
+            .path("/contribute/multiple")
+            .json(&payload)
+            .reply(&route)
+            .await;
+
+        assert_eq!(response.status(), warp::http::StatusCode::OK);
+        assert_eq!(std::str::from_utf8(response.body()).unwrap(), "0/2 updated");
+    }
+
+    #[tokio::test]
+    async fn validate_and_insert_listing_accepts_signed_i32_boundary_values() {
+        let state = state_for_router_tests().await;
+
+        for boundary in [i64::from(i32::MIN), i64::from(i32::MAX)] {
+            let mut listing = valid_upload_listing();
+            listing.last_server_restart = boundary;
+
+            let error = validate_and_insert_listing(&state, listing)
+                .await
+                .expect_err("fixture should reach insert path and fail on io");
+
+            assert!(
+                error.to_string().contains("could not insert record"),
+                "expected insert io failure for boundary {boundary}, got: {error:#}"
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn validate_and_insert_listing_rejects_values_outside_signed_i32_range() {
+        let state = state_for_router_tests().await;
+
+        for out_of_range in [i64::from(i32::MIN) - 1, i64::from(i32::MAX) + 1] {
+            let mut listing = valid_upload_listing();
+            listing.last_server_restart = out_of_range;
+
+            let error = validate_and_insert_listing(&state, listing)
+                .await
+                .expect_err("out-of-range restart timestamp must be rejected");
+
+            assert!(
+                error
+                    .to_string()
+                    .contains("invalid listing: last_server_restart"),
+                "expected validation failure for {out_of_range}, got: {error:#}"
+            );
+        }
+    }
 }
