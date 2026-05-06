@@ -307,19 +307,27 @@ fn id_inventory_is_stable() {
     assert_eq!(id_inventory::duty_type_id(DutyType::Roulette), 1);
     assert_eq!(id_inventory::duty_type_id(DutyType::Normal), 2);
 
-    assert_eq!(
-        id_inventory::job_ids(),
-        vec![
-            1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-            35, 36, 37, 38, 39, 40, 41, 42,
-        ]
-    );
+    let expected_job_ids = {
+        let mut ids = crate::ffxiv::JOBS
+            .keys()
+            .copied()
+            .filter(|job_id| JobFlags::accepted_slot_bit_for_job_id(*job_id).is_some())
+            .collect::<Vec<_>>();
+        ids.sort_unstable();
+        ids
+    };
+    assert_eq!(id_inventory::job_ids(), expected_job_ids);
     assert_eq!(id_inventory::filled_job_id(19), Some(19));
     assert_eq!(id_inventory::filled_job_id(8), Some(8));
+    assert_eq!(
+        id_inventory::accepted_job_flag_bits(43),
+        Some(u64::from(JobFlags::BEASTMASTER.bits()))
+    );
     assert_eq!(
         id_inventory::accepted_job_ids(JobFlags::WHITE_MAGE | JobFlags::SCHOLAR),
         vec![24, 28]
     );
+    assert_eq!(id_inventory::accepted_job_ids(JobFlags::BEASTMASTER), vec![43]);
 
     assert_eq!(id_inventory::ROLE_IDS, [1, 2, 3]);
     assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Dps), 1);
@@ -916,6 +924,30 @@ fn collection_response_filters_public_job_ids_by_inventory_mapping() {
             ..Default::default()
         },
         [&white_mage, &red_mage],
+    );
+
+    assert_eq!(response.pagination.total, 1);
+    assert_eq!(response.data.len(), 1);
+    assert_eq!(response.data[0].id, WIDE_LISTING_ID_STR);
+    assert_eq!(response.data[0].player_name, "Active");
+}
+
+#[test]
+fn collection_response_filters_beastmaster_by_inventory_mapping() {
+    let now = Utc::now();
+    let mut beastmaster = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    beastmaster.listing.slots[0].accepting = JobFlags::BEASTMASTER;
+
+    let mut pictomancer = queried_fixture(ACTIVE_FIXTURE_JSON, now - Duration::minutes(1), 1200.0);
+    pictomancer.listing.id = 54321;
+    pictomancer.listing.slots[0].accepting = JobFlags::PICTOMANCER;
+
+    let response = collection_response_from_documents(
+        ListingsQuery {
+            job_ids: vec![43],
+            ..Default::default()
+        },
+        [&beastmaster, &pictomancer],
     );
 
     assert_eq!(response.pagination.total, 1);

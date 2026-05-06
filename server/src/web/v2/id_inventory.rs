@@ -59,7 +59,7 @@ pub fn job_ids() -> Vec<u32> {
     accepted_job_ids(JobFlags::all())
 }
 
-pub fn accepted_job_flag_bits(job_id: u32) -> Option<u32> {
+pub fn accepted_job_flag_bits(job_id: u32) -> Option<u64> {
     accepted_job_flag(job_id).map(|job_flag| job_flag.bits())
 }
 
@@ -124,7 +124,7 @@ fn accepted_job_flag(job_id: u32) -> Option<JobFlags> {
     )
 }
 
-fn all_job_flags() -> [JobFlags; 31] {
+fn all_job_flags() -> [JobFlags; 32] {
     [
         JobFlags::GLADIATOR,
         JobFlags::PUGILIST,
@@ -157,6 +157,7 @@ fn all_job_flags() -> [JobFlags; 31] {
         JobFlags::SAGE,
         JobFlags::VIPER,
         JobFlags::PICTOMANCER,
+        JobFlags::BEASTMASTER,
     ]
 }
 
