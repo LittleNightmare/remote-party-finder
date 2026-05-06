@@ -15,11 +15,13 @@ Phase 1 does not expose lookup routes. `/api/v2/lookups/*` does not exist. World
 
 - v1 stays available. Do not treat v1 as deprecated or removed.
 - v2 keeps all references as IDs; no inline convenience labels like `datacenter` are included.
+- Public listing ids are serialized as strings, even though the canonical persisted listing id is `u64`, so clients do not lose precision.
 - `player_name` and `description` stay inline text.
 - Unknown but well-formed filter ids or metadata names return `200` with an empty `data` array.
 - Unsupported legacy label filters return `400 invalid_query`.
 - `/api/v2/listings/{id}` resolves the current active visible PF listing by listing id. It is an active-detail lookup alias, not a durable storage identity.
 - Missing, expired, or non-visible ids return `404 not_found`.
+- Historical rows that were already stored with truncated legacy ids are treated as legacy data and are not losslessly recoverable through this API.
 
 ## `GET /api/v2/listings`
 
@@ -48,7 +50,7 @@ Summary item shape:
 
 ```json
 {
-  "id": 900001,
+  "id": "900001",
   "player_name": "Alice",
   "description": "Need clear",
   "created_world_id": 1167,
@@ -72,7 +74,7 @@ Collection response example:
 {
   "data": [
     {
-      "id": 900001,
+      "id": "900001",
       "player_name": "Alice",
       "description": "Need clear",
       "created_world_id": 1167,
@@ -114,6 +116,8 @@ Precedence examples:
 
 Avoid old label-based queries such as `world=` or `category=`. Use numeric ids instead.
 
+The listing id itself is the exception. Query filters stay numeric where documented, but listing resource ids and the `{id}` path segment use string form on the public API.
+
 ## `GET /api/v2/listings/{id}`
 
 Detail response example:
@@ -121,7 +125,7 @@ Detail response example:
 ```json
 {
   "data": {
-    "id": 900001,
+    "id": "900001",
     "player_name": "Alice",
     "description": "Need clear",
     "created_world_id": 1167,
@@ -159,6 +163,10 @@ Detail response example:
 
 Use this route as a lookup for the current active PF listing id only. If a listing expires, becomes non-visible, or is replaced by a newer active row for the same PF id, this route follows the current active row.
 
+Use the same decimal string you received from the list response when calling `/api/v2/listings/{id}`.
+
+If the `{id}` path segment contains a non-numeric value, the route returns `400 invalid_id`.
+
 ## Migration guidance for external clients
 
 If you already consume v1:
@@ -168,6 +176,7 @@ If you already consume v1:
 3. Replace label-based parsing with id-based parsing for worlds, duties, categories, jobs, objectives, conditions, loot rules, and slot roles.
 4. Move label resolution into your own lookup tables, frontend assets, or another metadata source.
 5. Treat `/api/v2/listings/{id}` as active listing lookup semantics, not as a stable historical key.
+6. Store public listing ids as strings in client code, and only parse them into wider integer types if your platform can safely represent the full value range.
 
 If you are starting fresh:
 
