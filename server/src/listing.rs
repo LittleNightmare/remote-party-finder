@@ -408,7 +408,7 @@ bitflags! {
 bitflags! {
     #[derive(Deserialize, Serialize)]
     #[serde(transparent)]
-    pub struct JobFlags : u32 {
+    pub struct JobFlags : u64 {
         const GLADIATOR = 1 << 1;
         const PUGILIST = 1 << 2;
         const MARAUDER = 1 << 3;
@@ -440,10 +440,64 @@ bitflags! {
         const SAGE = 1 << 29;
         const VIPER = 1 << 30;
         const PICTOMANCER = 1 << 31;
+        const BEASTMASTER = 1 << 32;
     }
 }
 
 impl JobFlags {
+    pub fn accepted_slot_bit_for_job_id(job_id: u32) -> Option<u64> {
+        crate::ffxiv::JOBS
+            .get(&job_id)
+            .copied()
+            .and_then(Self::accepted_slot_bit_for_classjob)
+    }
+
+    pub fn accepted_slot_bit_for_job_code(code: &str) -> Option<u64> {
+        crate::ffxiv::JOBS
+            .values()
+            .copied()
+            .find(|job| job.code() == code)
+            .and_then(Self::accepted_slot_bit_for_classjob)
+    }
+
+    fn accepted_slot_bit_for_classjob(classjob: ClassJob) -> Option<u64> {
+        Some(match classjob.code() {
+            "GLA" => u64::from(Self::GLADIATOR.bits()),
+            "PGL" => u64::from(Self::PUGILIST.bits()),
+            "MRD" => u64::from(Self::MARAUDER.bits()),
+            "LNC" => u64::from(Self::LANCER.bits()),
+            "ARC" => u64::from(Self::ARCHER.bits()),
+            "CNJ" => u64::from(Self::CONJURER.bits()),
+            "THM" => u64::from(Self::THAUMATURGE.bits()),
+            "PLD" => u64::from(Self::PALADIN.bits()),
+            "MNK" => u64::from(Self::MONK.bits()),
+            "WAR" => u64::from(Self::WARRIOR.bits()),
+            "DRG" => u64::from(Self::DRAGOON.bits()),
+            "BRD" => u64::from(Self::BARD.bits()),
+            "WHM" => u64::from(Self::WHITE_MAGE.bits()),
+            "BLM" => u64::from(Self::BLACK_MAGE.bits()),
+            "ACN" => u64::from(Self::ARCANIST.bits()),
+            "SMN" => u64::from(Self::SUMMONER.bits()),
+            "SCH" => u64::from(Self::SCHOLAR.bits()),
+            "ROG" => u64::from(Self::ROGUE.bits()),
+            "NIN" => u64::from(Self::NINJA.bits()),
+            "MCH" => u64::from(Self::MACHINIST.bits()),
+            "DRK" => u64::from(Self::DARK_KNIGHT.bits()),
+            "AST" => u64::from(Self::ASTROLOGIAN.bits()),
+            "SAM" => u64::from(Self::SAMURAI.bits()),
+            "RDM" => u64::from(Self::RED_MAGE.bits()),
+            "BLU" => u64::from(Self::BLUE_MAGE.bits()),
+            "GNB" => u64::from(Self::GUNBREAKER.bits()),
+            "DNC" => u64::from(Self::DANCER.bits()),
+            "RPR" => u64::from(Self::REAPER.bits()),
+            "SGE" => u64::from(Self::SAGE.bits()),
+            "VPR" => u64::from(Self::VIPER.bits()),
+            "PCT" => u64::from(Self::PICTOMANCER.bits()),
+            "BST" => 1u64 << 32,
+            _ => return None,
+        })
+    }
+
     pub fn classjobs(&self) -> Vec<ClassJob> {
         let mut cjs = Vec::new();
 
@@ -569,6 +623,10 @@ impl JobFlags {
 
         if self.contains(Self::PICTOMANCER) {
             cjs.push(ClassJob::Job(Job::Pictomancer));
+        }
+
+        if self.contains(Self::BEASTMASTER) {
+            cjs.push(ClassJob::Job(Job::Beastmaster));
         }
 
         cjs

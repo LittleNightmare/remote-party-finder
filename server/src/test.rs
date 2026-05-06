@@ -2,6 +2,7 @@ use crate::listing::{
     ConditionFlags, DutyCategory, DutyFinderSettingsFlags, DutyType, JobFlags, LootRuleFlags,
     ObjectiveFlags, PartyFinderListing, PartyFinderSlot, SearchAreaFlags,
 };
+use ffxiv_types_cn::jobs::{ClassJob, Job};
 use sestring::SeString;
 
 const NARROW_LISTING_ID: u64 = 123;
@@ -190,5 +191,100 @@ mod api_v1_regression {
 
         let actual = serde_json::to_value(&listings).expect("must serialize");
         assert_eq!(actual[0]["last_server_restart"], -123);
+    }
+}
+
+mod beastmaster_mapping {
+    use super::*;
+
+    #[test]
+    fn beastmaster_mapping_uses_canonical_slot_bits_for_public_job_ids() {
+        assert_eq!(
+            JobFlags::accepted_slot_bit_for_job_id(19),
+            Some(u64::from(JobFlags::PALADIN.bits()))
+        );
+        assert_eq!(JobFlags::accepted_slot_bit_for_job_id(43), Some(1u64 << 32));
+    }
+
+    #[test]
+    fn beastmaster_mapping_uses_canonical_slot_bits_for_public_job_codes() {
+        assert_eq!(
+            JobFlags::accepted_slot_bit_for_job_code("PLD"),
+            Some(u64::from(JobFlags::PALADIN.bits()))
+        );
+        assert_eq!(
+            JobFlags::accepted_slot_bit_for_job_code("BST"),
+            Some(1u64 << 32)
+        );
+        assert_eq!(JobFlags::accepted_slot_bit_for_job_id(8), None);
+    }
+
+    #[test]
+    fn beastmaster_slot_mask_round_trips_exactly() {
+        let slot = PartyFinderSlot {
+            accepting: JobFlags::BEASTMASTER,
+        };
+        let json = serde_json::to_string_pretty(&slot).unwrap();
+        let decoded: PartyFinderSlot = serde_json::from_str(&json).unwrap();
+        assert_eq!(slot.accepting, decoded.accepting);
+        assert!(decoded.accepting.contains(JobFlags::BEASTMASTER));
+    }
+
+    #[test]
+    fn classjobs_decodes_beastmaster() {
+        let slot = PartyFinderSlot {
+            accepting: JobFlags::BEASTMASTER,
+        };
+        let cjs = slot.accepting.classjobs();
+        assert_eq!(cjs.len(), 1);
+        assert_eq!(cjs[0], ClassJob::Job(Job::Beastmaster));
+    }
+}
+
+mod beastmaster_web_compat {
+    use std::{fs, path::Path};
+
+    #[test]
+    fn listings_icon_sheet_contains_bst_symbol() {
+        let icons =
+            fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/icons.svg"))
+                .expect("must read icons asset");
+        assert_eq!(icons.matches(r#"id="BST""#).count(), 1);
+
+        let listings_template = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("templates/listings.html"),
+        )
+        .expect("must read listings template");
+        assert!(
+            listings_template.contains(r#"<use href="/assets/icons.svg#{{ title }}"></use>"#),
+            "listings template must keep existing icon contract"
+        );
+    }
+
+    #[test]
+    fn api_v1_docs_mention_beastmaster_bst_and_43() {
+        let docs =
+            fs::read_to_string(Path::new(env!("CARGO_MANIFEST_DIR")).join("../docs/api-v1.md"))
+                .expect("must read v1 api docs");
+        let expected_empty_slot_job_ids = "\"job_id\": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]";
+
+        assert!(docs.contains("Beastmaster"));
+        assert!(docs.contains("BST"));
+        assert!(docs.contains("43"));
+        assert!(!docs.contains("\"job_id\": [1, 2, 3]"));
+        assert_eq!(docs.matches(expected_empty_slot_job_ids).count(), 7);
+        assert_eq!(docs.matches("\"role_id\": 0,").count(), 7);
+    }
+}
+
+mod legacy_storage {
+    use super::*;
+
+    #[test]
+    fn legacy_job_mask_round_trips_after_u64_upgrade() {
+        let legacy_json = r#"{"accepting": 167772160}"#;
+        let slot: PartyFinderSlot = serde_json::from_str(legacy_json).unwrap();
+        assert!(slot.accepting.contains(JobFlags::DANCER));
+        assert!(slot.accepting.contains(JobFlags::BLUE_MAGE));
     }
 }
