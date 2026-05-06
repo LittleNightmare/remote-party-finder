@@ -19,7 +19,7 @@ http://<my-server>/api
   - `world` (optional): Filter listings by world. e.g. `水晶塔`, `紫水栈桥`, `潮风亭`, `拉诺西亚`...
   - `search` (optional): Search for listings by name or description.
   - `datacenter` (optional): Filter listings by datacenter. Supports multiple values separated by commas. e.g. `豆豆柴,猫小胖`
-  - `jobs` (optional): Filter listings by job IDs, supports multiple IDs separated by commas (e.g., `1,2,8`).
+  - `jobs` (optional): Filter listings by job IDs, supports multiple IDs separated by commas (e.g., `1,2,43`). Beastmaster uses public job ID `43`.
   - `duty` (optional): Filter listings by duty IDs, supports multiple IDs separated by commas (e.g., `1,2,8`).
 
 - **Response:**
@@ -99,38 +99,50 @@ http://<my-server>/api
       "filled": false,
       "role": null,
       "role_id": 0,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT",
-      "job_id": [1, 2, 3]
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     },
     {
       "filled": false,
       "role": null,
-      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT"
+      "role_id": 0,
+      "job": "GLA PGL MRD LNC ARC CNJ THM PLD MNK WAR DRG BRD WHM BLM ACN SMN SCH ROG NIN MCH DRK AST SAM RDM BLU GNB DNC RPR SGE VPR PCT BST",
+      "job_id": [1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43]
     }
   ],
   "datacenter": "豆豆柴"
@@ -171,6 +183,11 @@ http://<my-server>/api
 /api/listings?duty=1006,1007,1017&jobs=8,10
 ```
 
+### Filter by Beastmaster
+```
+/api/listings?jobs=43
+```
+
 ### Filter by datacenter, category and jobs
 ```
 /api/listings?datacenter=猫小胖&category=HighEndDuty&jobs=10,21
@@ -183,6 +200,7 @@ http://<my-server>/api
 - The `pagination` object provides information about the total number of listings, the current page, the number of listings per page, and the total number of pages available.
 - Duty IDs refer to specific dungeons, trials, raids, etc. in the game. They can be found in the `duties.rs` file.
 - Job IDs can be found in the `jobs.rs` file.
+- Beastmaster is exposed in v1 with code `BST` and public job ID `43`. Existing slot-mask storage stays backward-compatible while widened masks continue to serialize through the same API surface.
 - For better cache performance, parameter order doesn't matter (e.g. `jobs=1,2,3` and `jobs=3,2,1` will yield the same results).
 
 This documentation provides a comprehensive overview of the API's functionality, allowing developers to integrate and utilize the endpoints effectively.
