@@ -146,7 +146,7 @@ Detail response example:
     "slots": [
       {
         "filled": true,
-        "role_id": 3,
+        "role_id": 1,
         "filled_job_id": 19,
         "accepted_job_ids": []
       },

@@ -7,9 +7,9 @@ use crate::{
 
 pub const PHASE_ONE_PRIMARY_EXPOSES_DATACENTER: bool = false;
 
-pub const ROLE_ID_DPS: u32 = 1;
+pub const ROLE_ID_TANK: u32 = 1;
 pub const ROLE_ID_HEALER: u32 = 2;
-pub const ROLE_ID_TANK: u32 = 3;
+pub const ROLE_ID_DPS: u32 = 3;
 
 pub const CATEGORY_IDS: [u32; 16] = [
     0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
@@ -17,7 +17,7 @@ pub const CATEGORY_IDS: [u32; 16] = [
 
 pub const DUTY_TYPE_IDS: [u32; 3] = [0, 1, 2];
 
-pub const ROLE_IDS: [u32; 3] = [ROLE_ID_DPS, ROLE_ID_HEALER, ROLE_ID_TANK];
+pub const ROLE_IDS: [u32; 3] = [ROLE_ID_TANK, ROLE_ID_HEALER, ROLE_ID_DPS];
 pub const OBJECTIVE_IDS: [u32; 3] = [
     ObjectiveFlags::DUTY_COMPLETION.bits(),
     ObjectiveFlags::PRACTICE.bits(),

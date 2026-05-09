@@ -200,7 +200,7 @@ fn success_envelopes_are_consistent() {
                 "slots": [
                     {
                         "filled": true,
-                        "role_id": 3,
+                        "role_id": 1,
                         "filled_job_id": 19,
                         "accepted_job_ids": []
                     },
@@ -330,10 +330,10 @@ fn id_inventory_is_stable() {
     assert_eq!(id_inventory::accepted_job_ids(JobFlags::BEASTMASTER), vec![43]);
 
     assert_eq!(id_inventory::ROLE_IDS, [1, 2, 3]);
-    assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Dps), 1);
+    assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Dps), 3);
     assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Healer), 2);
-    assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Tank), 3);
-    assert_eq!(id_inventory::role_id_for_job_id(19), Some(3));
+    assert_eq!(id_inventory::role_id(ffxiv_types_cn::Role::Tank), 1);
+    assert_eq!(id_inventory::role_id_for_job_id(19), Some(1));
     assert_eq!(id_inventory::role_id_for_job_id(24), Some(2));
     assert_eq!(id_inventory::role_id_for_job_ids(&[24, 28]), Some(2));
     assert_eq!(id_inventory::role_id_for_job_ids(&[19, 24]), None);
@@ -584,7 +584,7 @@ fn sample_detail() -> ListingDetail {
         slots: vec![
             ListingSlot {
                 filled: true,
-                role_id: 3,
+                role_id: 1,
                 filled_job_id: Some(19),
                 accepted_job_ids: vec![],
             },
@@ -676,7 +676,7 @@ fn listings_projection_excludes_legacy_labels() {
             loot_rule_id: 0,
             slots: vec![ListingSlot {
                 filled: true,
-                role_id: 1,
+                role_id: 3,
                 filled_job_id: Some(5),
                 accepted_job_ids: vec![],
             }],
@@ -747,7 +747,7 @@ assert_eq!(
             "slots": [
                 {
                     "filled": true,
-                    "role_id": 1,
+                    "role_id": 3,
                     "filled_job_id": 5,
                     "accepted_job_ids": [],
                 }
