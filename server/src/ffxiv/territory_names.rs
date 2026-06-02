@@ -7563,6 +7563,13 @@ lazy_static::lazy_static! {
             fr: "Contes du Camelot annexes",
             zh: "异闻商客奇谭",
         },
+        1319 => LocalisedText {
+            en: "Auxesia",
+            ja: "惑星アウクセシア",
+            de: "Auxesia",
+            fr: "Auxesia",
+            zh: "奥克塞西亚行星",
+        },
         1320 => LocalisedText {
             en: "Ring Noir",
             ja: "リング・オブ・ヴァンプ",
@@ -7730,6 +7737,13 @@ lazy_static::lazy_static! {
             de: "Nichts-Territorium",
             fr: "Domaine du néant",
             zh: "无之领域",
+        },
+        1363 => LocalisedText {
+            en: "Sigmascape V4.0",
+            ja: "被検世界「シグマ」V4.0",
+            de: "Sigmametrie 4.0",
+            fr: "Sigmastice v4.0",
+            zh: "西格玛幻境4",
         },
         1366 => LocalisedText {
             en: "Dusk Vigil",
