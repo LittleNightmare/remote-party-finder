@@ -9299,6 +9299,28 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        1087 => DutyInfo {
+            name: LocalisedText {
+                en: "Clotted Crime",
+                ja: "つわものふたり",
+                de: "Hartgesotten",
+                fr: "Les deux durs à cuire",
+                zh: "绅士与硬汉",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
+        },
+        1093 => DutyInfo {
+            name: LocalisedText {
+                en: "The Occult Crescent: North Horn",
+                ja: "蜃気楼の島 クレセントアイル：北征編",
+                de: "Das nördliche Kreszentia",
+                fr: "Île de Lunule septentrionale",
+                zh: "蜃景幻界新月岛 北征之章",
+            },
+            high_end: false,
+            content_kind: ContentKind::OccultCrescent,
+        },
         1094 => DutyInfo {
             name: LocalisedText {
                 en: "Dancing Mad (Ultimate)",
@@ -9309,6 +9331,17 @@ lazy_static::lazy_static! {
             },
             high_end: true,
             content_kind: ContentKind::UltimateRaids,
+        },
+        1095 => DutyInfo {
+            name: LocalisedText {
+                en: "Keybound Brawler",
+                ja: "キーバウンド・ブロウラー",
+                de: "Tastenschläger",
+                fr: "Frappe Fatale",
+                zh: "魔光键影",
+            },
+            high_end: false,
+            content_kind: ContentKind::GoldSaucer,
         },
         1098 => DutyInfo {
             name: LocalisedText {
@@ -9474,6 +9507,17 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::PvP,
+        },
+        1114 => DutyInfo {
+            name: LocalisedText {
+                en: "The Occult Crescent: North Horn - The Forked Tower: Magic (Extreme)",
+                ja: "蜃気楼の島 クレセントアイル：北征編（極フォークタワー：魔の塔）",
+                de: "Das nördliche Kreszentia: Fork-Turm - Magie (extrem)",
+                fr: "Île de Lunule septentrionale : Tour fourchue de la Magie (extrême)",
+                zh: "蜃景幻界新月岛 北征之章（两歧塔 超魔之塔）",
+            },
+            high_end: false,
+            content_kind: ContentKind::OccultCrescent,
         },
         1115 => DutyInfo {
             name: LocalisedText {

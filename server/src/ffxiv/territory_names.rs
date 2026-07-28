@@ -7633,6 +7633,13 @@ lazy_static::lazy_static! {
             fr: "Tréno",
             zh: "特雷诺",
         },
+        1329 => LocalisedText {
+            en: "Kanilokka Corpus Substructure",
+            ja: "カニロッカ技研地下",
+            de: "Tiefen von Kanilokkas Institut",
+            fr: "Sous-sol de l'Institut Kanilokka",
+            zh: "卡尼洛喀技术研究所地下",
+        },
         1330 => LocalisedText {
             en: "Dzemael Darkhold",
             ja: "ゼーメル要塞",
@@ -7710,6 +7717,13 @@ lazy_static::lazy_static! {
             fr: "Le Clyteum",
             zh: "克吕提俄斯魔导工厂",
         },
+        1346 => LocalisedText {
+            en: "North Horn",
+            ja: "三日月島北部",
+            de: "Nördliches Kreszentia",
+            fr: "Île de Lunule septentrionale",
+            zh: "新月岛北部",
+        },
         1357 => LocalisedText {
             en: "Archeia Harmonias",
             ja: "ハルモニア戦争図書館",
@@ -7723,6 +7737,20 @@ lazy_static::lazy_static! {
             de: "Archeia Harmonias",
             fr: "La Bibliothèque Harmonia",
             zh: "休兵书库",
+        },
+        1359 => LocalisedText {
+            en: "The Gold Saucer",
+            ja: "ゴールドソーサー",
+            de: "Gold Saucer",
+            fr: "Gold Saucer",
+            zh: "金碟游乐场",
+        },
+        1360 => LocalisedText {
+            en: "Keybound Square",
+            ja: "キーバウンドスクウェア",
+            de: "Ring der Tasten",
+            fr: "Square des clavistes",
+            zh: "键斗广场",
         },
         1361 => LocalisedText {
             en: "The Unmaking",
