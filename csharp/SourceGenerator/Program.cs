@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -136,6 +136,34 @@ internal class Program {
             return sb.ToString();
         }
 
+    /// <summary>
+    /// ContentType.Name 会被直接用作 Rust 枚举变体名，但官方数据存在占位符名称（如 ●XBM），
+    /// 其中包含无法作为 Rust 标识符起始字符的符号（●，U+25CF）。这里去掉空白和 & 之后，
+    /// 只保留 ASCII 字母/数字/下划线；若清洗结果为空或以数字开头，返回空串，
+    /// 让调用方按"名称为空"的既有路径处理（枚举声明处跳过，副本数据回退 ContentKind::Other(rowId)）。
+    /// </summary>
+    private static string SanitizeContentKindName(string rawName) {
+        var name = rawName.Replace(" ", "").Replace("&", "");
+        if (string.IsNullOrEmpty(name)) {
+            return name;
+        }
+
+        var sb = new StringBuilder(name.Length);
+        foreach (var ch in name) {
+            if (ch is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9' or '_') {
+                sb.Append(ch);
+            }
+        }
+
+        var ident = sb.ToString();
+        // Rust 标识符不能以数字开头
+        if (ident.Length > 0 && ident[0] >= '0' && ident[0] <= '9') {
+            return "";
+        }
+
+        return ident;
+    }
+
     private string GenerateDuties() {
         var sb = DefaultHeader(true);
         sb.Append('\n');
@@ -153,7 +181,7 @@ internal class Program {
         sb.Append("pub enum ContentKind {\n");
         // 先别用keyLanguage
         foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            var name = SanitizeContentKindName(kind.Name.ExtractText());
             if (name.Length > 0) {
                 sb.Append($"    {name} = {kind.RowId},\n");
             }
@@ -167,7 +195,7 @@ internal class Program {
         sb.Append("    fn from_u32(kind: u32) -> Self {\n");
         sb.Append("        match kind {\n");
         foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            var name = SanitizeContentKindName(kind.Name.ExtractText());
             if (name.Length > 0) {
                 sb.Append($"            {kind.RowId} => Self::{name},\n");
             }
@@ -180,7 +208,7 @@ internal class Program {
         sb.Append("    pub fn as_u32(self) -> u32 {\n");
         sb.Append("        match self {\n");
         foreach (var kind in this.Data[Language.English].GetExcelSheet<ContentType>()!) {
-            var name = kind.Name.ExtractText().Replace(" ", "").Replace("&", "");
+            var name = SanitizeContentKindName(kind.Name.ExtractText());
             if (name.Length > 0) {
                 sb.Append($"            Self::{name} => {kind.RowId},\n");
             }
@@ -242,7 +270,7 @@ internal class Program {
             }
             
             // Safely extract name or default to empty
-            var contentKind = contentType?.Name.ExtractText().Replace(" ", "").Replace("&", "") ?? "";
+            var contentKind = contentType == null ? "" : SanitizeContentKindName(contentType.Value.Name.ExtractText());
             
             if (string.IsNullOrEmpty(contentKind)) {
                 // Use the raw ID if content type is missing or name is empty
