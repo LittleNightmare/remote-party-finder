@@ -47,6 +47,7 @@ pub enum ContentKind {
     IslandSanctuary = 36,
     ChaoticAllianceRaid = 37,
     OccultCrescent = 38,
+    XBM = 40,
     Other(u32),
 }
 
@@ -88,6 +89,7 @@ impl ContentKind {
             36 => Self::IslandSanctuary,
             37 => Self::ChaoticAllianceRaid,
             38 => Self::OccultCrescent,
+            40 => Self::XBM,
             x => Self::Other(x),
         }
     }
@@ -129,6 +131,7 @@ impl ContentKind {
             Self::IslandSanctuary => 36,
             Self::ChaoticAllianceRaid => 37,
             Self::OccultCrescent => 38,
+            Self::XBM => 40,
             Self::Other(x) => x,
         }
     }
@@ -9310,6 +9313,61 @@ lazy_static::lazy_static! {
             high_end: false,
             content_kind: ContentKind::QuestBattles,
         },
+        1088 => DutyInfo {
+            name: LocalisedText {
+                en: "First Board of the Unbroken",
+                ja: "闘獣練 第一盤",
+                de: "Erstes Brett der Bestie",
+                fr: "Dédale bestial - 1er plateau",
+                zh: "斗兽奇弈 第一盘",
+            },
+            high_end: false,
+            content_kind: ContentKind::XBM,
+        },
+        1089 => DutyInfo {
+            name: LocalisedText {
+                en: "Second Board of the Unbroken",
+                ja: "闘獣練 第二盤",
+                de: "Zweites Brett der Bestie",
+                fr: "Dédale bestial - 2e plateau",
+                zh: "斗兽奇弈 第二盘",
+            },
+            high_end: false,
+            content_kind: ContentKind::XBM,
+        },
+        1090 => DutyInfo {
+            name: LocalisedText {
+                en: "Third Board of the Unbroken",
+                ja: "闘獣練 第三盤",
+                de: "Drittes Brett der Bestie",
+                fr: "Dédale bestial - 3e plateau",
+                zh: "斗兽奇弈 第三盘",
+            },
+            high_end: false,
+            content_kind: ContentKind::XBM,
+        },
+        1091 => DutyInfo {
+            name: LocalisedText {
+                en: "First Master's Board",
+                ja: "闘獣練 特一盤",
+                de: "Erstes Meisterbrett der Bestie",
+                fr: "Dédale bestial - 1er plateau expert",
+                zh: "斗兽奇弈高段 第一盘",
+            },
+            high_end: false,
+            content_kind: ContentKind::XBM,
+        },
+        1092 => DutyInfo {
+            name: LocalisedText {
+                en: "Second Master's Board",
+                ja: "闘獣練 特二盤",
+                de: "Zweites Meisterbrett der Bestie",
+                fr: "Dédale bestial - 2e plateau expert",
+                zh: "斗兽奇弈高段 第二盘",
+            },
+            high_end: false,
+            content_kind: ContentKind::XBM,
+        },
         1093 => DutyInfo {
             name: LocalisedText {
                 en: "The Occult Crescent: North Horn",
@@ -9375,6 +9433,17 @@ lazy_static::lazy_static! {
             },
             high_end: false,
             content_kind: ContentKind::DisciplesoftheLand,
+        },
+        1101 => DutyInfo {
+            name: LocalisedText {
+                en: "A Rush of Cold Wind",
+                ja: "寒風の吹くとき",
+                de: "Wo die kalten Winde wehen",
+                fr: "L'heure de briser la glace",
+                zh: "寒风来临之时",
+            },
+            high_end: false,
+            content_kind: ContentKind::QuestBattles,
         },
         1102 => DutyInfo {
             name: LocalisedText {

@@ -172,6 +172,13 @@ lazy_static::lazy_static! {
             zh: "陈旧的狞豹革地图",
         },
         24 => LocalisedText {
+            en: "Presumably Special Treasure Map",
+            ja: "古ぼけた地図S5",
+            de: "Epenleder-Schatzkarte",
+            fr: "Carte au trésor inhabituelle V",
+            zh: "陈旧的特殊地图5",
+        },
+        25 => LocalisedText {
             en: "Gargantuaskin Treasure Map",
             ja: "古ぼけた地図G18",
             de: "Gargantualeder-Schatzkarte",
