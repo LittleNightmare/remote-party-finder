@@ -18,6 +18,7 @@ const SUPPORTED_QUERY_FIELDS: &[&str] = &[
     "category_id",
     "duty_id",
     "job_ids",
+    "search_area",
     "search",
 ];
 
@@ -45,6 +46,7 @@ pub struct ListingsQuery {
     pub category_id: Option<u32>,
     pub duty_id: Option<u32>,
     pub job_ids: Vec<u32>,
+    pub search_area: Option<u32>,
     pub search: Option<String>,
 }
 
@@ -60,6 +62,7 @@ impl Default for ListingsQuery {
             category_id: None,
             duty_id: None,
             job_ids: Vec::new(),
+            search_area: None,
             search: None,
         }
     }
@@ -109,6 +112,8 @@ pub fn parse_listings_query(
     if let Some(value) = params.get("job_ids") {
         query.job_ids = parse_job_ids(value)?;
     }
+
+    query.search_area = parse_optional_u32(params, "search_area")?;
 
     if let Some(value) = params.get("search") {
         if !value.is_empty() {

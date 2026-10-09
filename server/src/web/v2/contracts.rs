@@ -80,6 +80,7 @@ pub struct ListingSummary {
     pub time_left_seconds: u32,
     pub updated_at: String,
     pub is_cross_world: bool,
+    pub search_area: u32,
     pub beginners_welcome: bool,
 }
 
@@ -99,6 +100,7 @@ pub struct ListingDetail {
     pub time_left_seconds: u32,
     pub updated_at: String,
     pub is_cross_world: bool,
+    pub search_area: u32,
     pub beginners_welcome: bool,
     pub objective_ids: Vec<u32>,
     pub condition_ids: Vec<u32>,

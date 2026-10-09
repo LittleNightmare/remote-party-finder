@@ -50,6 +50,18 @@ impl PartyFinderListing {
         self.search_area.contains(SearchAreaFlags::DATA_CENTRE)
     }
 
+    pub fn is_alliance_raid(&self) -> bool {
+        self.search_area.contains(SearchAreaFlags::ALLIANCE_RAID)
+    }
+
+    pub fn is_world_wide(&self) -> bool {
+        self.search_area.contains(SearchAreaFlags::WORLD)
+    }
+
+    pub fn one_player_per_job(&self) -> bool {
+        self.search_area.contains(SearchAreaFlags::ONE_PLAYER_PER_JOB)
+    }
+
     pub fn duty_name(&self, lang: &Language) -> Cow<str> {
         let player_name = self.name.full_text(lang);
         let world = self.created_world_string();
