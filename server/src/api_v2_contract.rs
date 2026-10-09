@@ -338,12 +338,12 @@ fn id_inventory_is_stable() {
     assert_eq!(id_inventory::role_id_for_job_ids(&[24, 28]), Some(2));
     assert_eq!(id_inventory::role_id_for_job_ids(&[19, 24]), None);
 
-    assert_eq!(id_inventory::OBJECTIVE_IDS, [1, 2, 4]);
+    assert_eq!(id_inventory::OBJECTIVE_IDS, [2, 4, 8]);
     assert_eq!(
         id_inventory::objective_ids(
             ObjectiveFlags::DUTY_COMPLETION | ObjectiveFlags::PRACTICE | ObjectiveFlags::LOOT,
         ),
-        vec![1, 2, 4]
+        vec![2, 4, 8]
     );
     assert_eq!(
         id_inventory::objective_ids(ObjectiveFlags::NONE),
@@ -671,7 +671,7 @@ fn listings_projection_excludes_legacy_labels() {
             updated_at: active.updated_at.to_rfc3339(),
             is_cross_world: true,
             beginners_welcome: false,
-            objective_ids: vec![1, 2],
+            objective_ids: vec![2],
             condition_ids: vec![],
             loot_rule_id: 0,
             slots: vec![ListingSlot {
@@ -741,7 +741,7 @@ assert_eq!(
             "updated_at": expected_updated_at,
             "is_cross_world": true,
             "beginners_welcome": false,
-            "objective_ids": [1, 2],
+            "objective_ids": [2],
             "condition_ids": [],
             "loot_rule_id": 0,
             "slots": [

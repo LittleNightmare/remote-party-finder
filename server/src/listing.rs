@@ -354,10 +354,10 @@ bitflags! {
     #[derive(Deserialize, Serialize)]
     #[serde(transparent)]
     pub struct ObjectiveFlags : u32 {
-        const NONE = 0;
-        const DUTY_COMPLETION = 1 << 0;
-        const PRACTICE = 1 << 1;
-        const LOOT = 1 << 2;
+        const NONE = 1 << 0;
+        const DUTY_COMPLETION = 1 << 1;
+        const PRACTICE = 1 << 2;
+        const LOOT = 1 << 3;
     }
 }
 
