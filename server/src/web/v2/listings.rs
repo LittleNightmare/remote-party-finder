@@ -389,6 +389,12 @@ pub(crate) fn collection_pipeline(query: &ListingsQuery) -> Vec<Document> {
         });
     }
 
+    if let Some(search_area) = query.search_area {
+        pipeline.push(doc! {
+            "listing.search_area": { "$bitsAllSet": search_area as i32 },
+        });
+    }
+
     // Datacenter filter (middle priority - masked by world-id, masks region)
     // Only apply if no world-id filter is active
     if !world_id_active {
@@ -699,6 +705,9 @@ fn matches_query(document: &QueriedListing, query: &ListingsQuery) -> bool {
 
     query.category_id.is_none_or(|category_id| id_inventory::category_id(listing.category) == category_id)
         && query.duty_id.is_none_or(|duty_id| id_inventory::duty_id(listing.duty) == duty_id)
+        && query
+            .search_area
+            .is_none_or(|search_area| listing.search_area.bits() & search_area == search_area)
         && matches_job_ids(listing, &query.job_ids)
         && matches_search(listing, query.search.as_deref())
 }
@@ -848,6 +857,7 @@ Some(ListingSummary {
         time_left_seconds: time_left_seconds(document.time_left),
         updated_at: document.updated_at.to_rfc3339(),
         is_cross_world: is_cross_world(listing),
+        search_area: listing.search_area.bits(),
         beginners_welcome: listing.beginners_welcome,
     })
 }
@@ -900,6 +910,7 @@ Some(ListingDetail {
         time_left_seconds: time_left_seconds(document.time_left),
         updated_at: document.updated_at.to_rfc3339(),
         is_cross_world: is_cross_world(listing),
+        search_area: listing.search_area.bits(),
         beginners_welcome: listing.beginners_welcome,
         objective_ids: id_inventory::objective_ids(listing.objective),
         condition_ids: id_inventory::condition_ids(listing.conditions),

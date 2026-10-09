@@ -45,7 +45,7 @@ const ACTIVE_FIXTURE_JSON: &str = r#"{
   "conditions": 1,
   "duty_finder_settings": 0,
   "loot_rules": 0,
-  "search_area": 1,
+  "search_area": 33,
   "slots": [{ "accepting": 167772160 }],
   "jobs_present": [5, 0, 0, 0, 0, 0, 0, 0]
 }"#;
@@ -159,6 +159,7 @@ fn success_envelopes_are_consistent() {
                     "time_left_seconds": 1200,
                     "updated_at": "2026-04-23T12:34:56Z",
                     "is_cross_world": true,
+                    "search_area": 33,
                     "beginners_welcome": false
                 }
             ],
@@ -191,9 +192,10 @@ fn success_envelopes_are_consistent() {
                 "slots_filled": 6,
                 "slots_available": 8,
                 "time_left_seconds": 1200,
-                "updated_at": "2026-04-23T12:34:56Z",
-                "is_cross_world": true,
-                "beginners_welcome": false,
+                    "updated_at": "2026-04-23T12:34:56Z",
+                    "is_cross_world": true,
+                    "search_area": 33,
+                    "beginners_welcome": false,
                 "objective_ids": [1, 4],
                 "condition_ids": [2],
                 "loot_rule_id": 3,
@@ -557,6 +559,7 @@ fn sample_summary() -> ListingSummary {
         time_left_seconds: 1200,
         updated_at: "2026-04-23T12:34:56Z".into(),
         is_cross_world: true,
+        search_area: 33,
         beginners_welcome: false,
     }
 }
@@ -577,6 +580,7 @@ fn sample_detail() -> ListingDetail {
         time_left_seconds: 1200,
         updated_at: "2026-04-23T12:34:56Z".into(),
         is_cross_world: true,
+        search_area: 33,
         beginners_welcome: false,
         objective_ids: vec![1, 4],
         condition_ids: vec![2],
@@ -649,6 +653,7 @@ fn listings_projection_excludes_legacy_labels() {
             time_left_seconds: 1200,
             updated_at: active.updated_at.to_rfc3339(),
             is_cross_world: true,
+            search_area: 33,
             beginners_welcome: false,
         }
     );
@@ -670,6 +675,7 @@ fn listings_projection_excludes_legacy_labels() {
             time_left_seconds: 1200,
             updated_at: active.updated_at.to_rfc3339(),
             is_cross_world: true,
+            search_area: 33,
             beginners_welcome: false,
             objective_ids: vec![2],
             condition_ids: vec![],
@@ -740,6 +746,7 @@ assert_eq!(
             "time_left_seconds": 1200,
             "updated_at": expected_updated_at,
             "is_cross_world": true,
+            "search_area": 33,
             "beginners_welcome": false,
             "objective_ids": [2],
             "condition_ids": [],
@@ -821,6 +828,7 @@ fn listings_summary_is_ids_only() {
                 "time_left_seconds": 1200,
                 "updated_at": active.updated_at.to_rfc3339(),
                 "is_cross_world": true,
+                "search_area": 33,
                 "beginners_welcome": false,
             },
             {
@@ -838,6 +846,7 @@ fn listings_summary_is_ids_only() {
                 "time_left_seconds": 900,
                 "updated_at": cross_world.updated_at.to_rfc3339(),
                 "is_cross_world": true,
+                "search_area": 1,
                 "beginners_welcome": false,
             }
         ])
