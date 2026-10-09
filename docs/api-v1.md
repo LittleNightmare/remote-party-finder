@@ -21,6 +21,7 @@ http://<my-server>/api
   - `datacenter` (optional): Filter listings by datacenter. Supports multiple values separated by commas. e.g. `豆豆柴,猫小胖`
   - `jobs` (optional): Filter listings by job IDs, supports multiple IDs separated by commas (e.g., `1,2,43`). Beastmaster uses public job ID `43`.
   - `duty` (optional): Filter listings by duty IDs, supports multiple IDs separated by commas (e.g., `1,2,8`).
+  - `is_cross_world`, `is_alliance_raid`, `is_world_wide`, `is_one_player_per_job` (optional): Boolean SearchAreaFlags filters. `true` requires the flag; `false` excludes it.
 
 - **Response:**
   - **Status Code:** `200 OK`
@@ -45,6 +46,9 @@ http://<my-server>/api
          "time_left":17.86,
          "updated_at":"2025-03-02T16:51:07.599+00:00",
          "is_cross_world":true,
+         "is_alliance_raid":false,
+         "is_world_wide":false,
+         "is_one_player_per_job":true,
          "datacenter":"莫古力"
       }
    ],
@@ -82,6 +86,9 @@ http://<my-server>/api
   "time_left": 8.55,
   "updated_at": "2025-03-02T16:59:15.667+00:00",
   "is_cross_world": true,
+  "is_alliance_raid": false,
+  "is_world_wide": false,
+  "is_one_player_per_job": true,
   "beginners_welcome": false,
   "duty_type": "Other",
   "objective": "NONE",
@@ -148,6 +155,8 @@ http://<my-server>/api
   "datacenter": "豆豆柴"
 }
 ```
+
+The `is_*` fields are semantic views of `SearchAreaFlags`: `is_cross_world` is `DATA_CENTRE`, `is_alliance_raid` is `ALLIANCE_RAID`, `is_world_wide` is `WORLD`, and `is_one_player_per_job` is `ONE_PLAYER_PER_JOB`. Boolean query parameters with the same names filter listings by the corresponding flag; `false` requires that the flag is absent.
 
 - **Error Responses:**
   - **Status Code:** `404 Not Found`

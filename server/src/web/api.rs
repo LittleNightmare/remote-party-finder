@@ -47,6 +47,9 @@ pub struct ApiListing {
     time_left: f64,
     updated_at: String,
     is_cross_world: bool,
+    is_alliance_raid: bool,
+    is_world_wide: bool,
+    is_one_player_per_job: bool,
     datacenter: Option<String>,
 }
 
@@ -65,6 +68,9 @@ pub struct DetailedApiListing {
     pub time_left: f64,
     pub updated_at: String,
     pub is_cross_world: bool,
+    pub is_alliance_raid: bool,
+    pub is_world_wide: bool,
+    pub is_one_player_per_job: bool,
     // 添加更多详细信息
     pub beginners_welcome: bool,
     pub duty_type: String,
@@ -219,6 +225,10 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         datacenter: Option<String>,
         jobs: Option<String>,
         duty: Option<String>,
+        is_cross_world: Option<bool>,
+        is_alliance_raid: Option<bool>,
+        is_world_wide: Option<bool>,
+        is_one_player_per_job: Option<bool>,
     ) -> std::result::Result<impl Reply, Infallible> {
         let page = page.unwrap_or(1);
         let per_page = per_page.unwrap_or(20).min(100); // 限制每页最大数量为100
@@ -375,10 +385,17 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         datacenter_list.sort_unstable();
         datacenter_list.dedup();
         let accepted_slot_bits = accepted_slot_bits_for_job_ids(&job_list);
+
+        let search_area_filters = [
+            (crate::listing::SearchAreaFlags::DATA_CENTRE, is_cross_world),
+            (crate::listing::SearchAreaFlags::ALLIANCE_RAID, is_alliance_raid),
+            (crate::listing::SearchAreaFlags::WORLD, is_world_wide),
+            (crate::listing::SearchAreaFlags::ONE_PLAYER_PER_JOB, is_one_player_per_job),
+        ];
         
         // 构建缓存键 - 使用jobs参数和duty参数
         let cache_key = format!(
-            "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}_du{}", 
+            "listings_p{}_pp{}_c{}_w{}_s{}_dc{}_js{}_du{}_sa{}",
             page, 
             per_page, 
             category.map(|c| c.pf_category().as_str()).unwrap_or(""),
@@ -386,7 +403,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             search.as_deref().unwrap_or(""), 
             datacenter_list.join("_"),
             job_list.iter().map(|j| j.to_string()).collect::<Vec<String>>().join("_"),
-            duty_list.iter().map(|d| d.to_string()).collect::<Vec<String>>().join("_")
+            duty_list.iter().map(|d| d.to_string()).collect::<Vec<String>>().join("_"),
+            search_area_filters.iter().map(|(flag, value)| format!("{}{}", flag.bits(), value.map(|value| value as u8).unwrap_or(2))).collect::<Vec<_>>().join("_")
         );
         
         // 尝试从缓存获取
@@ -468,6 +486,20 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         "$or": job_conditions
                     }
                 });
+            }
+        }
+
+        for (flag, value) in search_area_filters {
+            if let Some(value) = value {
+                if value {
+                    pipeline.push(doc! {
+                        "listing.search_area": { "$bitsAllSet": flag.bits() as i32 }
+                    });
+                } else {
+                    pipeline.push(doc! {
+                        "listing.search_area": { "$bitsAllClear": flag.bits() as i32 }
+                    });
+                }
             }
         }
 
@@ -634,9 +666,12 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                             slots_filled: listing.slots_filled(),
                                             slots_available: listing.slots_available,
                                             time_left: container.time_left,
-                                            updated_at: container.updated_at.to_rfc3339(),
-                                            is_cross_world: listing.is_cross_world(),
-                                            datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
+                                             updated_at: container.updated_at.to_rfc3339(),
+                                             is_cross_world: listing.is_cross_world(),
+                                             is_alliance_raid: listing.is_alliance_raid(),
+                                             is_world_wide: listing.is_world_wide(),
+                                             is_one_player_per_job: listing.one_player_per_job(),
+                                             datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
                                         });
                                     }
                                 }
@@ -780,9 +815,12 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                                 slots_filled: listing.slots_filled(),
                                 slots_available: listing.slots_available,
                                 time_left: container.time_left,
-                                updated_at: container.updated_at.to_rfc3339(),
-                                is_cross_world: listing.is_cross_world(),
-                                datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
+                                 updated_at: container.updated_at.to_rfc3339(),
+                                 is_cross_world: listing.is_cross_world(),
+                                 is_alliance_raid: listing.is_alliance_raid(),
+                                 is_world_wide: listing.is_world_wide(),
+                                 is_one_player_per_job: listing.one_player_per_job(),
+                                 datacenter: listing.data_centre_name().map(|dc| dc.to_string()),
                             }
                         }).collect()
                 };
@@ -849,10 +887,14 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             let datacenter = params.get("datacenter").cloned();
             let jobs = params.get("jobs").cloned();
             let duty = params.get("duty").cloned();
+            let is_cross_world = params.get("is_cross_world").and_then(|value| value.parse().ok());
+            let is_alliance_raid = params.get("is_alliance_raid").and_then(|value| value.parse().ok());
+            let is_world_wide = params.get("is_world_wide").and_then(|value| value.parse().ok());
+            let is_one_player_per_job = params.get("is_one_player_per_job").and_then(|value| value.parse().ok());
             
             let state_clone = state.clone();
             async move {
-                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, duty).await
+                logic(state_clone, page, per_page, category, world, search, datacenter, jobs, duty, is_cross_world, is_alliance_raid, is_world_wide, is_one_player_per_job).await
             }
         })
         .boxed()
@@ -981,6 +1023,9 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                             time_left: container.time_left,
                             updated_at: container.updated_at.to_rfc3339(),
                             is_cross_world: listing.is_cross_world(),
+                            is_alliance_raid: listing.is_alliance_raid(),
+                            is_world_wide: listing.is_world_wide(),
+                            is_one_player_per_job: listing.one_player_per_job(),
                             // 添加更多详细信息
                             beginners_welcome: listing.beginners_welcome,
                             duty_type: format!("{:?}", listing.duty_type),
@@ -1077,6 +1122,9 @@ mod tests {
             time_left: 1200.0,
             updated_at: "2026-05-02T12:00:00Z".into(),
             is_cross_world: true,
+            is_alliance_raid: false,
+            is_world_wide: false,
+            is_one_player_per_job: false,
             beginners_welcome: false,
             duty_type: "Normal".into(),
             objective: "DutyCompletion".into(),

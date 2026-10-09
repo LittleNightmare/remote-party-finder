@@ -37,6 +37,7 @@ Supported query parameters in phase 1:
 - `category_id`
 - `duty_id`
 - `job_ids`
+- `search_area`
 
 Filter semantics:
 
@@ -45,6 +46,7 @@ Filter semantics:
 - Different active fields combine with AND semantics after precedence is applied.
 - Precedence: any well-formed `created_world_id` or `home_world_id` masks `datacenter` and `region`; otherwise a well-formed `datacenter` masks `region`.
 - Only single-key CSV syntax is supported. Repeated query keys are not part of this contract.
+- `search_area` is a bitmask filter; all requested bits must be set. Known bits are `DATA_CENTRE=1`, `PRIVATE=2`, `ALLIANCE_RAID=4`, `WORLD=8`, and `ONE_PLAYER_PER_JOB=32`. Private listings are excluded from public results.
 
 Summary item shape:
 
@@ -64,6 +66,7 @@ Summary item shape:
   "time_left_seconds": 1200,
   "updated_at": "2026-04-23T12:34:56Z",
   "is_cross_world": true,
+  "search_area": 33,
   "beginners_welcome": false
 }
 ```
@@ -88,6 +91,7 @@ Collection response example:
       "time_left_seconds": 1200,
       "updated_at": "2026-04-23T12:34:56Z",
       "is_cross_world": true,
+      "search_area": 33,
       "beginners_welcome": false
     }
   ],
@@ -139,6 +143,7 @@ Detail response example:
     "time_left_seconds": 1200,
     "updated_at": "2026-04-23T12:34:56Z",
     "is_cross_world": true,
+    "search_area": 33,
     "beginners_welcome": false,
     "objective_ids": [1, 4],
     "condition_ids": [2],
