@@ -741,7 +741,11 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         let listing = &container.listing;
                         let name = listing.name.full_text(&lang).to_string().to_lowercase();
                         let description = listing.description.full_text(&lang).to_string().to_lowercase();
-                        if name.contains(&search_lower) || description.contains(&search_lower) {
+                        let duty = listing.duty_name(&lang).to_string().to_lowercase();
+                        if name.contains(&search_lower)
+                            || description.contains(&search_lower)
+                            || duty.contains(&search_lower)
+                        {
                             // 如果有职业过滤，再次检查（以防MongoDB查询不完整）
                             if !job_list.is_empty() {
                                 let has_job = listing

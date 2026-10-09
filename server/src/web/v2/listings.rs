@@ -820,8 +820,11 @@ fn matches_search(listing: &PartyFinderListing, search: Option<&str>) -> bool {
         .description
         .full_text(&crate::ffxiv::Language::ChineseSimplified)
         .to_lowercase();
+    let duty = listing
+        .duty_name(&crate::ffxiv::Language::ChineseSimplified)
+        .to_lowercase();
 
-    player_name.contains(&search) || description.contains(&search)
+    player_name.contains(&search) || description.contains(&search) || duty.contains(&search)
 }
 
 pub(crate) fn project_listing_summaries<'a>(

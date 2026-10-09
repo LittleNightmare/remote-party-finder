@@ -17,7 +17,7 @@ http://<my-server>/api
   - `per_page` (optional): The number of listings per page (default is 20, maximum is 100).
   - `category` (optional): Filter listings by [category](https://github.com/LittleNightmare/remote-party-finder/blob/main/server/src/ffxiv/duties.rs#L14).
   - `world` (optional): Filter listings by world. e.g. `水晶塔`, `紫水栈桥`, `潮风亭`, `拉诺西亚`...
-  - `search` (optional): Search for listings by name or description.
+  - `search` (optional): Search for listings by player name, description, or duty text.
   - `datacenter` (optional): Filter listings by datacenter. Supports multiple values separated by commas. e.g. `豆豆柴,猫小胖`
   - `jobs` (optional): Filter listings by job IDs, supports multiple IDs separated by commas (e.g., `1,2,43`). Beastmaster uses public job ID `43`.
   - `duty` (optional): Filter listings by duty IDs, supports multiple IDs separated by commas (e.g., `1,2,8`).
@@ -156,7 +156,7 @@ http://<my-server>/api
 }
 ```
 
-The `is_*` fields are semantic views of `SearchAreaFlags`: `is_cross_world` is `DATA_CENTRE`, `is_alliance_raid` is `ALLIANCE_RAID`, `is_world_wide` is `WORLD`, and `is_one_player_per_job` is `ONE_PLAYER_PER_JOB`. Boolean query parameters with the same names filter listings by the corresponding flag; `false` requires that the flag is absent.
+The `is_*` fields are semantic views of `SearchAreaFlags`: `is_cross_world` is `DATA_CENTRE`, `is_alliance_raid` is `ALLIANCE_RAID`, `is_world_wide` is `WORLD`, and `is_one_player_per_job` is `ONE_PLAYER_PER_JOB`. Boolean query parameters with the same names filter listings by the corresponding flag; `false` requires that the flag is absent. The `search` parameter matches player name, description, and duty text.
 
 - **Error Responses:**
   - **Status Code:** `404 Not Found`
