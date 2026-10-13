@@ -11,6 +11,26 @@ Fork了[Anna Clemens](https://git.anna.lgbt/ascclemens/remote-party-finder)的Re
 
 参考这个[issue](https://github.com/LittleNightmare/remote-party-finder/issues/3)，下载对应的字体放在`server/assets`里
 
+## Server 构建
+
+Rust 版本由根目录的 `rust-toolchain.toml` 固定，本地开发和 GitHub Actions 使用同一个 stable 工具链。安装 [rustup](https://rustup.rs/) 后，在仓库中运行 Cargo 会自动选择该版本，无需修改其他项目的默认工具链。
+
+```bash
+cd server
+cargo check --all-targets --locked
+cargo test --locked
+cargo build --release --locked
+```
+
+Windows 构建需要 Visual Studio 的 MSVC C++ 工具链和 Windows SDK。Linux 上生成与 CI 相同的静态 MUSL 产物，还需要 `musl-tools`：
+
+```bash
+rustup target add x86_64-unknown-linux-musl
+cargo build --release --target x86_64-unknown-linux-musl --locked
+```
+
+运行服务仍需要配置 MongoDB；部署前应验证数据库连接和 API。
+
 ## API
 已经提供了 API，使用方式请见仓库内文档：
 

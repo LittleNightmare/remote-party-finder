@@ -722,10 +722,8 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 let mut containers = Vec::new();
 
                 while let Ok(Some(container)) = cursor.try_next().await {
-                    let res: anyhow::Result<QueriedListing> = try {
-                        let result: QueriedListing = mongodb::bson::from_document(container)?;
-                        result
-                    };
+                    let res: anyhow::Result<QueriedListing> =
+                        mongodb::bson::from_document(container).map_err(anyhow::Error::from);
                     if let Ok(listing) = res {
                         containers.push(listing);
                     }
@@ -998,10 +996,8 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         Ok(match res {
             Ok(mut cursor) => {
                 if let Ok(Some(container)) = cursor.try_next().await {
-                    let res: anyhow::Result<QueriedListing> = try {
-                        let result: QueriedListing = mongodb::bson::from_document(container)?;
-                        result
-                    };
+                    let res: anyhow::Result<QueriedListing> =
+                        mongodb::bson::from_document(container).map_err(anyhow::Error::from);
                     
                     if let Ok(container) = res {
                         let listing = &container.listing;

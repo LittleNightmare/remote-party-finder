@@ -1,4 +1,3 @@
-#![feature(try_blocks, iter_intersperse)]
 
 use anyhow::Context;
 use std::borrow::Cow;

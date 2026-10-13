@@ -374,3 +374,30 @@ mod legacy_storage {
         assert!(slot.accepting.contains(JobFlags::BLUE_MAGE));
     }
 }
+
+mod slot_codes {
+    use super::*;
+    fn slot_with_flags(flags: JobFlags) -> PartyFinderSlot {
+        PartyFinderSlot {
+            accepting: flags,
+        }
+    }
+
+    #[test]
+    fn codes_no_jobs_yields_empty_string() {
+        let slot = slot_with_flags(JobFlags::empty());
+        assert_eq!(slot.codes(), "");
+    }
+
+    #[test]
+    fn codes_single_job_yields_code_without_space() {
+        let slot = slot_with_flags(JobFlags::PALADIN);
+        assert_eq!(slot.codes(), "PLD");
+    }
+
+    #[test]
+    fn codes_multiple_jobs_yields_space_separated_codes_in_classjob_order() {
+        let slot = slot_with_flags(JobFlags::PALADIN | JobFlags::WHITE_MAGE);
+        assert_eq!(slot.codes(), "PLD WHM");
+    }
+}

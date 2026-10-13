@@ -242,8 +242,8 @@ impl PartyFinderSlot {
             .classjobs()
             .iter()
             .map(|cj| cj.code())
-            .intersperse(" ")
-            .collect()
+            .collect::<Vec<_>>()
+            .join(" ")
     }
 }
 

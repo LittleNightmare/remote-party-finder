@@ -9,6 +9,8 @@ name: Build and Publish
       - 'server/**'
       - 'README.md'
       - 'docs/**'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/main.yml'
   pull_request:
     branches:
       - main
@@ -16,6 +18,11 @@ name: Build and Publish
       - 'server/**'
       - 'README.md'
       - 'docs/**'
+      - 'rust-toolchain.toml'
+      - '.github/workflows/main.yml'
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -25,33 +32,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Read pinned Rust version
+        id: rust-version
+        run: |
+          python3 -c 'import pathlib, tomllib; print("toolchain=" + tomllib.loads(pathlib.Path("rust-toolchain.toml").read_text())["toolchain"]["channel"])' >> "$GITHUB_OUTPUT"
+
+      - name: Install pinned Rust toolchain
+        id: rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ steps.rust-version.outputs.toolchain }}
+          targets: x86_64-unknown-linux-musl
+
       - name: Cache cargo registry
         uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      - name: Install Rust nightly toolchain
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          toolchain: nightly-2025-07-01
-          targets: x86_64-unknown-linux-musl
+            server/target
+          key: ${{ runner.os }}-rust-${{ steps.rust.outputs.cachekey }}-cargo-${{ hashFiles('server/Cargo.lock') }}
 
       - name: Install musl-tools (musl-gcc)
         run: sudo apt-get update && sudo apt-get install -y musl-tools
 
-      - name: Test
+      - name: Check and test
         run: |
           cd ./server
-          cargo test
+          cargo check --all-targets --locked
+          cargo test --locked
 
       - name: Build
         run: |
           cd ./server
-          cargo build --release --target x86_64-unknown-linux-musl
+          cargo build --release --target x86_64-unknown-linux-musl --locked
 
       - name: Strip binary
         run: |
