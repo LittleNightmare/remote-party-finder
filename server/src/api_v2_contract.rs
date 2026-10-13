@@ -1297,19 +1297,18 @@ fn mixed_validity_datacenter_and_region_lists_use_valid_subset() {
 
 #[tokio::test]
 async fn collection_decode_failure_returns_internal_error() {
-    let response = collection_response_from_raw_documents_for_tests(
+    let route = collection_response_from_raw_documents_for_tests(
         ListingsQuery::default(),
         vec![doc! {
             "listing": { "id": WIDE_LISTING_ID as i64 },
             "updated_at": chrono::Utc::now(),
         }],
     );
-    let status = response.status();
-    let body = warp::hyper::body::to_bytes(response.into_body()).await.unwrap();
+    let response = warp::test::request().reply(&route).await;
 
-    assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+    assert_eq!(response.status(), StatusCode::INTERNAL_SERVER_ERROR);
     assert_eq!(
-        serde_json::from_slice::<serde_json::Value>(&body).unwrap(),
+        serde_json::from_slice::<serde_json::Value>(response.body()).unwrap(),
         json!({
             "error": {
                 "code": "internal_error",

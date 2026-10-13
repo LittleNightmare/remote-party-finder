@@ -7,13 +7,14 @@ use std::{
 };
 
 use anyhow::{Context, Result};
+use askama::Template;
 use chrono::{DateTime, Utc};
 use mongodb::{
     bson::{doc, to_bson, Document},
     Client as MongoClient,
     Collection,
     IndexModel,
-    options::{IndexOptions, UpdateOptions},
+    options::IndexOptions,
     results::UpdateResult,
 };
 use tokio::sync::RwLock;
@@ -24,6 +25,7 @@ use warp::{
     http::Uri,
     Reply,
 };
+use warp::http::StatusCode;
 
 use crate::{
     config::Config,
@@ -54,6 +56,8 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
 
 pub struct State {
     mongo: MongoClient,
+    #[cfg(test)]
+    _mongo_test_listener: Option<std::net::TcpListener>,
     stats: RwLock<Option<CachedStatistics>>,
     listings_cache: RwLock<ListingsCache>,
     detail_cache: RwLock<DetailCache>,
@@ -121,6 +125,8 @@ impl State {
 
         let state = Arc::new(Self {
             mongo,
+            #[cfg(test)]
+            _mongo_test_listener: None,
             stats: Default::default(),
             listings_cache: RwLock::new(ListingsCache {
                 entries: HashMap::new(),
@@ -138,7 +144,6 @@ impl State {
                         .unique(true)
                         .build())
                     .build(),
-                None,
             )
             .await
             .context("could not create unique index")?;
@@ -150,7 +155,6 @@ impl State {
                         "updated_at": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create updated_at index")?;
@@ -160,7 +164,6 @@ impl State {
                 IndexModel::builder()
                     .keys(listing_id_index_keys())
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.id index")?;
@@ -172,7 +175,6 @@ impl State {
                         "listing.category": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.category index")?;
@@ -184,7 +186,6 @@ impl State {
                         "listing.created_world": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.created_world index")?;
@@ -196,7 +197,6 @@ impl State {
                         "listing.search_area": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.search_area index")?;
@@ -208,7 +208,6 @@ impl State {
                         "listing.slots.job": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.slots.job index")?;
@@ -220,7 +219,6 @@ impl State {
                         "listing.slots.accepting_classes": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.slots.accepting_classes index")?;
@@ -232,7 +230,6 @@ impl State {
                         "listing.duty": 1,
                     })
                     .build(),
-                None,
             )
             .await
             .context("could not create listing.duty index")?;
@@ -244,6 +241,7 @@ impl State {
                     Ok(stats) => stats,
                     Err(e) => {
                         eprintln!("error generating stats: {:#?}", e);
+                        tokio::time::sleep(Duration::from_secs(60 * 5)).await;
                         continue;
                     }
                 };
@@ -252,6 +250,7 @@ impl State {
                     Ok(stats) => stats,
                     Err(e) => {
                         eprintln!("error generating stats: {:#?}", e);
+                        tokio::time::sleep(Duration::from_secs(60 * 5)).await;
                         continue;
                     }
                 };
@@ -340,12 +339,20 @@ pub(crate) fn router(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
 #[cfg(test)]
 pub(crate) async fn state_for_router_tests() -> Arc<State> {
-    let mongo = MongoClient::with_uri_str("mongodb://127.0.0.1:27017")
+    // Keep the port reserved by a non-MongoDB listener for the lifetime of this state.
+    // A default localhost MongoDB port may be a tunnel to the production database.
+    let listener = std::net::TcpListener::bind("127.0.0.1:0")
+        .expect("router tests must reserve an isolated local port");
+    let address = listener.local_addr().expect("reserved listener must have an address");
+    let mongo = MongoClient::with_uri_str(format!(
+        "mongodb://{address}/?directConnection=true&serverSelectionTimeoutMS=50&connectTimeoutMS=50"
+    ))
         .await
         .expect("router tests should construct a Mongo client without touching the network");
 
     Arc::new(State {
         mongo,
+        _mongo_test_listener: Some(listener),
         stats: Default::default(),
         listings_cache: RwLock::new(ListingsCache {
             entries: HashMap::new(),
@@ -545,7 +552,6 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                         }
                     },
                 ],
-                None,
             )
             .await;
         Ok(match res {
@@ -568,17 +574,17 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 containers.sort_by_key(|container| container.updated_minute);
                 containers.reverse();
 
-                ListingsTemplate {
+                render_template(ListingsTemplate {
                     containers,
                     lang,
-                }
+                })
             }
             Err(e) => {
                 eprintln!("{:#?}", e);
-                ListingsTemplate {
+                render_template(ListingsTemplate {
                     containers: Default::default(),
                     lang,
-                }
+                })
             }
         })
     }
@@ -602,12 +608,22 @@ async fn stats_logic(state: Arc<State>, codes: Option<String>, seven_days: bool)
     let lang = Language::from_codes(codes.as_deref());
     let stats = state.stats.read().await.clone();
     Ok(match stats {
-        Some(stats) => StatsTemplate {
+        Some(stats) => render_template(StatsTemplate {
             stats: if seven_days { stats.seven_days } else { stats.all_time },
             lang,
-        },
-        None => panic!(),
+        }),
+        None => warp::reply::with_status("Statistics are not ready", StatusCode::SERVICE_UNAVAILABLE).into_response(),
     })
+}
+
+fn render_template(template: impl Template) -> warp::reply::Response {
+    match template.render() {
+        Ok(html) => warp::reply::html(html).into_response(),
+        Err(error) => {
+            eprintln!("could not render listings template: {error}");
+            warp::reply::with_status("Internal Server Error", StatusCode::INTERNAL_SERVER_ERROR).into_response()
+        }
+    }
 }
 
 fn stats(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
@@ -651,6 +667,8 @@ fn contribute(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 
     let route = warp::path("contribute")
         .and(warp::path::end())
+        // TODO: Reintroduce a measured request-size limit after collecting real upload peaks.
+        // The previous 4 MiB limit was provisional and is intentionally disabled for now.
         .and(warp::body::json())
         .and_then(move |listing: PartyFinderListing| logic(Arc::clone(&state), listing));
     warp::post().and(route).boxed()
@@ -676,12 +694,18 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     let route = warp::path("contribute")
         .and(warp::path("multiple"))
         .and(warp::path::end())
+        // TODO: Reintroduce a measured request-size limit after collecting real upload peaks.
+        // The previous 4 MiB limit was provisional and is intentionally disabled for now.
         .and(warp::body::json())
         .and_then(move |listings: Vec<PartyFinderListing>| logic(Arc::clone(&state), listings));
     warp::post().and(route).boxed()
 }
 
 async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
+    if listing.jobs_present.len() > listing.slots.len() {
+        anyhow::bail!("invalid listing: jobs_present exceeds slots");
+    }
+
     // Validate remaining time
     if listing.seconds_remaining > 60 * 60 {
         anyhow::bail!("invalid listing: remaining time greater than 1 hour");
@@ -739,9 +763,6 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
 }
 
 async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<UpdateResult> {
-    let opts = UpdateOptions::builder()
-        .upsert(true)
-        .build();
     let bson_value = mongodb::bson::to_bson(&listing).unwrap();
     // Canonical writes always upsert on the widened `(listing.id, last_server_restart,
     // created_world)` identity only. Pre-migration truncated-id rows remain legacy data; the
@@ -763,8 +784,8 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<Up
                         "created_at": now,
                     },
                 },
-            opts,
         )
+        .upsert(true)
         .await
         .context("could not insert record")
 }
@@ -828,6 +849,11 @@ mod tests {
 
     fn valid_upload_listing() -> PartyFinderListing {
         let mut listing = fixture_listing();
+        while listing.slots.len() < listing.jobs_present.len() {
+            listing.slots.push(crate::listing::PartyFinderSlot {
+                accepting: crate::listing::JobFlags::all(),
+            });
+        }
         listing.duty = 0;
         listing
     }
@@ -911,6 +937,41 @@ mod tests {
             serde_json::to_value(listing).expect("fixture must serialize"),
         );
         assert!(state.get_detail_cache(WIDE_LISTING_ID - 1).await.is_none());
+    }
+
+
+    #[tokio::test]
+    async fn contribution_routes_still_accept_small_payloads() {
+        let state = state_for_router_tests().await;
+        let route = contribute(Arc::clone(&state)).or(contribute_multiple(state));
+
+        let response = warp::test::request()
+            .method("POST")
+            .path("/contribute")
+            .json(&valid_upload_listing())
+            .reply(&route)
+            .await;
+        assert_eq!(response.status(), warp::http::StatusCode::OK);
+
+        let response = warp::test::request()
+            .method("POST")
+            .path("/contribute/multiple")
+            .json(&Vec::<PartyFinderListing>::new())
+            .reply(&route)
+            .await;
+        assert_eq!(response.status(), warp::http::StatusCode::OK);
+        assert_eq!(response.body(), "0/0 updated");
+    }
+
+    #[tokio::test]
+    async fn statistics_routes_return_service_unavailable_until_ready() {
+        let state = state_for_router_tests().await;
+        let route = stats(Arc::clone(&state)).or(stats_seven_days(state));
+
+        for path in ["/stats", "/stats/7days"] {
+            let response = warp::test::request().path(path).reply(&route).await;
+            assert_eq!(response.status(), warp::http::StatusCode::SERVICE_UNAVAILABLE);
+        }
     }
 
 #[test]
@@ -997,6 +1058,36 @@ mod tests {
                     .contains("invalid listing: last_server_restart"),
                 "expected validation failure for {out_of_range}, got: {error:#}"
             );
+        }
+    }
+
+    #[tokio::test]
+    async fn validate_and_insert_listing_rejects_jobs_without_slot_masks_before_io() {
+        let state = state_for_router_tests().await;
+        let mut listing = valid_upload_listing();
+        listing.slots.clear();
+        listing.jobs_present = vec![0];
+
+        let error = validate_and_insert_listing(&state, listing)
+            .await
+            .expect_err("parallel job without slot mask must be rejected");
+
+        assert!(error.to_string().contains("jobs_present exceeds slots"));
+    }
+
+    #[tokio::test]
+    async fn validate_and_insert_listing_accepts_full_and_alliance_slot_arrays() {
+        let state = state_for_router_tests().await;
+        for parties in [1, 3] {
+            let mut listing = valid_upload_listing();
+            listing.num_parties = parties;
+            listing.slots_available = parties * 8;
+            listing.jobs_present = vec![19; usize::from(parties) * 8];
+            listing.slots = (0..usize::from(parties) * 8).map(|_| crate::listing::PartyFinderSlot {
+                accepting: crate::listing::JobFlags::all(),
+            }).collect();
+            let error = validate_and_insert_listing(&state, listing).await.unwrap_err();
+            assert!(error.to_string().contains("could not insert record"), "{error:#}");
         }
     }
 }

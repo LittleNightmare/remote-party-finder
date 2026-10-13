@@ -596,7 +596,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         // 执行主查询
         let res = state
             .collection()
-            .aggregate(pipeline, None)
+            .aggregate(pipeline)
             .await;
             
         let reply = match res {
@@ -990,7 +990,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         // 执行查询
         let res = state
             .collection()
-            .aggregate(pipeline, None)
+            .aggregate(pipeline)
             .await;
             
         Ok(match res {

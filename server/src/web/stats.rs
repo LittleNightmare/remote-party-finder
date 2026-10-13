@@ -1,7 +1,6 @@
 use anyhow::Result;
 use chrono::{Duration, Utc};
 use mongodb::bson::{Document, doc};
-use mongodb::options::AggregateOptions;
 use tokio_stream::StreamExt;
 use crate::stats::{Aliases, Statistics};
 use crate::web::State;
@@ -166,9 +165,8 @@ pub async fn get_stats_seven_days(state: &State) -> Result<Statistics> {
 async fn get_stats_internal(state: &State, docs: impl IntoIterator<Item = Document>) -> Result<Statistics> {
     let mut cursor = state
         .collection()
-        .aggregate(docs, AggregateOptions::builder()
-            .allow_disk_use(true)
-            .build())
+        .aggregate(docs)
+        .allow_disk_use(true)
         .await?;
     let doc = cursor.try_next().await?;
     let doc = doc.ok_or_else(|| anyhow::anyhow!("missing document"))?;
@@ -185,9 +183,8 @@ async fn get_stats_internal(state: &State, docs: impl IntoIterator<Item = Docume
     });
     let mut cursor = state
         .collection()
-        .aggregate(aliases_query, AggregateOptions::builder()
-            .allow_disk_use(true)
-            .build())
+        .aggregate(aliases_query)
+        .allow_disk_use(true)
         .await?;
     let doc = cursor.try_next().await?;
     let doc = doc.ok_or_else(|| anyhow::anyhow!("missing document"))?;

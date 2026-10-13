@@ -81,7 +81,7 @@ xivpf - listings
           data-centre="{{ listing.data_centre_name().unwrap_or_default() }}"
           data-pf-category="{{ listing.html_pf_category() }}">
             <div class="left">
-                {%- let duty_class %}
+                {%- decl duty_class %}
                 {%- if listing.is_cross_world() %}
                 {%- let duty_class = " cross" %}
                 {%- else %}
@@ -102,9 +102,9 @@ xivpf - listings
                 </div>
                 <div class="party">
                     {%- for slot in listing.slots() %}
-                    {%- let filled %}
-                    {%- let title %}
-                    {%- let role_class %}
+                    {%- decl filled %}
+                    {%- decl title %}
+                    {%- decl role_class %}
                     {%- match slot %}
                     {%- when Ok with (slot) %}
                     {%- let filled = " filled" %}

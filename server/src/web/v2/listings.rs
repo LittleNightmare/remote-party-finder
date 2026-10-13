@@ -72,8 +72,8 @@ pub(crate) fn collection_route_for_tests() -> BoxedFilter<(Response,)> {
 pub(crate) fn collection_response_from_raw_documents_for_tests(
     query: ListingsQuery,
     documents: Vec<Document>,
-) -> Response {
-    collection_response_from_raw_documents(query, documents)
+) -> BoxedFilter<(Response,)> {
+    warp::any().map(move || collection_response_from_raw_documents(query.clone(), documents.clone())).boxed()
 }
 
 async fn collection(
@@ -151,7 +151,7 @@ async fn member_response(id: u64, state: Arc<State>) -> Response {
         }
     };
 
-    let aggregation = state.collection().aggregate(pipeline, None).await;
+    let aggregation = state.collection().aggregate(pipeline).await;
 
     match aggregation {
         Ok(mut cursor) => {
@@ -262,7 +262,7 @@ async fn collection_response(query: ListingsQuery, state: Arc<State>) -> Respons
         return warp::reply::json(&empty_collection_response(&query)).into_response();
     }
 
-    let aggregation = state.collection().aggregate(collection_pipeline(&query), None).await;
+    let aggregation = state.collection().aggregate(collection_pipeline(&query)).await;
 
     match aggregation {
         Ok(mut cursor) => {

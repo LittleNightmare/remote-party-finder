@@ -97,7 +97,9 @@ impl PartyFinderListing {
                 .copied()
             {
                 Some(cj) => Ok(cj),
-                None => Err((self.slots[i].html_classes(), self.slots[i].codes())),
+                None => Err(self.slots.get(i)
+                    .map(|slot| (slot.html_classes(), slot.codes()))
+                    .unwrap_or_default()),
             };
             slots.push(cj);
         }
@@ -205,6 +207,27 @@ impl PartyFinderListing {
 
     pub fn html_pf_category(&self) -> &'static str {
         self.pf_category().as_str()
+    }
+}
+
+#[cfg(test)]
+mod slot_rendering_tests {
+    use super::*;
+
+    #[test]
+    fn slots_does_not_panic_when_jobs_present_exceeds_slot_masks() {
+        let mut listing: PartyFinderListing = serde_json::from_str(r#"{
+          "id": 1, "content_id_lower": 1, "name": "", "description": "",
+          "created_world": 1, "home_world": 1, "current_world": 1, "category": 0,
+          "duty": 0, "duty_type": 0, "beginners_welcome": false, "seconds_remaining": 0,
+          "min_item_level": 0, "num_parties": 1, "slots_available": 1,
+          "last_server_restart": 1, "objective": 1, "conditions": 1,
+          "duty_finder_settings": 0, "loot_rules": 0, "search_area": 0,
+          "slots": [], "jobs_present": [0]
+        }"#).expect("listing fixture must deserialize");
+        listing.slots.clear();
+
+        let _ = listing.slots();
     }
 }
 
@@ -363,8 +386,7 @@ impl DutyType {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct ObjectiveFlags : u32 {
         const NONE = 1 << 0;
         const DUTY_COMPLETION = 1 << 1;
@@ -374,8 +396,7 @@ bitflags! {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct ConditionFlags : u32 {
         const NONE = 1 << 0;
         const DUTY_COMPLETE = 1 << 1;
@@ -385,8 +406,7 @@ bitflags! {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct DutyFinderSettingsFlags : u32 {
         const NONE = 0;
         const UNDERSIZED_PARTY = 1 << 0;
@@ -396,8 +416,7 @@ bitflags! {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct LootRuleFlags : u32 {
         const NONE = 0;
         const GREED_ONLY = 1 << 0;
@@ -406,8 +425,7 @@ bitflags! {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct SearchAreaFlags : u32 {
         const DATA_CENTRE = 1 << 0;
         const PRIVATE = 1 << 1;
@@ -418,8 +436,7 @@ bitflags! {
 }
 
 bitflags! {
-    #[derive(Deserialize, Serialize)]
-    #[serde(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
     pub struct JobFlags : u64 {
         const GLADIATOR = 1 << 1;
         const PUGILIST = 1 << 2;
@@ -453,6 +470,53 @@ bitflags! {
         const VIPER = 1 << 30;
         const PICTOMANCER = 1 << 31;
         const BEASTMASTER = 1 << 32;
+    }
+}
+
+// Keep the existing numeric JSON/BSON format, including unknown bits. The
+// bitflags serde feature uses flag names for human-readable serializers.
+macro_rules! numeric_flags_serde {
+    ($($flags:ty => $bits:ty),+ $(,)?) => {
+        $(
+            impl Serialize for $flags {
+                fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+                    self.bits().serialize(serializer)
+                }
+            }
+
+            impl<'de> Deserialize<'de> for $flags {
+                fn deserialize<D: serde::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+                    <$bits>::deserialize(deserializer).map(Self::from_bits_retain)
+                }
+            }
+        )+
+    };
+}
+
+numeric_flags_serde! {
+    ObjectiveFlags => u32,
+    ConditionFlags => u32,
+    DutyFinderSettingsFlags => u32,
+    LootRuleFlags => u32,
+    SearchAreaFlags => u32,
+    JobFlags => u64,
+}
+
+#[cfg(test)]
+mod bitflags_wire_tests {
+    use super::{JobFlags, ObjectiveFlags};
+
+    #[test]
+    fn flags_keep_numeric_serde_and_unknown_bits() {
+        let objective: ObjectiveFlags = serde_json::from_str("2147483648").unwrap();
+        assert_eq!(serde_json::to_string(&objective).unwrap(), "2147483648");
+
+        let jobs: JobFlags = serde_json::from_str("4294967296").unwrap();
+        assert_eq!(jobs.bits(), 1_u64 << 32);
+        assert_eq!(serde_json::to_string(&jobs).unwrap(), "4294967296");
+
+        let unknown: ObjectiveFlags = serde_json::from_str("2147483648").unwrap();
+        assert_eq!(unknown.bits(), 1_u32 << 31);
     }
 }
 
