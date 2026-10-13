@@ -154,7 +154,7 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
             }
         }
 
-        // GoldSaucer: duty 11-26 range
+        // GoldSaucer: duty 11-27 range
         (_, DutyCategory::GoldSaucer) if duty == 11 => Ok(()),
         (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
             let row = match duty {
@@ -168,7 +168,7 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
                 None => Err(format!("GoldSaucer duty {} (mapped to roulette {}) not found", duty, row)),
             }
         }
-        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 27 => {
             let row = match duty {
                 20 => 195,
                 21 => 756,
@@ -177,6 +177,7 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
                 24 => 650,
                 25 => 768,
                 26 => 769,
+                27 => 958,
                 _ => 0,
             };
             match crate::ffxiv::duty(row) {
@@ -184,7 +185,7 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
                 None => Err(format!("GoldSaucer duty {} (mapped to duty {}) not found", duty, row)),
             }
         }
-        (_, DutyCategory::GoldSaucer) => Err(format!("GoldSaucer requires duty 11-26, got duty={}", duty)),
+        (_, DutyCategory::GoldSaucer) => Err(format!("GoldSaucer requires duty 11-27, got duty={}", duty)),
 
         // TreasureHunt: duty must exist in TREASURE_MAPS
         (_, DutyCategory::TreasureHunt) => {
@@ -196,6 +197,28 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
 
         // Other cases: invalid (use different prefix to distinguish from _duty_name_impl)
         _ => Err(format!("VALIDATION_FAILED: unknown type/category/duty: {:?}/{:?}/{}", duty_type, category, duty)),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn accepts_and_names_blunderville_gold_saucer_listing() {
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::GoldSaucer, 27),
+            Ok(())
+        );
+        assert_eq!(
+            duty_name_simple(
+                DutyType::Other,
+                DutyCategory::GoldSaucer,
+                27,
+                Language::ChineseSimplified,
+            ),
+            "金碟巨豆中心"
+        );
     }
 }
 
@@ -322,7 +345,7 @@ fn _duty_name_impl<'a>(
                 return Cow::from(info.name.text(&lang));
             }
         }
-        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 26 => {
+        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 27 => {
             let row = match duty {
                 20 => 195,
                 21 => 756,
@@ -331,6 +354,7 @@ fn _duty_name_impl<'a>(
                 24 => 650,
                 25 => 768,
                 26 => 769,
+                27 => 958,
                 _ => 0,
             };
 
