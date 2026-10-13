@@ -505,7 +505,7 @@ impl JobFlags {
             "SGE" => u64::from(Self::SAGE.bits()),
             "VPR" => u64::from(Self::VIPER.bits()),
             "PCT" => u64::from(Self::PICTOMANCER.bits()),
-            "BST" => 1u64 << 32,
+            "BST" => u64::from(Self::BEASTMASTER.bits()),
             _ => return None,
         })
     }

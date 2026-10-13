@@ -64,9 +64,9 @@ internal class UploadableListing {
 [Serializable]
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 internal class UploadableSlot {
-    public uint Accepting { get; } // TODO: JobFlags should : uint
+    public ulong Accepting { get; }
 
     internal UploadableSlot(PartyFinderSlot slot) {
-        this.Accepting = slot.Accepting.Aggregate((uint)0, (agg, flag) => agg | (uint)flag);
+        this.Accepting = slot.Accepting.Aggregate((ulong)0, (agg, flag) => agg | (ulong)flag);
     }
 }
