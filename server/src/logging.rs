@@ -50,12 +50,29 @@ pub(crate) mod tests {
 
     use super::*;
 
-    #[derive(Clone, Default)]
-    pub(crate) struct Capture(Arc<Mutex<Vec<u8>>>);
+    #[derive(Clone)]
+    pub(crate) struct Capture {
+        buffer: Arc<Mutex<Vec<u8>>>,
+        // Keep a second dispatch registered so tracing-core 0.1.32 does not
+        // take its single-dispatch callsite cache path for scoped captures.
+        // https://github.com/tokio-rs/tracing/issues/2874
+        _dispatch_keepalive: Arc<tracing::Dispatch>,
+    }
+
+    impl Capture {
+        fn new() -> Self {
+            Self {
+                buffer: Arc::new(Mutex::new(Vec::new())),
+                _dispatch_keepalive: Arc::new(tracing::Dispatch::new(
+                    tracing::subscriber::NoSubscriber::new(),
+                )),
+            }
+        }
+    }
 
     impl Write for Capture {
         fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
-            self.0.lock().unwrap().extend_from_slice(bytes);
+            self.buffer.lock().unwrap().extend_from_slice(bytes);
             Ok(bytes.len())
         }
 
@@ -66,7 +83,7 @@ pub(crate) mod tests {
 
     impl Capture {
         pub(crate) fn subscriber(directives: &str) -> (Self, tracing::Dispatch) {
-            let capture = Self::default();
+            let capture = Self::new();
             let writer = capture.clone();
             let subscriber = tracing_subscriber::fmt()
                 .with_env_filter(filter(directives, None).unwrap())
@@ -78,8 +95,44 @@ pub(crate) mod tests {
         }
 
         pub(crate) fn text(&self) -> String {
-            String::from_utf8(self.0.lock().unwrap().clone()).unwrap()
+            String::from_utf8(self.buffer.lock().unwrap().clone()).unwrap()
         }
+    }
+
+    #[test]
+    fn scoped_subscriber_captures_callsite_first_seen_without_subscriber() {
+        const CHILD_ENV: &str = "RPF_SCOPED_CAPTURE_TEST_CHILD";
+        // A fresh process prevents other tests from masking the single-dispatch bug.
+        if std::env::var_os(CHILD_ENV).is_none() {
+            let output = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "logging::tests::scoped_subscriber_captures_callsite_first_seen_without_subscriber",
+                    "--exact",
+                    "--nocapture",
+                ])
+                .env(CHILD_ENV, "1")
+                .output()
+                .unwrap();
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            assert!(
+                output.status.success() && stdout.contains("running 1 test"),
+                "child test failed:\n{stdout}\n{}",
+                String::from_utf8_lossy(&output.stderr),
+            );
+            return;
+        }
+
+        fn emit() {
+            tracing::error!("cold callsite marker");
+        }
+
+        let (capture, subscriber) = Capture::subscriber("error");
+        emit();
+        assert!(capture.text().is_empty());
+        tracing::dispatcher::with_default(&subscriber, emit);
+        let output = capture.text();
+        assert_eq!(output.lines().count(), 1, "{output:?}");
+        assert!(output.contains("cold callsite marker"));
     }
 
     #[test]
