@@ -383,7 +383,7 @@ fn _duty_name_impl<'a>(
         error_msg.push_str(&format!(" | description: {}", desc_preview));
     }
     
-    eprintln!("{}", error_msg);
+    tracing::warn!("{}", error_msg);
     Cow::from(format!("{:?}", category))
 }
 

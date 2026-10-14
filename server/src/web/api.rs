@@ -849,7 +849,7 @@ pub fn listings_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 ));
             },
             Err(e) => {
-                eprintln!("{:#?}", e);
+                tracing::error!(error = %e, "could not load API v1 listings");
                 let pagination = Pagination {
                     total: 0,
                     page,
@@ -923,7 +923,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
         let listing_id = match to_bson(&id) {
             Ok(listing_id) => listing_id,
             Err(error) => {
-                eprintln!("序列化招募ID错误: {:#?}", error);
+                tracing::error!(error = %error, listing_id = id, "could not serialize listing ID");
                 return Ok(warp::reply::with_status(
                     warp::reply::json(&serde_json::json!({
                         "error": "数据库查询错误"
@@ -1046,7 +1046,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                     } else {
                         // 添加错误日志
                         if let Err(e) = res {
-                            eprintln!("解析招募信息错误: {:#?}", e);
+                            tracing::error!(error = %e, listing_id = id, "could not decode API v1 listing");
                         }
                         
                         warp::reply::with_status(
@@ -1066,7 +1066,7 @@ pub fn listing_detail_api(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 }
             },
             Err(e) => {
-                eprintln!("获取招募详情错误: {:#?}", e);
+                tracing::error!(error = %e, listing_id = id, "could not load API v1 listing detail");
                 warp::reply::with_status(
                     warp::reply::json(&serde_json::json!({
                         "error": "数据库查询错误"

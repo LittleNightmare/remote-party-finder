@@ -146,7 +146,7 @@ async fn member_response(id: u64, state: Arc<State>) -> Response {
     let pipeline = match member_pipeline(id) {
         Ok(pipeline) => pipeline,
         Err(error) => {
-            eprintln!("{error:#?}");
+            tracing::error!(error = %error, listing_id = id, "could not build API v2 detail query");
             return internal_error_reply().into_response();
         }
     };
@@ -162,12 +162,12 @@ async fn member_response(id: u64, state: Arc<State>) -> Response {
                     Ok(document) => match mongodb::bson::from_document::<QueriedListing>(document) {
                         Ok(document) => documents.push(document),
                         Err(error) => {
-                            eprintln!("{error:#?}");
+                            tracing::error!(error = %error, listing_id = id, "could not decode API v2 listing detail");
                             return internal_error_reply().into_response();
                         }
                     },
                     Err(error) => {
-                        eprintln!("{error:#?}");
+                        tracing::error!(error = %error, listing_id = id, "could not read API v2 detail cursor");
                         return internal_error_reply().into_response();
                     }
                 }
@@ -176,7 +176,7 @@ async fn member_response(id: u64, state: Arc<State>) -> Response {
             member_response_from_documents(id, documents.iter())
         }
         Err(error) => {
-            eprintln!("{error:#?}");
+            tracing::error!(error = %error, listing_id = id, "could not load API v2 listing detail");
             internal_error_reply().into_response()
         }
     }
@@ -275,7 +275,7 @@ async fn collection_response(query: ListingsQuery, state: Arc<State>) -> Respons
                         Err(()) => return internal_error_reply().into_response(),
                     },
                     Err(error) => {
-                        eprintln!("{error:#?}");
+                        tracing::error!(error = %error, "could not read API v2 listings cursor");
                         return internal_error_reply().into_response();
                     }
                 }
@@ -284,7 +284,7 @@ async fn collection_response(query: ListingsQuery, state: Arc<State>) -> Respons
             collection_response_from_decoded_documents(query, documents)
         }
         Err(error) => {
-            eprintln!("{error:#?}");
+            tracing::error!(error = %error, "could not load API v2 listings");
             internal_error_reply().into_response()
         }
     }
@@ -802,7 +802,7 @@ fn collection_response_from_decoded_documents(
 
 fn decode_queried_listing(document: Document) -> Result<QueriedListing, ()> {
     mongodb::bson::from_document::<QueriedListing>(document).map_err(|error| {
-        eprintln!("{error:#?}");
+        tracing::error!(error = %error, "could not decode API v2 listing");
     })
 }
 

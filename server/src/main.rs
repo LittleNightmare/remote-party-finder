@@ -8,6 +8,7 @@ use tokio::io::AsyncReadExt;
 use crate::config::Config;
 
 mod config;
+mod logging;
 mod listing;
 mod listing_container;
 mod base64_sestring;
@@ -24,7 +25,7 @@ mod test;
 mod api_v2_contract;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> std::process::ExitCode {
     let mut args: Vec<String> = std::env::args().skip(1).collect();
     let config_path = if args.is_empty() {
         Cow::from("./config.toml")
@@ -35,16 +36,22 @@ async fn main() {
     let config = match get_config(&*config_path).await {
         Ok(config) => config,
         Err(e) => {
-            eprintln!("error: {}", e);
-            return;
+            logging::report_startup_error(&e);
+            return std::process::ExitCode::FAILURE;
         }
     };
 
-    if let Err(e) = self::web::start(Arc::new(config)).await {
-        eprintln!("error: {}", e);
-        eprintln!("  {:?}", e);
-        // eprintln!("{}", e.backtrace());
+    if let Err(error) = logging::init(&config.logging) {
+        logging::report_startup_error(&error);
+        return std::process::ExitCode::FAILURE;
     }
+
+    if let Err(error) = self::web::start(Arc::new(config)).await {
+        tracing::error!(error = %format_args!("{error:#}"), "server failed");
+        tracing::debug!(error = ?error, "server failure details");
+        return std::process::ExitCode::FAILURE;
+    }
+    std::process::ExitCode::SUCCESS
 }
 
 async fn get_config<P: AsRef<Path>>(path: P) -> anyhow::Result<Config> {

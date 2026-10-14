@@ -3,3 +3,17 @@ host = "127.0.0.1:8000"
 
 [mongo]
 url = "mongodb://username:password@example.com:27017"
+
+[validation]
+# Empty means all server IDs are allowed.
+created_world_id_ranges = [[1000, 1999], [4000, 4999]]
+
+[logging]
+# Usually only change this to "info", "debug", or "trace".
+# Levels: error, warn, info, debug, trace, or off. RUST_LOG overrides this value.
+# World-ID range rejections are debug; other validation rejections are warn.
+# Advanced per-module filtering:
+# filter = "warn,remote_party_finder=debug"
+# Hide just world-ID rejections while retaining other debug messages:
+# filter = "warn,remote_party_finder=debug,remote_party_finder::world_validation=off"
+filter = "info"

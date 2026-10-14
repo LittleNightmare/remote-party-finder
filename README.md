@@ -31,6 +31,60 @@ cargo build --release --target x86_64-unknown-linux-musl --locked
 
 运行服务仍需要配置 MongoDB；部署前应验证数据库连接和 API。
 
+### 日志
+
+服务端使用 Rust 生态常用的 `tracing` 日志系统。一般只需要在 `config.toml` 中填写一个等级：
+
+```toml
+[logging]
+filter = "info"
+```
+
+等级从少到多为：
+
+| 配置值 | 会显示的日志 |
+|---|---|
+| `error` | 错误 |
+| `warn` | 警告和错误 |
+| `info` | 一般运行信息、警告和错误 |
+| `debug` | 调试信息以及以上等级 |
+| `trace` | 最详细的调试信息 |
+| `off` | 关闭日志 |
+
+因此，日常使用通常只需要把 `filter` 改成 `info`、`debug` 或 `trace`。服务器 ID 超出
+`validation.created_world_id_ranges` 的拒绝属于 `debug`，默认的 `info` 不会显示；其他招募
+校验失败属于 `warn`，数据库和服务错误属于 `error`。
+
+`filter` 这个名字来自 `tracing-subscriber` 的过滤器语法。它支持按模块进一步调整，但这是
+高级用法，不影响上面的简单配置。规则用逗号分隔：单独的等级是全局默认值，
+`模块=等级` 是该模块的例外规则，更具体的模块规则优先。例如：
+
+```toml
+# 依赖只显示警告和错误，本项目显示 debug 及以上日志
+filter = "warn,remote_party_finder=debug"
+```
+
+这里的 `warn` 控制全局，`remote_party_finder=debug` 只为本项目开启调试日志。
+`remote_party_finder` 是本项目的日志模块名；依赖库不属于这个模块，因此仍只输出警告和错误。
+
+```toml
+# 上面的配置基础上，单独隐藏服务器 ID 超范围日志
+filter = "warn,remote_party_finder=debug,remote_party_finder::world_validation=off"
+```
+
+临时排查时也可以使用 `RUST_LOG` 环境变量覆盖 TOML 中的 `filter`，无需修改配置文件：
+
+```bash
+RUST_LOG=debug ./remote-party-finder ./config.toml
+```
+
+Windows PowerShell：
+
+```powershell
+$env:RUST_LOG = "debug"
+./remote-party-finder.exe ./config.toml
+```
+
 ## API
 已经提供了 API，使用方式请见仓库内文档：
 

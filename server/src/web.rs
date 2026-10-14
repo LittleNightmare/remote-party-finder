@@ -19,6 +19,7 @@ use mongodb::{
 };
 use tokio::sync::RwLock;
 use tokio_stream::StreamExt;
+
 use warp::{
     Filter,
     filters::BoxedFilter,
@@ -28,7 +29,7 @@ use warp::{
 use warp::http::StatusCode;
 
 use crate::{
-    config::Config,
+    config::{Config, Validation},
     ffxiv::Language,
     listing::PartyFinderListing,
     listing_container::{ListingContainer, QueriedListing},
@@ -47,7 +48,7 @@ use crate::web::api::{ApiResponse, DetailedApiListing, ApiListing};
 pub async fn start(config: Arc<Config>) -> Result<()> {
     let state = State::new(Arc::clone(&config)).await?;
 
-    println!("listening at {}", config.web.host);
+    tracing::info!(address = %config.web.host, "listening");
     warp::serve(router(state))
         .run(config.web.host)
         .await;
@@ -56,11 +57,55 @@ pub async fn start(config: Arc<Config>) -> Result<()> {
 
 pub struct State {
     mongo: MongoClient,
+    validation: Validation,
     #[cfg(test)]
     _mongo_test_listener: Option<std::net::TcpListener>,
     stats: RwLock<Option<CachedStatistics>>,
     listings_cache: RwLock<ListingsCache>,
     detail_cache: RwLock<DetailCache>,
+}
+
+/// Typed rejection for a listed created-world ID that is not covered by any configured
+/// range; the Display text includes the actual configured ranges.
+struct CreatedWorldIdMismatchError {
+    world_id: u16,
+    ranges: Vec<[u16; 2]>,
+}
+
+impl std::fmt::Display for CreatedWorldIdMismatchError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "invalid listing: created_world {} is outside configured ranges {:?}",
+            self.world_id, self.ranges
+        )
+    }
+}
+
+impl std::error::Error for CreatedWorldIdMismatchError {}
+
+// Debug mirrors the Display sentence so Debug-formatted route bodies and log dumps
+// keep the rejection message instead of leaking struct internals.
+impl std::fmt::Debug for CreatedWorldIdMismatchError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Display::fmt(self, f)
+    }
+}
+
+fn handle_listing_rejection(error: &anyhow::Error) {
+    if let Some(mismatch) = error.downcast_ref::<CreatedWorldIdMismatchError>() {
+        tracing::debug!(
+            target: "remote_party_finder::world_validation",
+            world_id = mismatch.world_id,
+            ranges = ?mismatch.ranges,
+            error = %error,
+            "listing rejected"
+        );
+    } else if error.to_string().starts_with("invalid listing:") {
+        tracing::warn!(error = %format_args!("{error:#}"), "listing rejected");
+    } else {
+        tracing::error!(error = %format_args!("{error:#}"), "listing update failed");
+    }
 }
 
 struct CacheEntry<T> {
@@ -125,6 +170,9 @@ impl State {
 
         let state = Arc::new(Self {
             mongo,
+            validation: Validation {
+                created_world_id_ranges: config.validation.created_world_id_ranges.clone(),
+            },
             #[cfg(test)]
             _mongo_test_listener: None,
             stats: Default::default(),
@@ -240,7 +288,7 @@ impl State {
                 let all_time = match self::stats::get_stats(&*task_state).await {
                     Ok(stats) => stats,
                     Err(e) => {
-                        eprintln!("error generating stats: {:#?}", e);
+                        tracing::error!(error = %format_args!("{e:#}"), window = "all_time", "could not generate statistics");
                         tokio::time::sleep(Duration::from_secs(60 * 5)).await;
                         continue;
                     }
@@ -249,7 +297,7 @@ impl State {
                 let seven_days = match self::stats::get_stats_seven_days(&*task_state).await {
                     Ok(stats) => stats,
                     Err(e) => {
-                        eprintln!("error generating stats: {:#?}", e);
+                        tracing::error!(error = %format_args!("{e:#}"), window = "seven_days", "could not generate statistics");
                         tokio::time::sleep(Duration::from_secs(60 * 5)).await;
                         continue;
                     }
@@ -352,6 +400,7 @@ pub(crate) async fn state_for_router_tests() -> Arc<State> {
 
     Arc::new(State {
         mongo,
+        validation: Validation::default(),
         _mongo_test_listener: Some(listener),
         stats: Default::default(),
         listings_cache: RwLock::new(ListingsCache {
@@ -580,7 +629,7 @@ fn listings(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
                 })
             }
             Err(e) => {
-                eprintln!("{:#?}", e);
+                tracing::error!(error = %e, "could not load listings page");
                 render_template(ListingsTemplate {
                     containers: Default::default(),
                     lang,
@@ -620,7 +669,7 @@ fn render_template(template: impl Template) -> warp::reply::Response {
     match template.render() {
         Ok(html) => warp::reply::html(html).into_response(),
         Err(error) => {
-            eprintln!("could not render listings template: {error}");
+            tracing::error!(error = %error, "could not render template");
             warp::reply::with_status("Internal Server Error", StatusCode::INTERNAL_SERVER_ERROR).into_response()
         }
     }
@@ -662,6 +711,9 @@ fn stats_seven_days(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
 fn contribute(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
     async fn logic(state: Arc<State>, listing: PartyFinderListing) -> std::result::Result<impl Reply, Infallible> {
         let result = validate_and_insert_listing(&*state, listing).await;
+        if let Err(error) = result.as_ref() {
+            handle_listing_rejection(error);
+        }
         Ok(format!("{:#?}", result))
     }
 
@@ -683,11 +735,12 @@ fn contribute_multiple(state: Arc<State>) -> BoxedFilter<(impl Reply, )> {
             let result = validate_and_insert_listing(&*state, listing).await;
             if result.is_ok() {
                 successful += 1;
-            } else {
-                eprintln!("{:#?}", result);
+            } else if let Err(error) = result.as_ref() {
+                handle_listing_rejection(error);
             }
         }
 
+        tracing::debug!(successful, total, "listing batch processed");
         Ok(format!("{}/{} updated", successful, total))
     }
 
@@ -720,11 +773,12 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
         );
     }
 
-    if !matches!(listing.created_world, 1000..=1999 | 4000..=4999) {
-        anyhow::bail!(
-            "invalid listing: created_world {} out of range (expected 1000-1999 or 4000-4999)",
-            listing.created_world
-        );
+    if !state.validation.allows_created_world_id(listing.created_world) {
+        return Err(CreatedWorldIdMismatchError {
+            world_id: listing.created_world,
+            ranges: state.validation.created_world_id_ranges.clone(),
+        }
+        .into());
     }
 
     // Validate duty/category/duty_type combination (fast path, no allocation)
@@ -753,8 +807,7 @@ async fn validate_and_insert_listing(state: &State, listing: PartyFinderListing)
                 let desc_preview: String = desc.chars().take(5).collect();
                 full_error.push_str(&format!(" | desc: {}", desc_preview));
             }
-
-            eprintln!("未插入: {}", full_error);
+            // Return the rejection; contribution routes log it once at the appropriate level.
             anyhow::bail!("invalid listing: {}", full_error);
         }
     }
@@ -793,6 +846,8 @@ async fn insert_listing(state: &State, listing: PartyFinderListing) -> Result<Up
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tracing::instrument::WithSubscriber;
+    use crate::logging::tests::Capture;
 
     const WIDE_LISTING_ID: u64 = 4_294_967_296;
 
@@ -1037,6 +1092,159 @@ mod tests {
                 error.to_string().contains("could not insert record"),
                 "expected insert io failure for boundary {boundary}, got: {error:#}"
             );
+        }
+    }
+
+    #[tokio::test]
+    async fn validate_and_insert_listing_uses_configured_world_ranges() {
+        let mut state = state_for_router_tests().await;
+        Arc::get_mut(&mut state).unwrap().validation = toml::from_str(
+            "created_world_id_ranges = [[70, 73], [80, 80]]"
+        ).unwrap();
+
+        for world in [70, 73, 80] {
+            let mut listing = valid_upload_listing();
+            listing.created_world = world;
+            let error = validate_and_insert_listing(&state, listing).await.unwrap_err();
+            assert!(error.to_string().contains("could not insert record"), "{error:#}");
+        }
+        for world in [69, 74, 79, 81, 1167] {
+            let mut listing = valid_upload_listing();
+            listing.created_world = world;
+            let error = validate_and_insert_listing(&state, listing).await.unwrap_err();
+            let error_text = error.to_string();
+            assert!(
+                error_text.starts_with("invalid listing: created_world "),
+                "{error_text:#}"
+            );
+            assert!(
+                error_text.contains("[[70, 73], [80, 80]]"),
+                "rejection text must include configured ranges, got: {error_text:#}"
+            );
+        }
+
+        Arc::get_mut(&mut state).unwrap().validation = toml::from_str(
+            "created_world_id_ranges = []"
+        ).unwrap();
+        for world in [0, 69, u16::MAX] {
+            let mut listing = valid_upload_listing();
+            listing.created_world = world;
+            let error = validate_and_insert_listing(&state, listing).await.unwrap_err();
+            assert!(error.to_string().contains("could not insert record"), "{error:#}");
+        }
+    }
+
+    #[tokio::test]
+    async fn world_rejection_filters_preserve_single_and_batch_responses() {
+        for batch in [false, true] {
+            let mut state = state_for_router_tests().await;
+            Arc::get_mut(&mut state).unwrap().validation = toml::from_str(
+                "created_world_id_ranges = [[1000, 1999], [4000, 4999]]"
+            ).unwrap();
+            let mut listing = valid_upload_listing();
+            listing.created_world = 2222;
+            let mut first_body = None;
+            for (filter, logged) in [
+                ("info", false),
+                ("debug", true),
+                ("debug,remote_party_finder::world_validation=off", false),
+            ] {
+                let (capture, subscriber) = Capture::subscriber(filter);
+                let response = if batch {
+                    warp::test::request().method("POST").path("/contribute/multiple")
+                        .json(&vec![&listing, &listing])
+                        .reply(&contribute_multiple(Arc::clone(&state)))
+                        .with_subscriber(subscriber).await
+                } else {
+                    warp::test::request().method("POST").path("/contribute")
+                        .json(&listing).reply(&contribute(Arc::clone(&state)))
+                        .with_subscriber(subscriber).await
+                };
+                assert_eq!(response.status(), warp::http::StatusCode::OK);
+                let body = std::str::from_utf8(response.body()).unwrap().to_owned();
+                if batch {
+                    assert_eq!(body, "0/2 updated");
+                } else {
+                    assert!(body.contains("created_world 2222 is outside configured ranges [[1000, 1999], [4000, 4999]]"));
+                }
+                if let Some(first) = &first_body {
+                    assert_eq!(&body, first);
+                } else {
+                    first_body = Some(body);
+                }
+                let output = capture.text();
+                let lines: Vec<_> = output.lines().filter(|line| line.contains("listing rejected")).collect();
+                assert_eq!(lines.len(), if logged { if batch { 2 } else { 1 } } else { 0 });
+                for line in lines {
+                    assert!(line.contains("DEBUG"));
+                    assert!(line.contains("world_validation"));
+                    assert!(line.contains("[[1000, 1999], [4000, 4999]]"));
+                }
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn insert_failures_are_logged_at_error_level() {
+        for batch in [false, true] {
+            let state = state_for_router_tests().await;
+            let (capture, subscriber) = Capture::subscriber("error");
+            let listing = valid_upload_listing();
+            let response = if batch {
+                warp::test::request().method("POST").path("/contribute/multiple")
+                    .json(&vec![listing]).reply(&contribute_multiple(state))
+                    .with_subscriber(subscriber).await
+            } else {
+                warp::test::request().method("POST").path("/contribute")
+                    .json(&listing).reply(&contribute(state))
+                    .with_subscriber(subscriber).await
+            };
+            assert_eq!(response.status(), warp::http::StatusCode::OK);
+            let output = capture.text();
+            assert_eq!(output.lines().filter(|line| line.contains("listing update failed")).count(), 1);
+            assert!(output.contains("ERROR"));
+            assert!(output.contains("could not insert record"));
+        }
+    }
+
+    #[tokio::test]
+    async fn validation_rejections_are_logged_once_at_warn_level() {
+        for batch in [false, true] {
+            for invalid_duty in [false, true] {
+                let state = state_for_router_tests().await;
+                let (capture, subscriber) = Capture::subscriber("warn");
+                let mut listing = valid_upload_listing();
+                let expected = if invalid_duty {
+                    listing.duty_type = crate::listing::DutyType::Other;
+                    listing.category = crate::listing::DutyCategory::GoldSaucer;
+                    listing.duty = 0;
+                    "GoldSaucer requires duty 11-27"
+                } else {
+                    listing.seconds_remaining = 3601;
+                    "remaining time greater than 1 hour"
+                };
+                let response = if batch {
+                    warp::test::request().method("POST").path("/contribute/multiple")
+                        .json(&vec![listing]).reply(&contribute_multiple(state))
+                        .with_subscriber(subscriber).await
+                } else {
+                    warp::test::request().method("POST").path("/contribute")
+                        .json(&listing).reply(&contribute(state))
+                        .with_subscriber(subscriber).await
+                };
+                assert_eq!(response.status(), warp::http::StatusCode::OK);
+                let output = capture.text();
+                assert_eq!(output.lines().count(), 1, "{output}");
+                assert!(output.contains("WARN"), "{output}");
+                assert!(output.contains(expected));
+                let body = std::str::from_utf8(response.body()).unwrap();
+                if batch {
+                    assert_eq!(body, "0/1 updated");
+                } else {
+                    assert!(body.contains("invalid listing:"));
+                    assert!(body.contains(expected));
+                }
+            }
         }
     }
 
