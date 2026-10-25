@@ -122,7 +122,7 @@ See [`docs/api-v2.md`](docs/api-v2.md) for the phase-1 contract, examples, and m
 
 - `duty_type=2`：ContentFinderCondition 行号（副本/讨伐/团队等）；`duty_type=1`：ContentRoulette 行号（随机任务）；
 - `duty_type=0` 且分类为金碟游乐场（1<<8）或深层迷宫（1<<13）：**LFGExtensionContent** 表的「行号 + 1」。这张表由 `csharp/SourceGenerator` 生成到 [`server/src/ffxiv/lfg_extension_content.rs`](server/src/ffxiv/lfg_extension_content.rs)，校验和网页显示都查它；
-- `duty_type=0` 的其他分类（命运/怪物狩猎/寻宝）：区域/宝图行号，0 表示未指定。
+- `duty_type=0` 的其他分类：命运/寻宝按区域/宝图行号，怪物狩猎的编号含义未解析（显示固定名「怪物狩猎」），0 表示未指定。
 
 **`duty = 0` 且分类为金碟/深层迷宫是合法组合**：客户端按内容匹配 LFGExtensionContent 失败（如内容未解锁）时只清零 duty、保留分类，网页显示为「深层迷宫」「金碟游乐场」通用名。
 
