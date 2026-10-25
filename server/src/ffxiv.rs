@@ -10,6 +10,7 @@ pub use self::{
     auto_translate::AUTO_TRANSLATE,
     duties::DUTIES,
     jobs::JOBS,
+    lfg_extension_content::LFG_EXTENSION_CONTENT,
     roulettes::ROULETTES,
     territory_names::TERRITORY_NAMES,
     treasure_maps::TREASURE_MAPS,
@@ -19,6 +20,7 @@ pub use self::{
 pub mod auto_translate;
 pub mod duties;
 pub mod jobs;
+pub mod lfg_extension_content;
 pub mod roulettes;
 pub mod territory_names;
 pub mod treasure_maps;
@@ -138,10 +140,6 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
         (_, DutyCategory::None) if duty == 0 => Ok(()),
         (_, DutyCategory::None) => Err(format!("None category requires duty=0, got duty={}", duty)),
 
-        // DeepDungeon: duty IDs 29-34
-        (DutyType::Other, DutyCategory::DeepDungeon) if (29..=34).contains(&duty) => Ok(()),
-        (DutyType::Other, DutyCategory::DeepDungeon) => Err(format!("DeepDungeon requires duty 29-34, got duty={}", duty)),
-
         // Normal: duty > 0 (allow unrecorded new duties)
         (DutyType::Normal, _) if duty > 0 => Ok(()),
         (DutyType::Normal, _) => Err(format!("Normal type requires duty>0, got duty={}", duty)),
@@ -154,38 +152,21 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
             }
         }
 
-        // GoldSaucer: duty 11-27 range
-        (_, DutyCategory::GoldSaucer) if duty == 11 => Ok(()),
-        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
-            let row = match duty {
-                12 | 16 => 21 + (duty - 12),
-                13..=15 => 18 + (duty - 13),
-                17..=19 => 22 + (duty - 17),
-                _ => 0
-            };
-            match roulette(u32::from(row)) {
-                Some(_) => Ok(()),
-                None => Err(format!("GoldSaucer duty {} (mapped to roulette {}) not found", duty, row)),
+        // GoldSaucer / DeepDungeon: duty is a 1-based LFGExtensionContent row id
+        // (group 3 = gold saucer list, group 4 = deep dungeon list, mirroring the
+        // client's selection checker); duty = 0 is what the client stores when it
+        // fails to resolve a selection and keeps the category
+        (_, DutyCategory::GoldSaucer) | (_, DutyCategory::DeepDungeon) => {
+            let expected_group = if category == DutyCategory::GoldSaucer { 3 } else { 4 };
+            match LFG_EXTENSION_CONTENT.get(&u32::from(duty)) {
+                Some(entry) if entry.group == expected_group => Ok(()),
+                _ if duty == 0 => Ok(()),
+                _ => Err(format!(
+                    "{:?} requires a known PF extension entry or duty=0, got duty={}",
+                    category, duty
+                )),
             }
         }
-        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 27 => {
-            let row = match duty {
-                20 => 195,
-                21 => 756,
-                22 => 199,
-                23 => 645,
-                24 => 650,
-                25 => 768,
-                26 => 769,
-                27 => 958,
-                _ => 0,
-            };
-            match crate::ffxiv::duty(row) {
-                Some(_) => Ok(()),
-                None => Err(format!("GoldSaucer duty {} (mapped to duty {}) not found", duty, row)),
-            }
-        }
-        (_, DutyCategory::GoldSaucer) => Err(format!("GoldSaucer requires duty 11-27, got duty={}", duty)),
 
         // TreasureHunt: duty must exist in TREASURE_MAPS
         (_, DutyCategory::TreasureHunt) => {
@@ -219,6 +200,68 @@ mod tests {
             ),
             "金碟巨豆中心"
         );
+    }
+
+    #[test]
+    fn accepts_and_names_deep_dungeon_listing_from_lfg_extension_content_table() {
+        // 死者宫殿: LFGExtensionContent row 28 (group 4), wire duty 29
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::DeepDungeon, 29),
+            Ok(())
+        );
+        assert_eq!(
+            duty_name_simple(
+                DutyType::Other,
+                DutyCategory::DeepDungeon,
+                29,
+                Language::ChineseSimplified,
+            ),
+            "死者宫殿 地下1～10层"
+        );
+    }
+
+    #[test]
+    fn accepts_unresolved_extension_duty() {
+        // the client stores duty = 0 (keeping the category) when it fails to
+        // resolve a selection, e.g. 深层迷宫 listings posted without one
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::DeepDungeon, 0),
+            Ok(())
+        );
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::GoldSaucer, 0),
+            Ok(())
+        );
+        assert_eq!(
+            duty_name_simple(
+                DutyType::Other,
+                DutyCategory::DeepDungeon,
+                0,
+                Language::ChineseSimplified,
+            ),
+            "深层迷宫"
+        );
+    }
+
+    #[test]
+    fn accepts_new_gold_saucer_entry_and_rejects_cross_group_duties() {
+        // 魔光键影: LFGExtensionContent row 34 (group 3), wire duty 35
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::GoldSaucer, 35),
+            Ok(())
+        );
+        // deep dungeon entries live in group 4 and must not match gold saucer,
+        // and vice versa
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::GoldSaucer, 29),
+            Err("GoldSaucer requires a known PF extension entry or duty=0, got duty=29".to_string())
+        );
+        assert_eq!(
+            is_valid_duty_combination(DutyType::Other, DutyCategory::DeepDungeon, 35),
+            Err("DeepDungeon requires a known PF extension entry or duty=0, got duty=35".to_string())
+        );
+        // values outside the sheet have no entry at all
+        assert!(is_valid_duty_combination(DutyType::Other, DutyCategory::DeepDungeon, 1000).is_err());
     }
 }
 
@@ -269,51 +312,6 @@ fn _duty_name_impl<'a>(
             Language::French => "Non spécifiée",
             Language::ChineseSimplified => "无",
         }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 29 => return Cow::from(match lang {
-            Language::English => "The Palace of the Dead",
-            Language::Japanese => "死者の宮殿",
-            Language::German => "Palast der Toten",
-            Language::French => "Palais des morts",
-            Language::ChineseSimplified => "死者宫殿",
-        }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 30 => return Cow::from(match lang {
-            Language::English => "Heaven-on-High",
-            Language::Japanese => "アメノミハシラ",
-            Language::German => "Himmelssäule",
-            Language::French => "Pilier des Cieux",
-            Language::ChineseSimplified => "天之御柱",
-        }),
-        (DutyType::Other, DutyCategory::DeepDungeon) if duty == 31 => return Cow::from(match lang {
-            Language::English => "Eureka Orthos",
-            Language::Japanese => "オルト・エウレカ",
-            Language::German => "Eureka Orthos",
-            Language::French => "Eurêka Orthos",
-            Language::ChineseSimplified => "正统优雷卡",
-        }),
-        (DutyType::Other, DutyCategory::DeepDungeon) => {
-            let row = match duty {
-                34 => 1065,
-                32 => 0, // Pilgrim's Traverse - handled inline below
-                33 => 1063,
-                _ => 0,
-            };
-            
-            if duty == 32 {
-                return Cow::from(match lang {
-                    Language::English => "Pilgrim's Traverse",
-                    Language::Japanese => "ピルグリム・トラバース",
-                    Language::German => "Pilgers Pfad",
-                    Language::French => "Sanctuaire des pèlerins",
-                    Language::ChineseSimplified => "朝圣交错路",
-                });
-            }
-            
-            if row != 0 {
-                if let Some(info) = crate::ffxiv::duty(row) {
-                    return Cow::from(info.name.text(&lang));
-                }
-            }
-        }
         (DutyType::Normal, _) => {
             if let Some(info) = crate::ffxiv::duty(u32::from(duty)) {
                 return Cow::from(info.name.text(&lang));
@@ -324,42 +322,47 @@ fn _duty_name_impl<'a>(
                 return Cow::from(info.name.text(&lang));
             }
         }
-        // gold saucer duties appear to be all over the place. source in comments:
-        (_, DutyCategory::GoldSaucer) if duty == 11 => return Cow::from(match lang { // Addon 2308
-            Language::English => "GATEs",
-            Language::Japanese => "G.A.T.E.",
-            Language::German => "GATEs",
-            Language::French => "JACTA",
-            Language::ChineseSimplified => "机遇任务",
+        (_, DutyCategory::GoldSaucer) if duty == 0 => return Cow::from(match lang {
+            Language::English => "Gold Saucer",
+            Language::Japanese => "ゴールドソーサー",
+            Language::German => "Goldsaucer",
+            Language::French => "Gold Saucer",
+            Language::ChineseSimplified => "金碟游乐场",
         }),
-        (_, DutyCategory::GoldSaucer) if duty >= 12 && duty <= 19 => {
-            // in the sheet, the order is sagolii, del sol, tranquil, random
-            // in PF, random comes first:
-            let row = match duty {
-                12 | 16 => 21 + (duty - 12),
-                13..=15 => 18 + (duty - 13),
-                17..=19 => 22 + (duty - 17),
-                _ => 0
-            };
-            if let Some(info) = roulette(u32::from(row)) {
-                return Cow::from(info.name.text(&lang));
+        (_, DutyCategory::DeepDungeon) if duty == 0 => return Cow::from(match lang {
+            Language::English => "Deep Dungeons",
+            Language::Japanese => "ディープダンジョン",
+            Language::German => "Tiefengewölbe",
+            Language::French => "Donjons sans fond",
+            Language::ChineseSimplified => "深层迷宫",
+        }),
+        // gold saucer / deep dungeon duties resolve through LFGExtensionContent
+        // (wire duty = sheet row + 1); GATEs have no underlying duty, the client
+        // shows a fixed addon label for them
+        (_, DutyCategory::GoldSaucer | DutyCategory::DeepDungeon) => {
+            if duty == 11 {
+                return Cow::from(match lang {
+                    Language::English => "GATEs",
+                    Language::Japanese => "G.A.T.E.",
+                    Language::German => "GATEs",
+                    Language::French => "JACTA",
+                    Language::ChineseSimplified => "机遇任务",
+                });
             }
-        }
-        (_, DutyCategory::GoldSaucer) if duty >= 20 && duty <= 27 => {
-            let row = match duty {
-                20 => 195,
-                21 => 756,
-                22 => 199,
-                23 => 645,
-                24 => 650,
-                25 => 768,
-                26 => 769,
-                27 => 958,
-                _ => 0,
-            };
-
-            if let Some(info) = crate::ffxiv::duty(row) {
-                return Cow::from(info.name.text(&lang));
+            if let Some(entry) = LFG_EXTENSION_CONTENT.get(&u32::from(duty)) {
+                match entry.content {
+                    lfg_extension_content::LfgContent::Regular(row) => {
+                        if let Some(info) = crate::ffxiv::duty(row) {
+                            return Cow::from(info.name.text(&lang));
+                        }
+                    }
+                    lfg_extension_content::LfgContent::Roulette(row) => {
+                        if let Some(info) = roulette(u32::from(row)) {
+                            return Cow::from(info.name.text(&lang));
+                        }
+                    }
+                    lfg_extension_content::LfgContent::Unresolved => {}
+                }
             }
         }
         (_, DutyCategory::TreasureHunt) => if let Some(name) = crate::ffxiv::TREASURE_MAPS.get(&u32::from(duty)) {

@@ -1217,8 +1217,10 @@ mod tests {
                 let expected = if invalid_duty {
                     listing.duty_type = crate::listing::DutyType::Other;
                     listing.category = crate::listing::DutyCategory::GoldSaucer;
-                    listing.duty = 0;
-                    "GoldSaucer requires duty 11-27"
+                    // deep dungeon entries live in LFGExtensionContent group 4 and
+                    // never match the gold saucer list (group 3)
+                    listing.duty = 29;
+                    "GoldSaucer requires a known PF extension entry or duty=0"
                 } else {
                     listing.seconds_remaining = 3601;
                     "remaining time greater than 1 hour"
