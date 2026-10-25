@@ -690,13 +690,22 @@ internal class Program {
 
     /// <summary>
     /// 生成 PF 扩展内容表（金碟游乐场 / 深层迷宫的招募 duty 编码来源）。
-    /// 客户端（sub_14056B3D0）按行内字节偏移读取：+0 u32 内容 id、+6 u8 分组、+7 u8 类型；
+    /// 客户端扫描函数按行内字节偏移读行：+0 u32 内容 id、+6 u8 分组、+7 u8 类型；
     /// 上报的 duty 值 = 0 起始行号 + 1。类型 1 → ContentFinderCondition 行号，
     /// 3 → ContentRoulette 行号，4 → DeepDungeonResident[+0] 首 u16（CFC 行号）。
     /// duty = 0 是客户端解析失败/未选择时的取值，不落表，由服务端单独放行。
+    ///
+    /// 规则来源与再定位（客户端函数地址随版本变化，按特征找）：
+    /// 对 ContentType 行号 19/21/39 做 switch、并分别用组 3/组 4 扫表的函数，
+    /// 就是可用性检查（服务端「分类→分组」映射的依据）；行查找按
+    /// SheetsEnum.LFGExtensionContent 解析（7.5 = 938）。
+    /// 游戏更新后重跑本生成器并 diff 产物即可；完整说明见 README「PF 招募的分类与任务编号」。
     /// </summary>
     private string GenerateLfgExtension() {
         var sb = DefaultHeader();
+        sb.Append("// Generated from the game's LFGExtensionContent sheet (938) by csharp/SourceGenerator.\n");
+        sb.Append("// Rerun the generator after game updates; field semantics and IDA anchors:\n");
+        sb.Append("// README \"PF 招募的分类与任务编号（duty_type / category / duty）\".\n");
         sb.Append('\n');
 
         var sheet = new ExcelSheet<RawRow>(this.Data[keyLanguage].Excel.GetRawSheet("LFGExtensionContent"));

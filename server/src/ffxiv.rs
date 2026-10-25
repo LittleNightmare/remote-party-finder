@@ -155,7 +155,8 @@ pub fn is_valid_duty_combination(duty_type: DutyType, category: DutyCategory, du
         // GoldSaucer / DeepDungeon: duty is a 1-based LFGExtensionContent row id
         // (group 3 = gold saucer list, group 4 = deep dungeon list, mirroring the
         // client's selection checker); duty = 0 is what the client stores when it
-        // fails to resolve a selection and keeps the category
+        // fails to resolve a selection and keeps the category.
+        // Derivation & re-verification playbook: README「PF 招募的分类与任务编号」.
         (_, DutyCategory::GoldSaucer) | (_, DutyCategory::DeepDungeon) => {
             let expected_group = if category == DutyCategory::GoldSaucer { 3 } else { 4 };
             match LFG_EXTENSION_CONTENT.get(&u32::from(duty)) {

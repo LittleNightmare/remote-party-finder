@@ -1,4 +1,7 @@
 use std::collections::HashMap;
+// Generated from the game's LFGExtensionContent sheet (938) by csharp/SourceGenerator.
+// Rerun the generator after game updates; field semantics and IDA anchors:
+// README "PF 招募的分类与任务编号（duty_type / category / duty）".
 
 /// One row of the client's LFGExtensionContent sheet (the PF extension list).
 /// LfgContent mirrors the client's Agent::ContentsType resolution (None/Roulette/Regular);
