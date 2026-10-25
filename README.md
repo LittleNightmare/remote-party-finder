@@ -108,6 +108,44 @@ See [`docs/api-v2.md`](docs/api-v2.md) for the phase-1 contract, examples, and m
 
 [点击这里访问xivpf.littlengihtmare.top](https://xivpf.littlenightmare.top)
 
+## PF 招募的分类与任务编号（duty_type / category / duty）
+
+招募上报里的三个字段来自客户端数据包（对应 FFXIVClientStructs 的 `CrossRealmListing`）：
+
+| 字段 | 包内偏移 | 含义 |
+|---|---|---|
+| `category` | +0x1C u32 | 分类位标志，PF 页签 N → `1 << N`（1<<4=讨伐战、1<<13=深层迷宫…） |
+| `duty` | +0x20 u16 | 任务编号，含义由 duty_type 决定 |
+| `duty_type` | +0x22 u8 | 0=无（Other）、1=随机任务、2=具体任务 |
+
+`duty` 的取值：
+
+- `duty_type=2`：ContentFinderCondition 行号（副本/讨伐/团队等）；`duty_type=1`：ContentRoulette 行号（随机任务）；
+- `duty_type=0` 且分类为金碟游乐场（1<<8）或深层迷宫（1<<13）：**LFGExtensionContent** 表的「行号 + 1」。这张表由 `csharp/SourceGenerator` 生成到 [`server/src/ffxiv/lfg_extension_content.rs`](server/src/ffxiv/lfg_extension_content.rs)，校验和网页显示都查它；
+- `duty_type=0` 的其他分类（命运/怪物狩猎/寻宝）：区域/宝图行号，0 表示未指定。
+
+**`duty = 0` 且分类为金碟/深层迷宫是合法组合**：客户端按内容匹配 LFGExtensionContent 失败（如内容未解锁）时只清零 duty、保留分类，网页显示为「深层迷宫」「金碟游乐场」通用名。
+
+### 这套规则是怎么得来的（IDA 复现路径）
+
+1. `AgentLookingForGroup.RequestCategoryListings` —— 里面用 `1 << category` 生成分类位标志；
+2. `AgentLookingForGroup.PopulateListingData` —— 读网络包里的 listing 结构体，给出各字段偏移；
+3. 选择写入函数（无名）：在 `AgentLookingForGroup` / `AddonLookingForGroupCondition` 的符号段里，找"对 ContentType 行号 1/2/3/4/5/6/8/9/19/21/30/39 做 switch、生成 `1 << N` 位标志"的那个。它枚举了全部合法组合：category 位来自所选内容的 ContentType 行（CT19→金碟、CT21/39→深层迷宫、CT30→V&C，高难度标志→64）；普通页签的 duty 包为 `(类型字节 << 16) | id`，金碟/深层迷宫页签写 LFGExtensionContent「行号 + 1」（深层迷宫 29–34 与当前表核对一致）；
+4. 可用性检查函数（无名）：特征是"对 19/21/39 做 switch，分别用组 3、组 4 扫 LFGExtensionContent"。服务端「分类→分组」映射镜像它；
+5. 行扫描函数（无名）：找引用 LFGExtensionContent（sheet 938）行查找、并循环读 `+0/+6/+7` 的函数——按内容匹配，命中写「行号 + 1」，失败清零；
+6. sheet id 以客户端 `Component::Exd::SheetsEnum` 的名字为准（7.5：938 = LFGExtensionContent、1334 = DeepDungeonResident），id 本身随版本可能调整。
+
+交叉验证：FFXIVClientStructs 的 [PartyFinderPackets.cs](https://github.com/goatcorp/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Network/PartyFinderPackets.cs)（`+0x1C Category`、`+0x20 Duty`、`+0x22 DutyType`，注释明确 Duty 可能是 LFGExtensionContent RowId）。
+
+### 游戏更新后怎么快速再确认
+
+1. **通常什么都不用改**：重跑生成器（`cd csharp/SourceGenerator && dotnet run -c Debug`，输出路径硬编码到 `server/src/ffxiv`），diff `lfg_extension_content.rs` —— 新增的金碟/深层迷宫条目自动进表、自动通过校验（例：7.5 新增的值 35 = 魔光键影）；
+2. **出现新的 `unknown type/category/duty` WARN**：按上面第 1–6 步重新定位客户端逻辑（用符号名搜，别用旧地址），判断是编码变化还是新分类；只是新条目的话重跑生成器即可；
+3. **怀疑行布局变化**：生成器运行时会把每一行的 `id/group/type` 打到控制台，与已知锚点比对（值 11 = 机遇任务/Addon 2308、值 29 = 死者宫殿、值 33/34 = 悲寂深想/歼灭战）即可发现偏移或分组语义是否变了；
+4. `cargo test` 本机跑不了时看 CI；生成器编译运行需要能写 `obj/` 目录的权限。
+
+相关：未来新增 category 位时的兼容见下方「已知问题」的 TODO 小节。
+
 ## To Anna
 If you don't wanna see it on Github, please tell me through issue.
 
