@@ -52,6 +52,7 @@ internal class Program {
         File.WriteAllText(Path.Join(outPath, "territory_names.rs"), prog.GenerateTerritoryNames());
         File.WriteAllText(Path.Join(outPath, "auto_translate.rs"), prog.GenerateAutoTranslate());
         File.WriteAllText(Path.Join(outPath, "treasure_maps.rs"), prog.GenerateTreasureMaps());
+        File.WriteAllText(Path.Join(outPath, "lfg_extension_content.rs"), prog.GenerateLfgExtension());
     }
 
     private Dictionary<Language, GameData> Data { get; }
@@ -686,4 +687,91 @@ internal class Program {
 
             return sb.ToString();
         }
+
+    /// <summary>
+    /// 生成 PF 扩展内容表（金碟游乐场 / 深层迷宫的招募 duty 编码来源）。
+    /// 客户端（sub_14056B3D0）按行内字节偏移读取：+0 u32 内容 id、+6 u8 分组、+7 u8 类型；
+    /// 上报的 duty 值 = 0 起始行号 + 1。类型 1 → ContentFinderCondition 行号，
+    /// 3 → ContentRoulette 行号，4 → DeepDungeonResident[+0] 首 u16（CFC 行号）。
+    /// duty = 0 是客户端解析失败/未选择时的取值，不落表，由服务端单独放行。
+    /// </summary>
+    private string GenerateLfgExtension() {
+        var sb = DefaultHeader();
+        sb.Append('\n');
+
+        var sheet = new ExcelSheet<RawRow>(this.Data[keyLanguage].Excel.GetRawSheet("LFGExtensionContent"));
+        var residents = new ExcelSheet<RawRow>(this.Data[keyLanguage].Excel.GetRawSheet("DeepDungeonResident"));
+
+        Console.WriteLine($"LFGExtensionContent: {sheet.Count} rows");
+        Console.WriteLine($"DeepDungeonResident: {residents.Count} rows");
+
+        sb.Append("/// One row of the client's LFGExtensionContent sheet (the PF extension list).\n");
+        sb.Append("/// LfgContent mirrors the client's Agent::ContentsType resolution (None/Roulette/Regular);\n");
+        sb.Append("/// it is not named ContentsType to avoid clashing with the ContentType sheet.\n");
+        sb.Append("#[derive(Debug, Clone, Copy, PartialEq, Eq)]\n");
+        sb.Append("pub enum LfgContent {\n");
+        sb.Append("    /// ContentFinderCondition row id\n");
+        sb.Append("    Regular(u32),\n");
+        sb.Append("    /// ContentRoulette row id\n");
+        sb.Append("    Roulette(u8),\n");
+        sb.Append("    /// row type the client cannot resolve to a specific duty\n");
+        sb.Append("    Unresolved,\n");
+        sb.Append("}\n\n");
+
+        sb.Append("#[derive(Debug, Clone, Copy, PartialEq, Eq)]\n");
+        sb.Append("pub struct LfgExtensionContent {\n");
+        sb.Append("    /// 0-based LFGExtensionContent row id (the packet's DutyId = row id + 1)\n");
+        sb.Append("    pub row_id: u32,\n");
+        sb.Append("    /// sheet group byte (3 = gold saucer list, 4 = deep dungeon list)\n");
+        sb.Append("    pub group: u8,\n");
+        sb.Append("    pub content: LfgContent,\n");
+        sb.Append("}\n\n");
+
+        sb.Append("/// Keyed by the packet's DutyId (Detailed.DutyId = row id + 1), as written by the client.\n");
+        sb.Append("lazy_static::lazy_static! {\n");
+        sb.Append("    pub static ref LFG_EXTENSION_CONTENT: HashMap<u32, LfgExtensionContent> = maplit::hashmap! {\n");
+
+        for (uint rowId = 0; rowId < sheet.Count; rowId++) {
+            if (!sheet.HasRow(rowId)) {
+                continue;
+            }
+
+            var row = sheet.GetRow(rowId);
+            var contentId = row.ReadUInt32(0);
+            var group = row.ReadUInt8(6);
+            var type = row.ReadUInt8(7);
+
+            string content;
+            switch (type) {
+                case 1:
+                    content = $"LfgContent::Regular({contentId})";
+                    break;
+                case 3:
+                    content = $"LfgContent::Roulette({contentId & 0xFF})";
+                    break;
+                case 4: {
+                    if (!residents.HasRow(contentId)) {
+                        Console.WriteLine($"LFGExtensionContent row {rowId}: type 4 content id {contentId} has no DeepDungeonResident row");
+                        content = "LfgContent::Unresolved";
+                        break;
+                    }
+
+                    var cfc = residents.GetRow(contentId).ReadUInt16(0);
+                    content = $"LfgContent::Regular({cfc})";
+                    break;
+                }
+                default:
+                    content = "LfgContent::Unresolved";
+                    break;
+            }
+
+            Console.WriteLine($"  row {rowId}: id={contentId} group={group} type={type} -> {content}");
+            sb.Append($"        {rowId + 1} => LfgExtensionContent {{ row_id: {rowId}, group: {group}, content: {content} }},\n");
+        }
+
+        sb.Append("    };\n");
+        sb.Append("}\n");
+
+        return sb.ToString();
     }
+}
