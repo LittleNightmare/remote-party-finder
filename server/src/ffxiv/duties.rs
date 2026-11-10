@@ -9607,7 +9607,7 @@ lazy_static::lazy_static! {
                 fr: "L'Anticréation (extrême)",
                 zh: "恩欧歼殛战",
             },
-            high_end: true,
+            high_end: false,
             content_kind: ContentKind::Trials,
         },
         1117 => DutyInfo {

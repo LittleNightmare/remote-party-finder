@@ -32820,6 +32820,13 @@ lazy_static::lazy_static! {
             fr: "puluche",
             zh: "蟑虫",
         },
+        (65, 560) => LocalisedText {
+            en: "dreambringer",
+            ja: "ユメマワシ",
+            de: "Träumelein",
+            fr: "troqueur de rêves",
+            zh: "转梦兽",
+        },
         (65, 561) => LocalisedText {
             en: "micro crow",
             ja: "タイニークロウ",
